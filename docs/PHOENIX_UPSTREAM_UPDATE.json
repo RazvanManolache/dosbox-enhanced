@@ -1,0 +1,378 @@
+{
+  "checkedUtc": "2026-10-15T16:02:24.728664+00:00",
+  "upstreamRepository": "https://github.com/RazvanManolache/dlss5-phoenix-addon",
+  "upstreamTag": "0.8.1-beta",
+  "upstreamRevision": "4c9b75ff42b6945352f66f309dc84404e498f4cf",
+  "originalDosboxReleaseCommit": "a19101f4fbc205dafa54151d7c9c94d9d53c4b52",
+  "comparison": {
+    "upstream": "4c9b75ff42b6945352f66f309dc84404e498f4cf",
+    "compiledInputFiles": 39,
+    "identical": [
+      "native_runtime/native_api.cpp",
+      "native_runtime/phoenix_native.h",
+      "src/native/model/bundle_loader.h",
+      "src/native/model/generated_plan.h",
+      "src/native/model/launch_plan.h",
+      "src/native/model/portable_model_io.h",
+      "src/native/model/weight_source.h",
+      "src/native/network/network.h",
+      "src/native/network/production_network.h",
+      "src/native/runtime/device_recovery.h",
+      "src/native/runtime/kernel_module.h",
+      "src/native/session/session.h",
+      "src/native/shaders/colour_bridge_bytecode.h",
+      "src/native/shaders/denormalize_bytecode.h",
+      "src/native/shaders/meter_bytecode.h",
+      "src/native/support/colour_bridge.h",
+      "src/native/support/compute_pass.h",
+      "src/native/support/controls.h",
+      "src/native/support/denormalize.h",
+      "src/native/support/dispatch.h",
+      "src/native/support/dispatch_audit.h",
+      "src/native/support/exposure_meter.h",
+      "src/native/support/host_memory.h",
+      "src/native/support/kernel_resolution.h",
+      "src/native/support/live_controls.h",
+      "src/native/support/memory.h",
+      "src/native/support/network_policy.h",
+      "src/native/support/policy.h",
+      "src/native/support/resolution.h",
+      "src/native/support/resolution_bridge.h",
+      "third_party/nlohmann/json.hpp",
+      "third_party/nvapi/nvapi.h",
+      "third_party/nvapi/nvapi_lite_common.h",
+      "third_party/nvapi/nvapi_lite_d3dext.h",
+      "third_party/nvapi/nvapi_lite_salend.h",
+      "third_party/nvapi/nvapi_lite_salstart.h",
+      "third_party/nvapi/nvapi_lite_sli.h",
+      "third_party/nvapi/nvapi_lite_stereo.h",
+      "third_party/nvapi/nvapi_lite_surround.h"
+    ],
+    "changes": [],
+    "productionInputs": [
+      {
+        "path": "src/native/kernels/production/optimized/decoder/input_upsampling.cu",
+        "sha256": "49fd96bb5e59af7a4bc1b0b8fea2edb49945e4709e4dbb8febb35a1d0fb46dc6"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/split_heads_512/feed_forward.cu",
+        "sha256": "e6698b812396ffc420cd179802d13549f2951d057b47bc2e96d6e525560d861c"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/split_heads_512/feed_forward_input_view_tile_sync.cu",
+        "sha256": "89f16cc13651f0d6cf2b391d16173f36b06e83e333955ed0543443697f999f0c"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/split_heads_512/feed_forward_projection.cu",
+        "sha256": "83c81924a9f566a79201d7c700121662813a5b423dd7640ff24ade4ff52e020e"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/split_heads_512/feed_forward_projection_input_view.cu",
+        "sha256": "521a97d9bdce74035e2ca3b77952fa88f8195cc1ecd802c7df8dded6116c8c80"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/split_heads_512/final_head_wait.cu",
+        "sha256": "b6c2a7c0c68d621089995d5453998cd8ed927648402a1aa54b15f4a93dd2bd0c"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/split_heads_512/projection.cu",
+        "sha256": "16d11b2a05acbbb71e08c5089e451e6c3508d26feff2469812852d017f0a0b1d"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/split_heads_512/projection_output_view_wait.cu",
+        "sha256": "17276d53f91aef422a376540e8d7b46ed6010ed271893e358aae81770d59ee18"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/split_heads_512/projection_pool.cu",
+        "sha256": "04388d10b2a3b28619ef5238b1fac937c1f2d05c6c6df344b49f20fb025131c7"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/split_heads_512/query_key_value.cu",
+        "sha256": "ed7558348c9d354a87111e64e2a6d47ada32d8c998f89226e5063309f9ed821a"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/transformer/attention.cu",
+        "sha256": "06eaa73eb65fe17037c4cd0fc67a75e72492240d72aa49ce8f76ffd1d5699c3d"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/transformer/feed_forward_contract.cu",
+        "sha256": "5228960e1d939881f62681644d31bef62a980db670ea5abe73c8814279154ce9"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/transformer/feed_forward_expand.cu",
+        "sha256": "7c4c96b2740846dd1762ebb9486607973e65ad6c8a4e6d06fff9dcee0c85feba"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/transformer/feed_forward_expand_publish.cu",
+        "sha256": "04a18c0865ec3d90db483de5cad7cf1d58e8dc76e9f18b338323be6b6d86fd02"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/transformer/projection.cu",
+        "sha256": "e292570e647ff07fd480bc4367e49a3b48ed637d599518ef0f6ab92bf3583a95"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/transformer/projection_wait.cu",
+        "sha256": "bacbe960f58cd772056753befd92346fd10c2188e2aa8e2ebd066cec7e89c87e"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/global_attention/transformer/query_key_value.cu",
+        "sha256": "a474e5ba3bc77bb51ba3e496519613baf60023b6d0f654765b1395e264bce404"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/input/preparation.cu",
+        "sha256": "e4a7c9711417d991ed13fa14001242b9e96cd0030ea5db7f867259def1086ca1"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/layout/image_to_tokens.cu",
+        "sha256": "631d47303a6bf2e8518b93fda76e25fc758ef38439cdc313e6bf70e23e9a15ca"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/layout/tokens_to_image.cu",
+        "sha256": "8d1debdfb6a306b080818a26aa239b63edc3b68f7105b973990157264fdf33ea"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/output/reconstruction.cu",
+        "sha256": "aa6c53dd50ba547160fee8a61168fa1f7c671fe97ee30e67081b32c1d81be08e"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_128/attention.cu",
+        "sha256": "4d151aed4f9920801b898cfcb63285c4501792c478e4bd15a592a76f8dec436d"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_128/downsample.cu",
+        "sha256": "34b380f581af930d45c2c7cab025faf9a2ba957e6b38dac27b95ce403ca41afa"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_128/input_view.cu",
+        "sha256": "739e6f6769e752c0afeafab8433476b91681d35f2f32a9b7a96f21f7a5f2d13b"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_128/output_view.cu",
+        "sha256": "3ccc31a9c7a29093a1a605725deb3787a6e1c90eeed4c913b1ada2a44cac2bc0"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_128/upsample.cu",
+        "sha256": "4be18b5ac38147453067aa3256f25cb199e266ef615bd145768f23c2833a78c4"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_256/attention.cu",
+        "sha256": "3c1161c5d64f893602d6f3bf6c07f02efec7218869b38cc8aa2a564c24747d73"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_256/downsample.cu",
+        "sha256": "6399104a02700d0e221e7c84626e0535917c6306ee49081a6b10552aea90ce66"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_256/input_view.cu",
+        "sha256": "25df592696da0851521e891ac5082909ce3c71b53b10a6f720898b3d04b23fb6"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_256/output_view.cu",
+        "sha256": "491c1d8edfc965e9da89b15baa32db7daa766c313c41b49b3c8b50751eb64868"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_256/upsample.cu",
+        "sha256": "27a0e14ea8a534d6db915b8ed8f86bc02185b76cf44ca5039fe8e84867ed9cbf"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_32/attention.cu",
+        "sha256": "f0a2cbfe1d8217a108e9ffddd08a82b5655a0c187c41e548fb9e475d5acaf06b"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_32/downsample.cu",
+        "sha256": "ea4f6cf29aef18f8280a4aa9ee273d8d971efe6dc7469df276e0d1c7f2b1e15e"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_32/input_view.cu",
+        "sha256": "ef028c015d8ac505cf6d974a9c895a73b1a553de4d8d171ec225e11376f7bd55"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_32/output_view.cu",
+        "sha256": "4c25ee8e893f8cff2eb95480296ef6844b8ff009767ea177548ce8b9d0828a38"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_32/upsample.cu",
+        "sha256": "c6843c69949cd3db56a2e2792ae0d39a21ce505b433e43ff06dcd3e70e1ba786"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_64/attention.cu",
+        "sha256": "e7847184f76ce29c1b80357b2e38fc647ad0c884d1cbd89a565835f3c9bcbb95"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_64/downsample.cu",
+        "sha256": "5d2dabf2568ffdcc55a59885653673929cf2a0314f65d664711d4a16af77ff2f"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_64/input_view.cu",
+        "sha256": "e15ff15d338d939b366aa8aa0dcc65fc6e2805c646f35ac8cfca14dbf53f4e72"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_64/output_view.cu",
+        "sha256": "882b48826dff59509796785f34cfbe39245b255527849adbffd999a5caca2540"
+      },
+      {
+        "path": "src/native/kernels/production/optimized/window_attention/channels_64/upsample.cu",
+        "sha256": "eeb8d76789148497247704549cfb76c77f6227a63b5b1eab1d6c7bae6c606e2d"
+      },
+      {
+        "path": "src/native/model/production_kernel_contracts.json",
+        "sha256": "8ade11acae8fdd98e31ece45b2f9e03d54e3137ec5c77b5fa8c13d27714bde11"
+      },
+      {
+        "path": "src/native/model/production_native_graph.json",
+        "sha256": "5a67dcbb677d070d04d2cfab8de697f1c1134ab8985eee55baeb526086b4c7e7"
+      },
+      {
+        "path": "tools/production_build_native_kernels.py",
+        "sha256": "e3fc1549df18e93c44ae3f632da964d6014b5864763a9b23485abe2cd67f63a0"
+      }
+    ],
+    "nativeMachineCode": {
+      "phoenix_native.dll": {
+        "releasedTextSha256": "ef3528e364f45bf21fd59488362130be51ef182521342821ba738a434532c8b6",
+        "rebuiltTextSha256": "ef3528e364f45bf21fd59488362130be51ef182521342821ba738a434532c8b6",
+        "identical": true
+      },
+      "dosbox_nvngx.dll": {
+        "releasedTextSha256": "bf1abe8c6cb2435108f6d2ae49e34265c5fac5b8fe0c53a319bf491a5873aa74",
+        "rebuiltTextSha256": "bf1abe8c6cb2435108f6d2ae49e34265c5fac5b8fe0c53a319bf491a5873aa74",
+        "identical": true
+      }
+    },
+    "managedSourceChanged": false
+  },
+  "validation": {
+    "hostSelfTest": {
+      "passed": true,
+      "count": 44
+    },
+    "upstreamNativeTests": {
+      "passed": true,
+      "tests": [
+        "native_library_spatial",
+        "native_header_c",
+        "native_resize_regression"
+      ]
+    },
+    "liveApp": {
+      "passed": true,
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "frames": 117,
+        "generated": 99,
+        "input_factor": 1.0,
+        "input_filter": "nearest",
+        "input_height": 200,
+        "input_width": 320,
+        "neural_height": 200,
+        "neural_width": 320,
+        "nr_frames": 5,
+        "output_height": 800,
+        "output_width": 1280,
+        "phoenix_frames": 112,
+        "pre_resize": false,
+        "renderer": "phoenix",
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 117,
+        "upscale_factor": 4,
+        "upscale_order": "after_nr"
+      },
+      "controls": {
+        "half_volume_gain": 0.5,
+        "muted_gain": 0,
+        "nvidia_selection": true,
+        "nvidia_active": true,
+        "nvidia_status": "NVIDIA DLSS 5 active \u00b7 2.6 ms",
+        "upscaling_status": "NVIDIA SR \u00b7 320\u00d7200 \u2192 1280\u00d7800 \u00b7 after NR",
+        "frame_generation_status": "NVIDIA FG \u00b7 58 generated \u00b7 status 0",
+        "nvidia_options_retained": true,
+        "phoenix_active": true,
+        "phoenix_options_retained": true
+      },
+      "frameGenerationSuspendedOnPause": true,
+      "frameGenerationSuspendedInMenu": true
+    },
+    "gpuProbes": [
+      {
+        "renderer": "phoenix",
+        "passed": true,
+        "checks": {
+          "native_source": true,
+          "input_dimensions": true,
+          "neural_dimensions": true,
+          "output_dimensions": true,
+          "resize_enabled_state": true,
+          "nonuniform_output": true,
+          "opaque_output": true,
+          "sr_counter": true,
+          "nr_counter": true
+        },
+        "graphics": {
+          "frames": 12,
+          "generated": 0,
+          "input_factor": 1.5,
+          "input_filter": "nearest",
+          "input_height": 300,
+          "input_width": 480,
+          "neural_height": 300,
+          "neural_width": 480,
+          "nr_frames": 0,
+          "output_height": 600,
+          "output_width": 960,
+          "phoenix_frames": 12,
+          "pre_resize": true,
+          "renderer": "phoenix",
+          "source_height": 200,
+          "source_width": 320,
+          "sr_frames": 12,
+          "upscale_factor": 2,
+          "upscale_order": "after_nr"
+        },
+        "layoutTransitions": 24
+      },
+      {
+        "renderer": "nvidia",
+        "passed": true,
+        "checks": {
+          "native_source": true,
+          "input_dimensions": true,
+          "neural_dimensions": true,
+          "output_dimensions": true,
+          "resize_enabled_state": true,
+          "nonuniform_output": true,
+          "opaque_output": true,
+          "sr_counter": true,
+          "nr_counter": true
+        },
+        "graphics": {
+          "frames": 12,
+          "generated": 0,
+          "input_factor": 1.0,
+          "input_filter": "nearest",
+          "input_height": 200,
+          "input_width": 320,
+          "neural_height": 800,
+          "neural_width": 1280,
+          "nr_frames": 12,
+          "output_height": 800,
+          "output_width": 1280,
+          "phoenix_frames": 0,
+          "pre_resize": false,
+          "renderer": "nvidia",
+          "source_height": 200,
+          "source_width": 320,
+          "sr_frames": 12,
+          "upscale_factor": 4,
+          "upscale_order": "before_nr"
+        },
+        "layoutTransitions": 24
+      }
+    ]
+  },
+  "rebuiltRuntimeHashes": {
+    "phoenix_native.dll": "75e1b2a44dac5a0a6d40d9162e7ca2585cc8f7123ccc49fd77811cd4efec9b03",
+    "dosbox_nvngx.dll": "122a02ae35f5faa2d81997a8b75126a3934a3fe74eb9fb6db95d216618aa92ee"
+  },
+  "releaseDecision": "The v0.5 portable download, source archive, tag and checksums remain unchanged. Consumed native source and production inputs match the shipped implementation; rebuilt native DLL machine-code sections are identical. This update changes the current source pin and build procedure, not app behavior. The original v0.5 source archive retains its historical compatibility patch. Earlier gallery evidence remains attached to its original tested build."
+}

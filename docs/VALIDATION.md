@@ -41,7 +41,7 @@ with NVIDIA Frame Generation status bits **0**. Frame Generation suspended on
 pause and menu reveal. Source input was 320 × 200. These counts prove execution;
 they are not a performance or image-quality guarantee.
 
-The normal host build and the pinned, patched Phoenix/native bridge build both
+The original v0.5 host build and its patched Phoenix/native bridge build both
 completed locally. Native dependency inspection confirms the packaged Phoenix
 and bridge DLLs depend on Windows system libraries (plus the packaged Phoenix
 DLL), without a separate MSVC runtime installation. The managed application
@@ -66,3 +66,5 @@ The final GPU probe repeated 24 live geometry/order changes per renderer on one 
 The CPU fixture queried DOSBox itself with `config -get "cpu cycles"`: 10000 → 12345 → auto → 12345 → 20000, all without replacing the running DOS machine. Tests cover remembered manual speed and preserving advanced syntax.
 
 Four additional live game captures (SkyRoads, Titus the Fox, Hexxagon and Fate of Atlantis) verified new generated presentations in every session with status bits 0. Ten combinations per game were compared on a frozen source (40 candidates). This is a visual preset selection for specific scenes, not a quality or performance benchmark. [Gallery evidence](GALLERY_EVIDENCE.json).
+
+The current source now builds Phoenix 0.8.1-beta directly from its published API. The compatibility patch is removed. [Upstream update verification](PHOENIX_UPSTREAM_UPDATE.md) records source/machine-code equivalence and checks of the rebuilt SDK. The original v0.5 downloads retain their tested binaries.

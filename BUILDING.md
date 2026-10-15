@@ -44,17 +44,17 @@ The bootstrap checks exact revisions and skips optional LFS-only documentation.
 It never resets an existing checkout or silently changes its selected revision.
 The full recursive clone may also fetch NVIDIA's optional Image Scaling module.
 
-### Phoenix API patch
+### Public Phoenix native API
 
-The needed native C API was available locally before its upstream publication.
-`patches/phoenix-native-api.patch` carries those source changes against public
-Phoenix revision `3ea814915228ecae5269baf5836e2ab7994cc6fe`. It is derived from
-Phoenix development revision `48ed4ee081ace9a5b7e2cd76967362b148b076f7` and retains
-Phoenix's Apache-2.0 terms. No private remote or unpublished Git object is needed.
+Phoenix is pinned to public tag **0.8.1-beta**, commit
+`4c9b75ff42b6945352f66f309dc84404e498f4cf`. Its native C API is now upstream:
+[Native library documentation](https://github.com/RazvanManolache/dlss5-phoenix-addon/blob/4c9b75ff42b6945352f66f309dc84404e498f4cf/docs/NATIVE_LIBRARY.md)
+and [C header](https://github.com/RazvanManolache/dlss5-phoenix-addon/blob/4c9b75ff42b6945352f66f309dc84404e498f4cf/native_runtime/phoenix_native.h).
 
-The build exports the pinned source into `out/phoenix-source`, applies the patch
-there, and leaves the submodule untouched. When upstream contains this API,
-update the pin and remove the patch together after validating the new SDK.
+The build compiles the submodule directly; no compatibility patch, private
+remote or unpublished Git object is required. CMake output uses
+`out/phoenix-build-<revision>` so changing the pin does not reuse another source
+build's cache. Generated SDK files remain under `out/phoenix-sdk`.
 
 ## Native graphics
 
@@ -65,7 +65,7 @@ Phoenix native SDK (`bin`, `include`, `lib`, and compiled `native` kernel bundle
 .\build.ps1 -Graphics -PhoenixSdk C:\SDKs\Phoenix-native
 ```
 
-Or build the native library from the pinned source plus patch:
+Or build the native library directly from the pinned public source:
 
 ```powershell
 .\build.ps1 -Graphics -BuildPhoenix
@@ -79,8 +79,7 @@ inference, also compile the model-free production kernels with CUDA 13.1:
 .\build.ps1 -Graphics -BuildPhoenix -CudaCompiler 'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1\bin\nvcc.exe'
 ```
 
-Use a fresh `out/phoenix-source` for a second source build; the script refuses to
-overwrite that generated source tree. The current production kernels target
+Repeated builds reuse the matching CMake build directory. The current production kernels target
 sm_120. To use the GPU, complete [graphics setup](docs/GRAPHICS.md) with your
 separately obtained model. A CPU-only CI build cannot validate neural inference.
 
@@ -118,4 +117,4 @@ No game library, local settings, logs, keys, caches, binaries or build outputs
 belong in Git. `tools/Package-Release.ps1` uses an allowlist to make the portable
 archive and excludes `data/`, generated graphics configuration, and model DLLs.
 
-`--cpu-test` generates a small DOS program and queries actual CPU settings before/after live updates. The GPU probe accepts `--input-factor 1|2|3|4`, `--input-filter nearest|linear` and `--reconfigure`. With NR/SR off it verifies exact nearest-neighbor enlargement, bilinear reference error, and native identity.
+`--cpu-test` generates a small DOS program and queries actual CPU settings before/after live updates. The GPU probe accepts `--input-factor 0.25`–`4` (including fractions), `--input-filter nearest|linear` and `--reconfigure`. With NR/SR off it verifies exact nearest-neighbor enlargement, bilinear reference error, and native identity.

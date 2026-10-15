@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Pin Phoenix 0.8.1-beta (`4c9b75ff42b6`) and build its published native C API
+  directly; remove the former compatibility patch and generated-source export.
+- Reuse a CMake build directory per Phoenix revision.
+- Verify identical native machine code and production-kernel inputs against v0.5;
+  its tested portable download and historical release tag remain unchanged.
+
 ## 0.5
 
 First prepared public release of the DOS workspace.

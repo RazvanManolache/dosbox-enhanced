@@ -24,13 +24,13 @@
     },
     {
       "path": "BUILDING.md",
-      "bytes": 5490,
-      "sha256": "ab7c67e89ce54d221aceb1c43c0a2cd1f7156fd09d371ae54d994d9d8e39236b"
+      "bytes": 5555,
+      "sha256": "9b185864ae42823c66def26b799dd88d9f49bf597d64c34cfe2d0bb8c0360e77"
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 1619,
-      "sha256": "8a7b5f4c6c5412de24c8395b4566d2fc088e2523a5a0a9787a8d26abea54777c"
+      "bytes": 2005,
+      "sha256": "3d10d7c0c8cbbed6b5f349183d67385071ef2ad1803c4d0675643c396af7a5e1"
     },
     {
       "path": "DOSBox Enhanced.cmd",
@@ -44,8 +44,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 7345,
-      "sha256": "5df2920ae619800b345ffe7703ddd11c7a159e2f6feac40f2a9c56a8db2047e1"
+      "bytes": 7385,
+      "sha256": "8a621f36fc834a78f2da40fd7751898e781627fd3cd5653ad8fa58704fa2d276"
     },
     {
       "path": "RELEASE_NOTES.md",
@@ -59,18 +59,18 @@
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
-      "bytes": 2756,
-      "sha256": "a3f01163ef3e33db8426cf6d7bb3075700dbba33aeacfae4c1aef3d0baaaba98"
+      "bytes": 2609,
+      "sha256": "09ee3bc99d6a0b2ffd8b8dc940c945f825a42fb8129add66bbe2c5733caeafd3"
     },
     {
       "path": "build.ps1",
-      "bytes": 4409,
-      "sha256": "d3c25dea88498b1ef645d85b9e972aea4bf9d394dcd0c26ef52dac8a2cdb093d"
+      "bytes": 3691,
+      "sha256": "4bfcb55a07abc9ef4bba4f5b1ca28ee44be620835a815b4c4aabd7d33cfd6e41"
     },
     {
       "path": "dependencies.lock.json",
-      "bytes": 883,
-      "sha256": "6df3869ce52d5e1323766f604c2cb5a13905f83ec2654f50c14fdd85d04f35e3"
+      "bytes": 832,
+      "sha256": "42fd0e32dac4156b64e750f99666abd1e22c77429cb7a7065d275b3408f07645"
     },
     {
       "path": "docs/CAPTURES.md",
@@ -114,8 +114,18 @@
     },
     {
       "path": "docs/PHOENIX_INTEGRATION.md",
-      "bytes": 6633,
-      "sha256": "054e31152cea3dec3f916113ac0226f2f82acd75a96e3bbba3f16212118a12dc"
+      "bytes": 6998,
+      "sha256": "fa0d1b6a77f19803649c8127290d0ce6605d15c73d436d1aaf3987a099fc2a4a"
+    },
+    {
+      "path": "docs/PHOENIX_UPSTREAM_UPDATE.json",
+      "bytes": 16127,
+      "sha256": "1be0701047a5bc28a0b04a265c95af08d8a8965511be252e1faa117f90b361d9"
+    },
+    {
+      "path": "docs/PHOENIX_UPSTREAM_UPDATE.md",
+      "bytes": 1901,
+      "sha256": "fe92be5e646e1f9114732ee94c64f4268a035f9f7c050ee365880dbb7441b4b7"
     },
     {
       "path": "docs/PIPELINE_EVIDENCE.json",
@@ -129,8 +139,8 @@
     },
     {
       "path": "docs/VALIDATION.md",
-      "bytes": 4574,
-      "sha256": "79b6e62e3453a58044c11724c78cdb2ec1ff3841cde69752a025d9516aa702c9"
+      "bytes": 4880,
+      "sha256": "8fa6ab05875b0b197ae3dcdf39e0467d9197b033a03246dbb91e15cdf3c39743"
     },
     {
       "path": "docs/images/cpu-controls.png",
@@ -413,11 +423,6 @@
       "sha256": "b99e4c1dbbf7376341691282088a570b41adba9a75498c5237f923f90a7eaf6e"
     },
     {
-      "path": "patches/phoenix-native-api.patch",
-      "bytes": 63567,
-      "sha256": "e2e9d2c07d1499c3104025fcdfb9b412fb23c53e08ed36c650d4a22bcf865b21"
-    },
-    {
       "path": "runtime.lock.json",
       "bytes": 1563,
       "sha256": "ec52de03978af8366061f850224595899969b6f509132ce7f34c1eca2ed634fd"
@@ -604,7 +609,7 @@
     },
     {
       "path": "external/phoenix",
-      "revision": "3ea814915228ecae5269baf5836e2ab7994cc6fe"
+      "revision": "4c9b75ff42b6945352f66f309dc84404e498f4cf"
     },
     {
       "path": "external/streamline",

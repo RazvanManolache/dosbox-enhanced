@@ -9,7 +9,6 @@ The Git submodules are separately maintained projects, pinned in
 | --- | --- | --- |
 | DOSBox Pure | Bernhard Schelling and contributors; built on DOSBox | GPL-2.0-or-later; `docs/DOSBOX_LICENSE`, `external/dosbox-pure` |
 | Phoenix native library and model-free kernels | DLSS5 Phoenix, Razvan Manolache and contributors | Apache-2.0 and retained component terms; `licenses/phoenix/`, upstream `LICENSE`, `NOTICE`, `THIRD_PARTY.md` |
-| Phoenix native C API patch | Adapted from Phoenix development revision 48ed4ee | Apache-2.0; `patches/phoenix-native-api.patch`, upstream copyright/notice retained |
 | nlohmann JSON | Niels Lohmann and contributors; used through Phoenix's JSON header | MIT; `licenses/phoenix/nlohmann-json-MIT.txt` |
 | NVIDIA NVAPI headers | NVIDIA Corporation; Phoenix build input | Retained upstream header/SDK terms; `licenses/phoenix/NVIDIA-NVAPI-headers-MIT.txt` |
 | NVIDIA Streamline headers | NVIDIA Corporation | `external/streamline/license.txt` and `3rd-party-licenses.md` |
@@ -26,11 +25,11 @@ Phoenix's library does not contain the neural model. Its generated kernel bundle
 contains executable kernels and the production graph, with no model weights.
 See the upstream Phoenix notices for its retained NVIDIA/JSON/layout attributions.
 
-Screenshots show locally installed games for demonstration. Prince of Persia,
-SkyRoads and Doom II and their artwork belong to their respective creators and
+Screenshots show locally installed games for demonstration. SkyRoads, Titus the Fox, Hexxagon, Fate of Atlantis
+and Doom II and their artwork belong to their respective creators and
 rights holders; no game files are supplied. Capture details and exact runtime
 observations are in `docs/CAPTURES.md`.
 
 Corresponding DOSBox Pure source is pinned at the 1.0-preview7 tag in the
 `external/dosbox-pure` submodule and source bootstrap. The host/bridge source,
-build scripts, Phoenix source pin and API patch accompany the source release.
+build scripts and public Phoenix source pin accompany the source release.

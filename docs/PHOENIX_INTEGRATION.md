@@ -4,6 +4,14 @@ The app now executes Phoenix native processing, NVIDIA neural rendering (feature
 18), NVIDIA DLSS Super Resolution and Streamline Frame Generation. Earlier notes
 requesting a bridge are superseded by this implementation.
 
+## Upstream API
+
+The current source pins public Phoenix **0.8.1-beta** at
+`4c9b75ff42b6945352f66f309dc84404e498f4cf` and builds its native C API directly.
+The former compatibility patch has been removed. See
+[upstream native-library documentation](https://github.com/RazvanManolache/dlss5-phoenix-addon/blob/4c9b75ff42b6945352f66f309dc84404e498f4cf/docs/NATIVE_LIBRARY.md)
+and [the update verification](PHOENIX_UPSTREAM_UPDATE.md).
+
 ## Frame path
 
 DOSBox Pure supplies packed BGRA8 and actual source dimensions. A latest-frame
@@ -69,7 +77,7 @@ signed NVIDIA/Streamline libraries under `runtime/`. `graphics.json` records
 their absolute paths, a writable app cache and the external model DLL/hash.
 The bridge and SDK have matching x64 C++ headers/libraries. Runtime versions and
 hashes are recorded in `GRAPHICS_RUNTIME_MANIFEST.json`. Python is not used by
-the app. Legacy `PortablePhoenixProcessor` remains a reference adapter only.
+the app.
 
 `native/bridge.h` defines the cdecl C ABI:
 
