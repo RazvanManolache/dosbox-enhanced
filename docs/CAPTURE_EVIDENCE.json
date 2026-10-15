@@ -1,0 +1,138 @@
+{
+  "version": "0.5",
+  "capturedUtc": "2026-10-15T13:33:50.2466245+00:00",
+  "controls": {
+    "intensity": 2,
+    "tone": 2,
+    "structure": 2,
+    "phoenixPasses": 1,
+    "upscaling": true,
+    "frameGeneration": true,
+    "upscaleOrder": "after_nr",
+    "upscaleFactor": 4,
+    "preResize": false,
+    "inputResize": false
+  },
+  "gpu": "NVIDIA GeForce RTX 5080",
+  "driver": "616.64",
+  "core": "DOSBox Pure 1.0-preview7",
+  "streamline": "2.14.1",
+  "games": [
+    {
+      "game": "Doom II",
+      "source": [
+        320,
+        200
+      ],
+      "neural": [
+        320,
+        200
+      ],
+      "output": [
+        1280,
+        800
+      ],
+      "superResolutionFrames": 163,
+      "generatedPresentations": 161,
+      "frameGenerationStatusBits": 0
+    },
+    {
+      "game": "SkyRoads",
+      "source": [
+        320,
+        200
+      ],
+      "neural": [
+        320,
+        200
+      ],
+      "output": [
+        1280,
+        800
+      ],
+      "superResolutionFrames": 1054,
+      "generatedPresentations": 409,
+      "frameGenerationStatusBits": 0
+    }
+  ],
+  "mcp": {
+    "transport": "authenticated loopback HTTP",
+    "toolCount": 23,
+    "actions": [
+      {
+        "tool": "dosbox_launch",
+        "result": "Launched Doom II in its saved environment"
+      },
+      {
+        "tool": "dosbox_press_keys",
+        "result": "Sent Enter directly to the DOS session"
+      },
+      {
+        "tool": "dosbox_effects",
+        "result": "Max intensity, tone and structure; one pass; NVIDIA upscaling and FG"
+      },
+      {
+        "tool": "dosbox_audio",
+        "result": "Set this app's volume to 35%"
+      },
+      {
+        "tool": "dosbox_status",
+        "result": "Read the running environment and graphics status"
+      },
+      {
+        "tool": "dosbox_screenshot",
+        "result": "Captured the enhanced DOS image as PNG"
+      }
+    ]
+  },
+  "imageHashes": {
+    "cpu-controls.png": "10d56c10babb908e3f7ad4d68f786e7c257063fac14289f041d9b07914980a5a",
+    "dlss-comparison.png": "cee42a9bd625331af3160314ff5249dab05b408748f20c870f821492d7d9f86e",
+    "dlss-controls.png": "c8d9f4f4b55722cf9306cc2d0d191a37f786eddab4c1003bdb8a4495c9a9c6b9",
+    "doom.png": "0dff9ea2e5730fbef2697b6b78d01df1c1517d73487d53ae30261e06f514b988",
+    "dosbox-settings.png": "3ac1e9f307b8ebc5039eb331cfb9975a622b471da14d103ea107ff1fd389c9b4",
+    "four-passes.png": "f9e0739056a71c2c39a6f73542364eabe15b036ff56444d431e8de32dcd983aa",
+    "gallery-atlantis-comparison.png": "12980b4b93e833ddec7b60d396442c109cb6a311b26fd0f753bd86163c73515c",
+    "gallery-atlantis-enhanced.png": "656794ae151ffd51d503ccaf4ce73d27536fa226e544a09762b93f2c48b038f1",
+    "gallery-atlantis-original.png": "d5ff7c2189999060e7cc89b19650b1e2b9ec9c823d2f9a4dd4c385a42b323e62",
+    "gallery-atlantis-trial-source.png": "6ff4597d47f5c4f723a82dd62fe302ae064efca5349de51a1c56d4fe7edd21d5",
+    "gallery-atlantis-trials.png": "d6dccca45c67914cedffeefe2a3924ba56021eb83acd5aa0d692d1b709d2d25b",
+    "gallery-atlantis-workspace.png": "8053c293d65323095b5c7f99714f1e4fdf37e8ce9dc173d61376c7c6ffef70a0",
+    "gallery-hexxagon-comparison.png": "3475b80e2ebb9839c5d8fbd563a411a2ee097b5d43b917d62e23b99bc6038155",
+    "gallery-hexxagon-enhanced.png": "c8fb098ea2a613198eb37676d9f26ea51cf8d248bb6c08f50c5029d5b94c23b7",
+    "gallery-hexxagon-original.png": "9530c03f5da8a2ea38df1d71f76384f261f5a5aa95266b2fa4798e1aa4235192",
+    "gallery-hexxagon-trial-source.png": "98d121636445ccb5af7e474138c7c09bb0a41df0f499d4ccf5261b1d8f98078a",
+    "gallery-hexxagon-trials.png": "48e3c05be23dac73f2868e1b8b3f30462893c89370f4cb430a0348893b49c52c",
+    "gallery-hexxagon-workspace.png": "d04d59578744cfcae27bd5ec42c713dcca83209c06b10065af146e373e98f1a4",
+    "gallery-skyroads-comparison.png": "09df5ba711e8ed98cadf6d645a8b5b47c075b507ad1f7c79430bd4cecc14c9a1",
+    "gallery-skyroads-enhanced.png": "4c7bd2a3081280ad2542c8b5f52933642bb2cc7a5f5b73e2061f326f39183670",
+    "gallery-skyroads-original.png": "af2c99f7cf4fbcddbb4fe9e6eb3011d4def27f0de67b4b14e3f97ea037080e7f",
+    "gallery-skyroads-trial-source.png": "2c2f7253de4bbc8c4568798e50e83871bc23dba492880f562a6167e07eedace2",
+    "gallery-skyroads-trials.png": "4666edf60f6c223e942f04cbb275b6f0904821a13359e1f2d589d82ed5a355c3",
+    "gallery-skyroads-workspace.png": "14f833e8592a09c8abf3f7e6e1767af541e591ac575165b9aee2ade5caf7b33e",
+    "gallery-titus-comparison.png": "c0f90c31038186803b83e622de24b84ee1fcce269e8863232c91d901701da58a",
+    "gallery-titus-enhanced.png": "96f857862c55b6f79c26c4d9e5f20712515dd6ededadc6bcdd7791db3804cb30",
+    "gallery-titus-original.png": "209a5d67c0d35d92e6fa76bb890dc4bb9f6ffb9d4c40ad96ad216e1fa00df886",
+    "gallery-titus-trial-source.png": "ae3d77ad40e500210836506b0847ac89a7bcf05878589571add2e7073631f815",
+    "gallery-titus-trials.png": "e384d9ce0fc5a5bdf22b067d901883944fcd39ea107a41b67a68bc94a2c9d306",
+    "gallery-titus-workspace.png": "4ec6ef91a704dd108cdad090e0113c17ebf97a4263b26c0ac7528ce0bcbede8e",
+    "gallery-workspace.png": "8053c293d65323095b5c7f99714f1e4fdf37e8ce9dc173d61376c7c6ffef70a0",
+    "games-overview.png": "1c460cdc53ce3fa1e39d93f891ad1f6cbe688e91b35ee7b62b432f5ad67f74ce",
+    "input-resize.png": "04ecd10b0b7c1b3792472f3542d488142419dec02d6404bb220182f5c469c2d0",
+    "mcp-session.png": "5da3c06cd159dcb4c2d0ea69337dbddca53f2595f891b0b6f25f02c0d5600c9d",
+    "nvidia.png": "2bd5dcff5898e622aa51b83be75aff3b1ce9235ca05d8172d4cba8380fcd29d7",
+    "program-picker.png": "779ceebbcada27e4034666c259c2be14bd676f09f9f4bbbbd57094b5800455b4",
+    "skyroads.png": "3a81e875028901bed4e0132d850bdc5bcc76dddb5e68164661dd84dea143fef9",
+    "upscale-first.png": "5c18585980c750b657a97d082b2eb46e9c08938eae7597c8553228e4bd84dc62",
+    "workspace.png": "0dff9ea2e5730fbef2697b6b78d01df1c1517d73487d53ae30261e06f514b988"
+  },
+  "fourPassExample": {
+    "passes": 4,
+    "intensity": 2,
+    "tone": 2,
+    "structure": 2,
+    "pipeline": "Earlier 640x384 processing canvas, 1280x768 output; retained only as a labeled joke example."
+  },
+  "legacyMaximumStrengthCaptureUtc": "2026-10-15T13:33:50.2466245+00:00",
+  "mainGallery": "Per-game presets and new four-game gallery: GALLERY_EVIDENCE.json. The controls/games fields below describe the retained earlier maximum-strength examples."
+}

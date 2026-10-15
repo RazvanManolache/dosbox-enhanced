@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "dependencies": [
+    {
+      "revision": "3ea814915228ecae5269baf5836e2ab7994cc6fe",
+      "name": "phoenix",
+      "path": "external/phoenix",
+      "url": "https://github.com/RazvanManolache/dlss5-phoenix-addon.git",
+      "patch": "patches/phoenix-native-api.patch"
+    },
+    {
+      "revision": "e8aaa6eaac968711fb62473d4ae8256dde20919b",
+      "name": "streamline",
+      "path": "external/streamline",
+      "url": "https://github.com/NVIDIA-RTX/Streamline.git"
+    },
+    {
+      "revision": "a291cc7d2cc642a51566f3dfd5376f635cd1b284",
+      "name": "dlss",
+      "path": "external/dlss",
+      "url": "https://github.com/NVIDIA/DLSS.git"
+    },
+    {
+      "revision": "cdaea10ce8cac231bc341ca05d4c5e4e5fe0fbd5",
+      "name": "dosbox-pure",
+      "path": "external/dosbox-pure",
+      "url": "https://codeberg.org/schelling/dosbox-pure.git"
+    }
+  ]
+}

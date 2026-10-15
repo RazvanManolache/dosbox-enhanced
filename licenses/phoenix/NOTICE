@@ -1,0 +1,14 @@
+DLSS5 Phoenix
+Copyright 2026 Razvan Manolache and contributors
+
+Original project code is licensed under the Apache License, Version 2.0.
+Third-party components and adaptations retain their applicable upstream
+licenses, copyright notices and attribution requirements. See THIRD_PARTY.md
+and the component license and notice files under third_party/.
+
+No NVIDIA model DLL or extracted model weights are distributed in this
+source repository or the release addon. Separately supplied SDKs, model data
+and vendor runtimes remain subject to their respective terms.
+
+DLSS and NVIDIA are trademarks of NVIDIA Corporation. This independent
+project is not affiliated with or endorsed by NVIDIA Corporation.

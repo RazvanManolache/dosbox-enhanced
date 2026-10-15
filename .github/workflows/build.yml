@@ -1,0 +1,32 @@
+name: Windows build
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  host:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Build portable host and check regressions
+        shell: pwsh
+        run: ./build.ps1
+  graphics-compile:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile pinned Phoenix source and the native bridge
+        shell: pwsh
+        run: ./build.ps1 -Graphics -BuildPhoenix
+      # This checks compilation; interactive DOS input and GPU inference run locally.

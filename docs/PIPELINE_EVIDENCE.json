@@ -1,0 +1,2492 @@
+{
+  "version": "0.5",
+  "verifiedUtc": "2026-10-15T13:36:43.384163+00:00",
+  "gpu": "NVIDIA GeForce RTX 5080",
+  "driver": "616.64",
+  "bridgeSha256": "eb8853c8ba6c1c461dd65b409786b2e4e5e03c922d65d01a61c48ab6c2e92e63",
+  "hostSha256": "a9545e52c4386e5b14bf0a94b97f728e1498b43dfd971d8fb45ec2de68c40465",
+  "default": "Native DOS input -> native NR -> NVIDIA SR at 4x; no preliminary resize",
+  "liveAppModes": [
+    {
+      "mode": "phoenix-after_nr",
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 177,
+        "input_factor": 1.0,
+        "input_filter": "nearest",
+        "input_height": 200,
+        "input_width": 320,
+        "neural_height": 200,
+        "neural_width": 320,
+        "nr_frames": 0,
+        "output_height": 800,
+        "output_width": 1280,
+        "phoenix_frames": 179,
+        "pre_resize": false,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 179,
+        "upscale_factor": 4,
+        "upscale_order": "after_nr"
+      }
+    },
+    {
+      "mode": "phoenix-before_nr",
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 193,
+        "input_factor": 1.0,
+        "input_filter": "nearest",
+        "input_height": 200,
+        "input_width": 320,
+        "neural_height": 800,
+        "neural_width": 1280,
+        "nr_frames": 0,
+        "output_height": 800,
+        "output_width": 1280,
+        "phoenix_frames": 196,
+        "pre_resize": false,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 196,
+        "upscale_factor": 4,
+        "upscale_order": "before_nr"
+      }
+    },
+    {
+      "mode": "phoenix-native",
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 209,
+        "input_factor": 1.0,
+        "input_filter": "nearest",
+        "input_height": 200,
+        "input_width": 320,
+        "neural_height": 200,
+        "neural_width": 320,
+        "nr_frames": 0,
+        "output_height": 200,
+        "output_width": 320,
+        "phoenix_frames": 213,
+        "pre_resize": false,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 197,
+        "upscale_factor": 1,
+        "upscale_order": "after_nr"
+      }
+    },
+    {
+      "mode": "nvidia-after_nr",
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 226,
+        "input_factor": 1.0,
+        "input_filter": "nearest",
+        "input_height": 200,
+        "input_width": 320,
+        "neural_height": 200,
+        "neural_width": 320,
+        "nr_frames": 17,
+        "output_height": 800,
+        "output_width": 1280,
+        "phoenix_frames": 214,
+        "pre_resize": false,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 214,
+        "upscale_factor": 4,
+        "upscale_order": "after_nr"
+      }
+    },
+    {
+      "mode": "nvidia-before_nr",
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 241,
+        "input_factor": 1.0,
+        "input_filter": "nearest",
+        "input_height": 200,
+        "input_width": 320,
+        "neural_height": 800,
+        "neural_width": 1280,
+        "nr_frames": 33,
+        "output_height": 800,
+        "output_width": 1280,
+        "phoenix_frames": 214,
+        "pre_resize": false,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 230,
+        "upscale_factor": 4,
+        "upscale_order": "before_nr"
+      }
+    },
+    {
+      "mode": "nvidia-native",
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 259,
+        "input_factor": 1.0,
+        "input_filter": "nearest",
+        "input_height": 200,
+        "input_width": 320,
+        "neural_height": 200,
+        "neural_width": 320,
+        "nr_frames": 52,
+        "output_height": 200,
+        "output_width": 320,
+        "phoenix_frames": 214,
+        "pre_resize": false,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 231,
+        "upscale_factor": 1,
+        "upscale_order": "after_nr"
+      }
+    }
+  ],
+  "gpuProbes": [
+    {
+      "case": "final-fg-after",
+      "renderer": "phoenix",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true,
+        "frame_generation": true
+      },
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 58,
+        "input_factor": 1,
+        "input_filter": "nearest",
+        "input_height": 200,
+        "input_width": 320,
+        "neural_height": 200,
+        "neural_width": 320,
+        "nr_frames": 0,
+        "output_height": 800,
+        "output_width": 1280,
+        "phoenix_frames": 120,
+        "pre_resize": false,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 120,
+        "upscale_factor": 4,
+        "upscale_order": "after_nr"
+      },
+      "reconfigurations": [
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            640,
+            480
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            720,
+            400
+          ],
+          "output": [
+            720,
+            400
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            321,
+            201
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            1280,
+            960
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "phoenix",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 2,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 2,
+          "input_filter": "linear",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            960,
+            600
+          ],
+          "renderer": "phoenix",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 3,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            640,
+            400
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 2,
+          "input_filter": "linear",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            640,
+            480
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            720,
+            400
+          ],
+          "output": [
+            720,
+            400
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            321,
+            201
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            1280,
+            960
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "phoenix",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 2,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 2,
+          "input_filter": "linear",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            960,
+            600
+          ],
+          "renderer": "phoenix",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 3,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            640,
+            400
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 2,
+          "input_filter": "linear",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case": "final-fg-before",
+      "renderer": "nvidia",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true,
+        "frame_generation": true
+      },
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 88,
+        "input_factor": 1,
+        "input_filter": "nearest",
+        "input_height": 200,
+        "input_width": 320,
+        "neural_height": 800,
+        "neural_width": 1280,
+        "nr_frames": 120,
+        "output_height": 800,
+        "output_width": 1280,
+        "phoenix_frames": 0,
+        "pre_resize": false,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 120,
+        "upscale_factor": 4,
+        "upscale_order": "before_nr"
+      },
+      "reconfigurations": [
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            640,
+            480
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            720,
+            400
+          ],
+          "output": [
+            720,
+            400
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            321,
+            201
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            1280,
+            960
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "nvidia",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 2,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 2,
+          "input_filter": "linear",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            960,
+            600
+          ],
+          "renderer": "nvidia",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 3,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            640,
+            400
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 2,
+          "input_filter": "linear",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            640,
+            480
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            720,
+            400
+          ],
+          "output": [
+            720,
+            400
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            321,
+            201
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            1280,
+            960
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "nvidia",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 2,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 2,
+          "input_filter": "linear",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            960,
+            600
+          ],
+          "renderer": "nvidia",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 3,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            640,
+            400
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 2,
+          "input_filter": "linear",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case": "final-fg-native",
+      "renderer": "phoenix",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true,
+        "frame_generation": true
+      },
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 108,
+        "input_factor": 1,
+        "input_filter": "nearest",
+        "input_height": 200,
+        "input_width": 320,
+        "neural_height": 200,
+        "neural_width": 320,
+        "nr_frames": 0,
+        "output_height": 200,
+        "output_width": 320,
+        "phoenix_frames": 120,
+        "pre_resize": false,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 0,
+        "upscale_factor": 1,
+        "upscale_order": "after_nr"
+      },
+      "reconfigurations": []
+    },
+    {
+      "case": "final-3x",
+      "renderer": "nvidia",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true
+      },
+      "graphics": {
+        "generated": 0,
+        "input_factor": 1,
+        "input_filter": "nearest",
+        "input_height": 200,
+        "input_width": 320,
+        "neural_height": 600,
+        "neural_width": 960,
+        "nr_frames": 12,
+        "output_height": 600,
+        "output_width": 960,
+        "phoenix_frames": 0,
+        "pre_resize": false,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 12,
+        "upscale_factor": 3,
+        "upscale_order": "before_nr"
+      },
+      "reconfigurations": []
+    },
+    {
+      "case": "input-nearest",
+      "renderer": "off",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true,
+        "nearest_reference": true
+      },
+      "graphics": {
+        "generated": 0,
+        "input_factor": 2,
+        "input_filter": "nearest",
+        "input_height": 400,
+        "input_width": 640,
+        "neural_height": 400,
+        "neural_width": 640,
+        "nr_frames": 0,
+        "output_height": 400,
+        "output_width": 640,
+        "phoenix_frames": 0,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 0,
+        "upscale_factor": 1,
+        "upscale_order": "after_nr"
+      },
+      "reconfigurations": []
+    },
+    {
+      "case": "input-linear",
+      "renderer": "off",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true,
+        "bilinear_reference": true
+      },
+      "graphics": {
+        "generated": 0,
+        "input_factor": 2,
+        "input_filter": "linear",
+        "input_height": 400,
+        "input_width": 640,
+        "neural_height": 400,
+        "neural_width": 640,
+        "nr_frames": 0,
+        "output_height": 400,
+        "output_width": 640,
+        "phoenix_frames": 0,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 0,
+        "upscale_factor": 1,
+        "upscale_order": "after_nr"
+      },
+      "reconfigurations": []
+    },
+    {
+      "case": "input-phoenix",
+      "renderer": "phoenix",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true
+      },
+      "graphics": {
+        "generated": 0,
+        "input_factor": 2,
+        "input_filter": "nearest",
+        "input_height": 400,
+        "input_width": 640,
+        "neural_height": 400,
+        "neural_width": 640,
+        "nr_frames": 0,
+        "output_height": 800,
+        "output_width": 1280,
+        "phoenix_frames": 12,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 12,
+        "upscale_factor": 2,
+        "upscale_order": "after_nr"
+      },
+      "reconfigurations": []
+    },
+    {
+      "case": "input-nvidia",
+      "renderer": "nvidia",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true
+      },
+      "graphics": {
+        "generated": 0,
+        "input_factor": 2,
+        "input_filter": "linear",
+        "input_height": 400,
+        "input_width": 640,
+        "neural_height": 800,
+        "neural_width": 1280,
+        "nr_frames": 12,
+        "output_height": 800,
+        "output_width": 1280,
+        "phoenix_frames": 0,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 12,
+        "upscale_factor": 2,
+        "upscale_order": "before_nr"
+      },
+      "reconfigurations": []
+    },
+    {
+      "case": "input-3x",
+      "renderer": "nvidia",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true
+      },
+      "graphics": {
+        "generated": 0,
+        "input_factor": 3,
+        "input_filter": "linear",
+        "input_height": 600,
+        "input_width": 960,
+        "neural_height": 600,
+        "neural_width": 960,
+        "nr_frames": 12,
+        "output_height": 600,
+        "output_width": 960,
+        "phoenix_frames": 0,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 0,
+        "upscale_factor": 1,
+        "upscale_order": "after_nr"
+      },
+      "reconfigurations": []
+    },
+    {
+      "case": "input-4x",
+      "renderer": "phoenix",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true
+      },
+      "graphics": {
+        "generated": 0,
+        "input_factor": 4,
+        "input_filter": "nearest",
+        "input_height": 800,
+        "input_width": 1280,
+        "neural_height": 800,
+        "neural_width": 1280,
+        "nr_frames": 0,
+        "output_height": 800,
+        "output_width": 1280,
+        "phoenix_frames": 12,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 0,
+        "upscale_factor": 1,
+        "upscale_order": "after_nr"
+      },
+      "reconfigurations": []
+    },
+    {
+      "case": "fraction-nearest",
+      "renderer": "off",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true,
+        "nearest_reference": true
+      },
+      "graphics": {
+        "generated": 0,
+        "input_factor": 1.25,
+        "input_filter": "nearest",
+        "input_height": 250,
+        "input_width": 400,
+        "neural_height": 250,
+        "neural_width": 400,
+        "nr_frames": 0,
+        "output_height": 250,
+        "output_width": 400,
+        "phoenix_frames": 0,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 0,
+        "upscale_factor": 1,
+        "upscale_order": "after_nr"
+      },
+      "reconfigurations": []
+    },
+    {
+      "case": "fraction-linear",
+      "renderer": "off",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true,
+        "bilinear_reference": true
+      },
+      "graphics": {
+        "generated": 0,
+        "input_factor": 1.5,
+        "input_filter": "linear",
+        "input_height": 300,
+        "input_width": 480,
+        "neural_height": 300,
+        "neural_width": 480,
+        "nr_frames": 0,
+        "output_height": 300,
+        "output_width": 480,
+        "phoenix_frames": 0,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 0,
+        "upscale_factor": 1,
+        "upscale_order": "after_nr"
+      },
+      "reconfigurations": []
+    },
+    {
+      "case": "fraction-downscale",
+      "renderer": "off",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true,
+        "bilinear_reference": true
+      },
+      "graphics": {
+        "generated": 0,
+        "input_factor": 0.25,
+        "input_filter": "linear",
+        "input_height": 50,
+        "input_width": 80,
+        "neural_height": 50,
+        "neural_width": 80,
+        "nr_frames": 0,
+        "output_height": 50,
+        "output_width": 80,
+        "phoenix_frames": 0,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 0,
+        "upscale_factor": 1,
+        "upscale_order": "after_nr"
+      },
+      "reconfigurations": []
+    },
+    {
+      "case": "fraction-phoenix",
+      "renderer": "phoenix",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true
+      },
+      "graphics": {
+        "generated": 0,
+        "input_factor": 1.25,
+        "input_filter": "nearest",
+        "input_height": 250,
+        "input_width": 400,
+        "neural_height": 250,
+        "neural_width": 400,
+        "nr_frames": 0,
+        "output_height": 500,
+        "output_width": 800,
+        "phoenix_frames": 12,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 12,
+        "upscale_factor": 2,
+        "upscale_order": "after_nr"
+      },
+      "reconfigurations": [
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            640,
+            480
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            720,
+            400
+          ],
+          "output": [
+            720,
+            400
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            321,
+            201
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            1280,
+            960
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "phoenix",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            802,
+            502
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1.25,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            964,
+            604
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 1.5,
+          "input_filter": "linear",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            240,
+            150
+          ],
+          "renderer": "phoenix",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 0.75,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            80,
+            50
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 0.25,
+          "input_filter": "linear",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            640,
+            480
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            720,
+            400
+          ],
+          "output": [
+            720,
+            400
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            321,
+            201
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            1280,
+            960
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "phoenix",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            802,
+            502
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1.25,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            964,
+            604
+          ],
+          "renderer": "phoenix",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 1.5,
+          "input_filter": "linear",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            240,
+            150
+          ],
+          "renderer": "phoenix",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 0.75,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            80,
+            50
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 0.25,
+          "input_filter": "linear",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case": "fraction-nvidia",
+      "renderer": "nvidia",
+      "passed": true,
+      "checks": {
+        "native_source": true,
+        "input_dimensions": true,
+        "neural_dimensions": true,
+        "output_dimensions": true,
+        "resize_enabled_state": true,
+        "nonuniform_output": true,
+        "opaque_output": true,
+        "sr_counter": true,
+        "nr_counter": true
+      },
+      "graphics": {
+        "generated": 0,
+        "input_factor": 1.5,
+        "input_filter": "linear",
+        "input_height": 300,
+        "input_width": 480,
+        "neural_height": 300,
+        "neural_width": 480,
+        "nr_frames": 12,
+        "output_height": 600,
+        "output_width": 960,
+        "phoenix_frames": 0,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 12,
+        "upscale_factor": 2,
+        "upscale_order": "after_nr"
+      },
+      "reconfigurations": [
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            640,
+            480
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            720,
+            400
+          ],
+          "output": [
+            720,
+            400
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            321,
+            201
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            1280,
+            960
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "nvidia",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            802,
+            502
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1.25,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            964,
+            604
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 1.5,
+          "input_filter": "linear",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            240,
+            150
+          ],
+          "renderer": "nvidia",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 0.75,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            80,
+            50
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 0.25,
+          "input_filter": "linear",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            640,
+            480
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            720,
+            400
+          ],
+          "output": [
+            720,
+            400
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            321,
+            201
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            1280,
+            800
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            640,
+            480
+          ],
+          "output": [
+            1280,
+            960
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            320,
+            200
+          ],
+          "renderer": "nvidia",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 1,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            802,
+            502
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "after_nr",
+          "input_factor": 1.25,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            321,
+            201
+          ],
+          "output": [
+            964,
+            604
+          ],
+          "renderer": "nvidia",
+          "upscaling": true,
+          "order": "before_nr",
+          "input_factor": 1.5,
+          "input_filter": "linear",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            240,
+            150
+          ],
+          "renderer": "nvidia",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 0.75,
+          "input_filter": "nearest",
+          "passed": true
+        },
+        {
+          "source": [
+            320,
+            200
+          ],
+          "output": [
+            80,
+            50
+          ],
+          "renderer": "off",
+          "upscaling": false,
+          "order": "after_nr",
+          "input_factor": 0.25,
+          "input_filter": "linear",
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "liveInputModes": [
+    {
+      "mode": "phoenix-after_nr-nearest",
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 275,
+        "input_factor": 1.25,
+        "input_filter": "nearest",
+        "input_height": 250,
+        "input_width": 400,
+        "neural_height": 250,
+        "neural_width": 400,
+        "nr_frames": 52,
+        "output_height": 500,
+        "output_width": 800,
+        "phoenix_frames": 231,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 248,
+        "upscale_factor": 2,
+        "upscale_order": "after_nr"
+      }
+    },
+    {
+      "mode": "phoenix-after_nr-linear",
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 291,
+        "input_factor": 1.25,
+        "input_filter": "linear",
+        "input_height": 250,
+        "input_width": 400,
+        "neural_height": 250,
+        "neural_width": 400,
+        "nr_frames": 52,
+        "output_height": 500,
+        "output_width": 800,
+        "phoenix_frames": 248,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 265,
+        "upscale_factor": 2,
+        "upscale_order": "after_nr"
+      }
+    },
+    {
+      "mode": "phoenix-before_nr-nearest",
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 308,
+        "input_factor": 1.25,
+        "input_filter": "nearest",
+        "input_height": 250,
+        "input_width": 400,
+        "neural_height": 500,
+        "neural_width": 800,
+        "nr_frames": 52,
+        "output_height": 500,
+        "output_width": 800,
+        "phoenix_frames": 266,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 283,
+        "upscale_factor": 2,
+        "upscale_order": "before_nr"
+      }
+    },
+    {
+      "mode": "phoenix-before_nr-linear",
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 309,
+        "input_factor": 1.25,
+        "input_filter": "linear",
+        "input_height": 250,
+        "input_width": 400,
+        "neural_height": 500,
+        "neural_width": 800,
+        "nr_frames": 52,
+        "output_height": 500,
+        "output_width": 800,
+        "phoenix_frames": 283,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 300,
+        "upscale_factor": 2,
+        "upscale_order": "before_nr"
+      }
+    },
+    {
+      "mode": "nvidia-after_nr-nearest",
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 325,
+        "input_factor": 1.25,
+        "input_filter": "nearest",
+        "input_height": 250,
+        "input_width": 400,
+        "neural_height": 250,
+        "neural_width": 400,
+        "nr_frames": 69,
+        "output_height": 500,
+        "output_width": 800,
+        "phoenix_frames": 284,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 318,
+        "upscale_factor": 2,
+        "upscale_order": "after_nr"
+      }
+    },
+    {
+      "mode": "nvidia-after_nr-linear",
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 326,
+        "input_factor": 1.25,
+        "input_filter": "linear",
+        "input_height": 250,
+        "input_width": 400,
+        "neural_height": 250,
+        "neural_width": 400,
+        "nr_frames": 87,
+        "output_height": 500,
+        "output_width": 800,
+        "phoenix_frames": 284,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 336,
+        "upscale_factor": 2,
+        "upscale_order": "after_nr"
+      }
+    },
+    {
+      "mode": "nvidia-before_nr-nearest",
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 341,
+        "input_factor": 1.25,
+        "input_filter": "nearest",
+        "input_height": 250,
+        "input_width": 400,
+        "neural_height": 500,
+        "neural_width": 800,
+        "nr_frames": 104,
+        "output_height": 500,
+        "output_width": 800,
+        "phoenix_frames": 284,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 353,
+        "upscale_factor": 2,
+        "upscale_order": "before_nr"
+      }
+    },
+    {
+      "mode": "nvidia-before_nr-linear",
+      "graphics": {
+        "frame_generation_status_bits": 0,
+        "generated": 358,
+        "input_factor": 1.25,
+        "input_filter": "linear",
+        "input_height": 250,
+        "input_width": 400,
+        "neural_height": 500,
+        "neural_width": 800,
+        "nr_frames": 122,
+        "output_height": 500,
+        "output_width": 800,
+        "phoenix_frames": 284,
+        "pre_resize": true,
+        "source_height": 200,
+        "source_width": 320,
+        "sr_frames": 371,
+        "upscale_factor": 2,
+        "upscale_order": "before_nr"
+      }
+    }
+  ],
+  "liveCpuValidation": {
+    "initial": "10000",
+    "fixed": "12345",
+    "auto": "auto",
+    "slider": "20000",
+    "passed": true,
+    "count": 8,
+    "checks": [
+      "initial manual cycles reach the actual DOSBox CPU configuration",
+      "manual mode enables slider and exact value",
+      "exact CPU value applies to the running DOS machine without restarting",
+      "Auto applies live and disables manual controls",
+      "Auto preserves the last manual speed on disk",
+      "turning Auto off restores the previous manual speed live",
+      "slider changes are acknowledged by the core and change its CPU setting live",
+      "untouched advanced CPU syntax survives common-panel saves"
+    ]
+  },
+  "scope": "Frozen real DOS framebuffer for initial GPU probes; generated gradient fixtures for resolution-change/identity tests. Runtime counters demonstrate execution, not quality or speed. Live app modes use an actual running Doom II session. Counters are cumulative within each bridge.",
+  "appSmoke": {
+    "passed": true,
+    "graphics": {
+      "frame_generation_status_bits": 0,
+      "generated": 91,
+      "input_factor": 1.0,
+      "input_filter": "nearest",
+      "input_height": 200,
+      "input_width": 320,
+      "neural_height": 200,
+      "neural_width": 320,
+      "nr_frames": 4,
+      "output_height": 800,
+      "output_width": 1280,
+      "phoenix_frames": 106,
+      "pre_resize": false,
+      "source_height": 200,
+      "source_width": 320,
+      "sr_frames": 110,
+      "upscale_factor": 4,
+      "upscale_order": "after_nr"
+    },
+    "suspendedOnPause": true,
+    "suspendedInMenu": true,
+    "controls": {
+      "half_volume_gain": 0.5,
+      "muted_gain": 0,
+      "nvidia_selection": true,
+      "nvidia_active": true,
+      "nvidia_status": "NVIDIA DLSS 5 active \u00b7 2.6 ms",
+      "upscaling_status": "NVIDIA SR \u00b7 320\u00d7200 \u2192 1280\u00d7800 \u00b7 after NR",
+      "frame_generation_status": "NVIDIA FG \u00b7 52 generated \u00b7 status 0",
+      "nvidia_options_retained": true,
+      "phoenix_active": true,
+      "phoenix_options_retained": true
+    }
+  },
+  "priorValidationHostSha256": "d99c037e8abdd8aafde787b844b1de09079f2d9ca00f767ebcca80520c3e920e",
+  "multiGameGallery": {
+    "evidence": "GALLERY_EVIDENCE.json",
+    "games": 4,
+    "candidates": 40,
+    "onePass": true,
+    "liveGeneratedInEveryGame": true
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "version": "0.5",
+  "scope": "Visual starting points selected for the pictured scenes; not universal quality or performance rankings. No paths, games or profiles included.",
+  "presets": [
+    {
+      "game": "SkyRoads",
+      "reason": "SR first keeps the road edges and cockpit labels steadier than native NR at maximum strength.",
+      "mcp_tool": "dosbox_effects",
+      "arguments": {
+        "renderer": "phoenix",
+        "enabled": true,
+        "intensity": 0.9,
+        "tone": 1,
+        "structure": 1.1,
+        "passes": 1,
+        "style": 0,
+        "compare": false,
+        "upscaling": true,
+        "upscale_factor": 4,
+        "upscale_order": "before_nr",
+        "frame_generation": true,
+        "input_resize": false,
+        "input_scale": 1.5,
+        "input_filter": "nearest"
+      }
+    },
+    {
+      "game": "Titus the Fox",
+      "reason": "A sharp 1.5\u00d7 input retains more of the narrow fence and sprite details; smooth pre-resize softened them.",
+      "mcp_tool": "dosbox_effects",
+      "arguments": {
+        "renderer": "phoenix",
+        "enabled": true,
+        "intensity": 0.9,
+        "tone": 1,
+        "structure": 1.1,
+        "passes": 1,
+        "style": 0,
+        "compare": false,
+        "upscaling": true,
+        "upscale_factor": 2,
+        "upscale_order": "after_nr",
+        "frame_generation": true,
+        "input_resize": true,
+        "input_scale": 1.5,
+        "input_filter": "nearest"
+      }
+    },
+    {
+      "game": "Hexxagon",
+      "reason": "NVIDIA NR after SR keeps the bright grid outlines and dark background closer to the source than maximum-strength Phoenix.",
+      "mcp_tool": "dosbox_effects",
+      "arguments": {
+        "renderer": "nvidia",
+        "enabled": true,
+        "intensity": 0.9,
+        "tone": 1,
+        "structure": 1.1,
+        "passes": 1,
+        "style": 0,
+        "compare": false,
+        "upscaling": true,
+        "upscale_factor": 4,
+        "upscale_order": "before_nr",
+        "frame_generation": true,
+        "input_resize": false,
+        "input_scale": 1.5,
+        "input_filter": "nearest"
+      }
+    },
+    {
+      "game": "Indiana Jones and the Fate of Atlantis",
+      "reason": "SR first preserves more of the brickwork and door trim; maximum native NR bends fine lines.",
+      "mcp_tool": "dosbox_effects",
+      "arguments": {
+        "renderer": "phoenix",
+        "enabled": true,
+        "intensity": 0.9,
+        "tone": 1,
+        "structure": 1.1,
+        "passes": 1,
+        "style": 0,
+        "compare": false,
+        "upscaling": true,
+        "upscale_factor": 4,
+        "upscale_order": "before_nr",
+        "frame_generation": true,
+        "input_resize": false,
+        "input_scale": 1.5,
+        "input_filter": "nearest"
+      }
+    }
+  ]
+}

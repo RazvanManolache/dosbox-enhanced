@@ -1,0 +1,121 @@
+# Building DOSBox Enhanced 0.5
+
+## Host and DOS engine
+
+Use Windows x64, PowerShell, Git and the .NET 9 SDK. From the repository root:
+
+```powershell
+.\build.ps1
+```
+
+This downloads the pinned DOSBox Pure 1.0-preview7 Windows x64 release, verifies
+both archive and DLL hashes, publishes the self-contained app, and runs the
+regression checks. No C++ compiler, GPU, Python or external NuGet package is needed
+for this host build. It runs DOS games with their original graphics.
+
+`setup-runtime.ps1 -CoreLibrary C:\SDKs\dosbox_pure_libretro.dll` can instead use
+a core you built. Its source is pinned under `external/dosbox-pure`; upstream's
+Makefile and build instructions describe its MinGW/Linux cross-build. A custom
+core changes the tested runtime and save-state compatibility.
+
+## External projects
+
+| Submodule | Role |
+| --- | --- |
+| `external/dosbox-pure` | Corresponding DOS engine source, pinned to 1.0-preview7 |
+| `external/phoenix` | Native RTX library source, JSON header and model-free kernel source |
+| `external/streamline` | NVIDIA Streamline / NGX headers |
+| `external/dlss` | NVIDIA DLSS SDK import library |
+
+Every Git revision and public URL is in `dependencies.lock.json`, and the Git
+index records real submodule gitlinks. For a clone:
+
+```powershell
+git submodule update --init --recursive
+```
+
+For a downloaded source ZIP, or to fetch just the four required projects:
+
+```powershell
+.\tools\Initialize-Dependencies.ps1
+```
+
+The bootstrap checks exact revisions and skips optional LFS-only documentation.
+It never resets an existing checkout or silently changes its selected revision.
+The full recursive clone may also fetch NVIDIA's optional Image Scaling module.
+
+### Phoenix API patch
+
+The needed native C API was available locally before its upstream publication.
+`patches/phoenix-native-api.patch` carries those source changes against public
+Phoenix revision `3ea814915228ecae5269baf5836e2ab7994cc6fe`. It is derived from
+Phoenix development revision `48ed4ee081ace9a5b7e2cd76967362b148b076f7` and retains
+Phoenix's Apache-2.0 terms. No private remote or unpublished Git object is needed.
+
+The build exports the pinned source into `out/phoenix-source`, applies the patch
+there, and leaves the submodule untouched. When upstream contains this API,
+update the pin and remove the patch together after validating the new SDK.
+
+## Native graphics
+
+Add CMake 3.22+ and Visual Studio 2022 C++ tools / Windows SDK. With a matching
+Phoenix native SDK (`bin`, `include`, `lib`, and compiled `native` kernel bundle):
+
+```powershell
+.\build.ps1 -Graphics -PhoenixSdk C:\SDKs\Phoenix-native
+```
+
+Or build the native library from the pinned source plus patch:
+
+```powershell
+.\build.ps1 -Graphics -BuildPhoenix
+```
+
+Phoenix's CMake configure step requires a Python interpreter for its development
+tooling. The native library target itself does not require CUDA. For neural
+inference, also compile the model-free production kernels with CUDA 13.1:
+
+```powershell
+.\build.ps1 -Graphics -BuildPhoenix -CudaCompiler 'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1\bin\nvcc.exe'
+```
+
+Use a fresh `out/phoenix-source` for a second source build; the script refuses to
+overwrite that generated source tree. The current production kernels target
+sm_120. To use the GPU, complete [graphics setup](docs/GRAPHICS.md) with your
+separately obtained model. A CPU-only CI build cannot validate neural inference.
+
+## Tests
+
+```powershell
+& .\app\DosboxEnhanced.exe --self-test
+& .\app\DosboxEnhanced.exe --ui-test
+& .\app\DosboxEnhanced.exe --mcp-test
+& .\app\DosboxEnhanced.exe --mouse-test
+& .\app\DosboxEnhanced.exe --cpu-test
+```
+
+The interactive checks open real windows and need an interactive Windows desktop; they
+temporarily move focus and, for input checks, the pointer. Run them sequentially.
+Tests create their own DOS fixtures; no game installation or personal profile is
+needed. Reports go to ignored `tests/results/`. CI builds the host and native
+bridge and runs the regression suite; the interactive and GPU checks run locally.
+
+The optional GPU pipeline probe needs Python with Pillow and NumPy on the
+developer's machine, plus configured graphics. Use a native-resolution PNG
+(for example, `dosbox_screenshot` with `enhanced: false`):
+
+```powershell
+python tests/graphics_pipeline_probe.py phoenix --input original.png --output tests/results/nr-first.json --order after_nr --factor 4
+python tests/graphics_pipeline_probe.py nvidia --input original.png --output tests/results/sr-first.json --order before_nr --factor 4 --window --frames 120
+python tests/graphics_pipeline_probe.py off --input original.png --output tests/results/native-identity.json --no-upscale
+```
+
+It checks native/neural/output dimensions, exact identity with both stages off,
+GPU counters and output pixels. `--window` also requires observed generated
+presentations; keep the test window active. These tools are not app dependencies.
+
+No game library, local settings, logs, keys, caches, binaries or build outputs
+belong in Git. `tools/Package-Release.ps1` uses an allowlist to make the portable
+archive and excludes `data/`, generated graphics configuration, and model DLLs.
+
+`--cpu-test` generates a small DOS program and queries actual CPU settings before/after live updates. The GPU probe accepts `--input-factor 1|2|3|4`, `--input-filter nearest|linear` and `--reconfigure`. With NR/SR off it verifies exact nearest-neighbor enlargement, bilinear reference error, and native identity.

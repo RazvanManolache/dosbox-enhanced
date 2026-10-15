@@ -1,0 +1,19 @@
+DLSS5 Phoenix portable runtime source subset
+-------------------------------------------
+Derived from dlssnr-pytorch (https://github.com/mauri870/dlssnr-pytorch).
+Copyright (c) 2026 Mauri de Souza Meneguzzo. MIT License; see LICENSE.
+
+DLSS5 Phoenix adaptations retain runtime tensor access and layout conversion,
+remove the upstream weight-file storage API, and split the in-memory tensor
+layout helpers from the upstream extraction module. The upstream extraction
+module, its command-line tools, weights and NVIDIA binaries are not included.
+See PROVENANCE.md for the reference revision and file-level changes.
+
+Source cleanup (2026-10-11): the former Python runtime modules are no longer
+included. This attribution and the MIT license remain for the layout
+declarations adapted into native_runtime/weight_layouts.h. The adaptation
+history below describes the earlier source subset.
+
+DLSS5 Phoenix readability refresh (2026-10-10): locally formatted runtime
+source and added operation/formatting comments. Original attribution and
+license text are retained. See PROVENANCE.md for the recorded origin.

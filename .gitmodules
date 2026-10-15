@@ -1,0 +1,12 @@
+[submodule "phoenix"]
+	path = external/phoenix
+	url = https://github.com/RazvanManolache/dlss5-phoenix-addon.git
+[submodule "streamline"]
+	path = external/streamline
+	url = https://github.com/NVIDIA-RTX/Streamline.git
+[submodule "dlss"]
+	path = external/dlss
+	url = https://github.com/NVIDIA/DLSS.git
+[submodule "dosbox-pure"]
+	path = external/dosbox-pure
+	url = https://codeberg.org/schelling/dosbox-pure.git
