@@ -2,9 +2,9 @@
 
 ## Unreleased
 
-- Pin Phoenix 0.8.1-beta (`4c9b75ff42b6`) and build its published native C API
+- Pin Phoenix DLSS5 0.8.1-beta (`4c9b75ff42b6`) and build its published native C API
   directly; remove the former compatibility patch and generated-source export.
-- Reuse a CMake build directory per Phoenix revision.
+- Reuse a CMake build directory per Phoenix DLSS5 revision.
 - Verify identical native machine code and production-kernel inputs against v0.5;
   its tested portable download and historical release tag remain unchanged.
 
@@ -17,7 +17,7 @@ First prepared public release of the DOS workspace.
 - Icon toolbar, searchable program tree across environments, friendly names,
   visibility/order management and optional automatic executable discovery.
 - Per-environment DOSBox configuration editor, core options and Advanced INI.
-- Optional native Phoenix / NVIDIA neural rendering, NVIDIA Super Resolution and
+- Optional native Phoenix DLSS5 / NVIDIA DLSS5 neural rendering, NVIDIA Super Resolution and
   Frame Generation, adjustable effects and same-source comparison.
 - Native-resolution NR, optional 2×–4× SR before or after NR, and native-only
   processing; live layout changes preserve the graphics device and reset history.

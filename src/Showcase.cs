@@ -180,12 +180,12 @@ public sealed partial class MainWindow
     {
         var panel = new StackPanel { Width = 1344, Background = Brush(15, 20, 29), Margin = new Thickness(0) }; panel.Children.Add(new TextBlock { Text = heading + " · maximum strength, one pass", FontSize = 25, Foreground = Brushes.WhiteSmoke, Margin = new Thickness(24, 20, 24, 12) });
         var grid = new Grid { Margin = new Thickness(24, 0, 24, 0) }; grid.ColumnDefinitions.Add(new()); grid.ColumnDefinitions.Add(new());
-        foreach (var (frame, label, column) in new[] { (before, $"Original DOS · {before.Width} × {before.Height}", 0), (after, $"Phoenix + NVIDIA DLSS SR · {after.Width} × {after.Height}", 1) })
+        foreach (var (frame, label, column) in new[] { (before, $"Original DOS · {before.Width} × {before.Height}", 0), (after, $"Phoenix DLSS5 + NVIDIA DLSS SR · {after.Width} × {after.Height}", 1) })
         {
             var stack = new StackPanel { Margin = new Thickness(0, 0, 12, 0) }; stack.Children.Add(new TextBlock { Text = label, Foreground = Brush(120, 221, 224), FontSize = 16, Margin = new Thickness(0, 0, 0, 10) });
             var picture = new Image { Source = BitmapSource.Create(frame.Width, frame.Height, 96, 96, PixelFormats.Bgra32, null, frame.Pixels, frame.Width * 4), Width = 632, Height = 395, Stretch = Stretch.Fill }; RenderOptions.SetBitmapScalingMode(picture, column == 0 ? BitmapScalingMode.NearestNeighbor : BitmapScalingMode.HighQuality); stack.Children.Add(picture); Grid.SetColumn(stack, column); grid.Children.Add(stack);
         }
-        panel.Children.Add(grid); panel.Children.Add(new TextBlock { Text = "Intensity / tone / structure: 2.0 · Phoenix passes: 1 · Same frozen source; both images fitted to the same display size.\n" + timing + " · A still image cannot demonstrate frame generation.", Foreground = Brushes.LightSlateGray, FontSize = 14, Margin = new Thickness(24, 18, 24, 22) });
+        panel.Children.Add(grid); panel.Children.Add(new TextBlock { Text = "Intensity / tone / structure: 2.0 · Phoenix DLSS5 passes: 1 · Same frozen source; both images fitted to the same display size.\n" + timing + " · A still image cannot demonstrate frame generation.", Foreground = Brushes.LightSlateGray, FontSize = 14, Margin = new Thickness(24, 18, 24, 22) });
         panel.Measure(new Size(1344, double.PositiveInfinity)); panel.Arrange(new Rect(panel.DesiredSize)); CaptureElement(panel, path);
     }
 }

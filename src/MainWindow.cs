@@ -206,7 +206,7 @@ public sealed partial class MainWindow : Window
         var inputRow = new Grid(); inputRow.ColumnDefinitions.Add(new()); inputRow.ColumnDefinitions.Add(new() { Width = GridLength.Auto }); inputRow.Children.Add(inputScale); Grid.SetColumn(inputScaleLabel, 1); inputRow.Children.Add(inputScaleLabel);
         inputResizeOptions.Children.Add(inputRow); inputResizeOptions.Children.Add(inputResolution); inputResizeOptions.Children.Add(inputFilter); right.Children.Add(inputResizeOptions);
         right.Children.Add(Label("Neural renderer", 13));
-        renderer.Items.Add("Phoenix DLSS 5"); renderer.Items.Add("NVIDIA DLSS 5"); renderer.SelectedIndex = 0; right.Children.Add(renderer);
+        renderer.Items.Add("Phoenix DLSS5"); renderer.Items.Add("NVIDIA DLSS5"); renderer.SelectedIndex = 0; right.Children.Add(renderer);
         right.Children.Add(enabled); right.Children.Add(compare);
         right.Children.Add(Label("Intensity")); right.Children.Add(intensity); right.Children.Add(Label("Local tone")); right.Children.Add(tone); right.Children.Add(Label("Structure")); right.Children.Add(structure);
         right.Children.Add(Label("Style")); foreach (string s in new[] { "Default", "Warm", "Cool" }) style.Items.Add(s); style.SelectedIndex = 0; right.Children.Add(style);
@@ -248,7 +248,7 @@ public sealed partial class MainWindow : Window
         UpdateInputPreview();
         upscaleOrder.IsEnabled = upscaleFactor.IsEnabled = nvidiaUpscaling.IsChecked == true;
         passes.IsEnabled = renderer.SelectedIndex != 1;
-        passes.ToolTip = passes.IsEnabled ? "Repeat Phoenix processing for a stronger effect" : "NVIDIA neural rendering uses one pass";
+        passes.ToolTip = passes.IsEnabled ? "Repeat Phoenix DLSS5 processing for a stronger effect" : "NVIDIA DLSS5 neural rendering uses one pass";
         if (selected != null) { selected.Effects = phoenix.Settings; library.Save(); }
         phoenix.Reset(); submitted = shown = enhancedSeen = -1;
     }
@@ -538,10 +538,10 @@ public sealed partial class MainWindow : Window
             muted.IsChecked = true; await Task.Delay(150);
             checks["muted_gain"] = core?.ActualAudioGain ?? double.NaN;
             renderer.SelectedIndex = 1;
-            for (int i = 0; i < 120 && !phoenix.Status.StartsWith("NVIDIA DLSS 5 active"); i++) await Task.Delay(100);
+            for (int i = 0; i < 120 && !phoenix.Status.StartsWith("NVIDIA DLSS5 active"); i++) await Task.Delay(100);
             Tick();
             checks["nvidia_selection"] = phoenix.Settings.Renderer == "nvidia";
-            checks["nvidia_active"] = phoenix.Status.StartsWith("NVIDIA DLSS 5 active");
+            checks["nvidia_active"] = phoenix.Status.StartsWith("NVIDIA DLSS5 active");
             checks["nvidia_status"] = phoenix.Status;
             checks["upscaling_status"] = phoenix.UpscalingStatus;
             checks["frame_generation_status"] = phoenix.FrameGenerationStatus;
@@ -549,8 +549,8 @@ public sealed partial class MainWindow : Window
             var directory = Path.Combine(Paths.Root, "tests", "results"); Directory.CreateDirectory(directory);
             CaptureWindow(Path.Combine(directory, "nvidia-controls.png"));
             renderer.SelectedIndex = 0;
-            for (int i = 0; i < 120 && !phoenix.Status.StartsWith("Phoenix DLSS 5 active"); i++) await Task.Delay(100);
-            checks["phoenix_active"] = phoenix.Status.StartsWith("Phoenix DLSS 5 active");
+            for (int i = 0; i < 120 && !phoenix.Status.StartsWith("Phoenix DLSS5 active"); i++) await Task.Delay(100);
+            checks["phoenix_active"] = phoenix.Status.StartsWith("Phoenix DLSS5 active");
             checks["phoenix_options_retained"] = nvidiaUpscaling.IsChecked == sr && nvidiaFrameGeneration.IsChecked == fg;
         }
         finally

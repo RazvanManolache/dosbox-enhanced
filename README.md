@@ -30,28 +30,28 @@ DOSBox with saved environments, optional DLSS graphics, and built-in MCP.
 ## DLSS graphics
 
 - **Input resize:** optional 0.25×–4× slider before NR/SR, including fractional sizes such as 1.25× and 1.5×, with a live resolution preview and sharp/smooth filtering. Off by default.
-- **Neural renderer:** Phoenix DLSS 5 or NVIDIA DLSS 5.
-- **Effects:** intensity, tone, structure, color styles and a before/after split. Phoenix supports multiple passes.
+- **Neural renderer:** Phoenix DLSS5 or NVIDIA DLSS5.
+- **Effects:** intensity, tone, structure, color styles and a before/after split. Phoenix DLSS5 supports multiple passes.
 - **Upscaling:** NVIDIA Super Resolution, with a separate enable switch.
 - **Frame Generation:** NVIDIA FG, with its own switch and generated-frame counter.
 - **Processing order:** NR → NVIDIA upscale (default), or NVIDIA upscale → NR.
 - **Upscale size:** NVIDIA SR adds 2×–4× to the processing input. Disable both input resize and SR to keep native-size processing. Display preserves the selected DOS aspect ratio.
 
-![The same frozen Fate of Atlantis frame before and after the selected Phoenix preset](docs/images/gallery-atlantis-comparison.png)
+![The same frozen Fate of Atlantis frame before and after the selected Phoenix DLSS5 preset](docs/images/gallery-atlantis-comparison.png)
 
 - Gallery presets were chosen per game from **ten combinations each**; intensity **0.9**, tone **1.0**, structure **1.1**, **one pass**.
-- SkyRoads / Atlantis: SR 4× before Phoenix. Titus: sharp 1.5× input → Phoenix → SR 2×. Hexxagon: SR 4× before NVIDIA NR.
+- SkyRoads / Atlantis: SR 4× before Phoenix DLSS5. Titus: sharp 1.5× input → Phoenix DLSS5 → SR 2×. Hexxagon: SR 4× before NVIDIA DLSS5 NR.
 - [Exact presets for the UI or MCP](docs/GAME_PRESETS.json); these are starting points for the pictured scenes.
 - Real app captures; the comparison uses the same frozen source frame. Stills cannot demonstrate Frame Generation.
 - Experimental: image-derived motion and flat depth can cause artifacts in scrolling, text and pixel art.
-- Tested on **RTX 5080**; bundled Phoenix kernels target **sm_120**. Other GPUs are not certified for this release.
+- Tested on **RTX 5080**; bundled Phoenix DLSS5 kernels target **sm_120**. Other GPUs are not certified for this release.
 - Graphics are optional; setup requires compatible NVIDIA runtimes and a separately supplied model DLL.
 - [Graphics setup](docs/GRAPHICS.md) · [Capture method and runtime counters](docs/CAPTURES.md)
 
 <details>
 <summary>Four passes: too much of a good thing</summary>
 
-![Doom II with four Phoenix passes and maximum strength](docs/images/four-passes.png)
+![Doom II with four Phoenix DLSS5 passes and maximum strength](docs/images/four-passes.png)
 
 The GPU has started taking artistic liberties. Four passes, maximum strength, captured with the earlier fixed-canvas path; not a recommended preset. Main screenshots use one pass.
 
@@ -59,9 +59,9 @@ The GPU has started taking artistic liberties. Four passes, maximum strength, ca
 
 ![Four saved game environments and the selected Atlantis graphics controls](docs/images/gallery-workspace.png)
 
-| Titus the Fox · fractional input | Hexxagon · NVIDIA renderer |
+| Titus the Fox · fractional input | Hexxagon · NVIDIA DLSS5 renderer |
 |:---:|:---:|
-| ![Titus the Fox with sharp 1.5× input resize](docs/images/gallery-titus-workspace.png) | ![Hexxagon with NVIDIA neural rendering](docs/images/gallery-hexxagon-workspace.png) |
+| ![Titus the Fox with sharp 1.5× input resize](docs/images/gallery-titus-workspace.png) | ![Hexxagon with NVIDIA DLSS5 neural rendering](docs/images/gallery-hexxagon-workspace.png) |
 
 ![Searchable programs grouped across the four game environments](docs/images/program-picker.png)
 
@@ -100,15 +100,15 @@ git submodule update --init --recursive
 ```
 
 - **Host:** C# / WPF, embedded DOSBox Pure; requires .NET 9 SDK and PowerShell.
-- **Graphics:** native D3D12 bridge; building adds MSVC, CMake and the Phoenix SDK. Phoenix source/kernel builds need additional development tools.
-- **Dependencies:** pinned Git submodules and lock file; Phoenix 0.8.1-beta native API builds directly from its public source.
+- **Graphics:** native D3D12 bridge; building adds MSVC, CMake and the Phoenix DLSS5 SDK. Phoenix DLSS5 source/kernel builds need additional development tools.
+- **Dependencies:** pinned Git submodules and lock file; Phoenix DLSS5 0.8.1-beta native API builds directly from its public source.
 - **Portable app:** does not need those development tools.
 - [Build instructions and CI](BUILDING.md) · [Release validation](docs/VALIDATION.md)
 
 ## Credits
 
 - [DOSBox Pure](https://codeberg.org/schelling/dosbox-pure) — Bernhard Schelling and contributors, based on DOSBox.
-- [DLSS5 Phoenix](https://github.com/RazvanManolache/dlss5-phoenix-addon) — standalone neural-rendering library.
+- [Phoenix DLSS5](https://github.com/RazvanManolache/dlss5-phoenix-addon) — standalone neural-rendering library.
 - [NVIDIA DLSS](https://github.com/NVIDIA/DLSS) and [Streamline](https://github.com/NVIDIA-RTX/Streamline) — NVIDIA graphics integration.
 - Independent project; **0.5 is an early experimental release**.
 - [Licenses and notices](THIRD_PARTY_NOTICES.md). Game artwork belongs to its respective creators.

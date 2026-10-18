@@ -7,10 +7,10 @@ The portable app plays DOS games immediately. Neural rendering is optional.
 2. Close DOSBox Enhanced, double-click **Setup graphics.cmd**, and select that
    file. The setup downloads NVIDIA's pinned Streamline 2.14.1 SDK, verifies the
    archive hash, extracts the required signed runtimes and retains their terms.
-3. Start the app again. Choose Phoenix or NVIDIA in the effects panel and adjust
+3. Start the app again. Choose Phoenix DLSS5 or NVIDIA DLSS5 in the effects panel and adjust
    the controls. Keep your selected model DLL at its chosen location.
 
-The app includes the model-free Phoenix native library and sm_120 kernels in the
+The app includes the model-free Phoenix DLSS5 native library and sm_120 kernels in the
 portable package. These were tested on RTX 5080; other GPU architectures are not
 certified. DLSS Super Resolution / Frame Generation also require a compatible
 NVIDIA GPU and driver. A graphics error falls back to the original DOS picture.
@@ -41,7 +41,7 @@ Graphics use estimated image motion and a flat depth plane. No real 3D engine
 geometry is available. Temporal artifacts are possible; this experiment does not
 promise better image quality or a particular frame rate in every game.
 
-![Phoenix with NVIDIA upscaling before neural rendering](images/upscale-first.png)
+![Phoenix DLSS5 with NVIDIA upscaling before neural rendering](images/upscale-first.png)
 
 ![Optional input resize before NR and NVIDIA SR](images/input-resize.png)
 

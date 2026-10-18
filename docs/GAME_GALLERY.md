@@ -10,10 +10,10 @@
 
 | Game | Renderer | Input | Order | Output before display aspect correction |
 | --- | --- | --- | --- | --- |
-| SkyRoads | Phoenix | Native 320×200 | SR 4× → NR | 1280×800 |
-| Titus the Fox | Phoenix | Sharp 1.5×: 480×300 | NR → SR 2× | 960×600 |
-| Hexxagon | NVIDIA NR | Native 320×200 | SR 4× → NR | 1280×800 |
-| Indiana Jones and the Fate of Atlantis | Phoenix | Native 320×200 | SR 4× → NR | 1280×800 |
+| SkyRoads | Phoenix DLSS5 | Native 320×200 | SR 4× → NR | 1280×800 |
+| Titus the Fox | Phoenix DLSS5 | Sharp 1.5×: 480×300 | NR → SR 2× | 960×600 |
+| Hexxagon | NVIDIA DLSS5 NR | Native 320×200 | SR 4× → NR | 1280×800 |
+| Indiana Jones and the Fate of Atlantis | Phoenix DLSS5 | Native 320×200 | SR 4× → NR | 1280×800 |
 
 - [Exact settings as MCP tool arguments](GAME_PRESETS.json): apply `arguments` to `dosbox_effects` with the intended environment selected.
 - [Runtime observations, all candidate settings and image hashes](GALLERY_EVIDENCE.json).
@@ -37,9 +37,9 @@
 
 ## Hexxagon
 
-- NVIDIA NR after SR keeps the bright grid outlines and dark background closer to the source than maximum-strength Phoenix.
+- NVIDIA DLSS5 NR after SR keeps the bright grid outlines and dark background closer to the source than maximum-strength Phoenix DLSS5.
 - The final capture shows the populated board. Trials use its board-building scene; the two phases are labeled separately in the evidence.
-- [Live UI and NVIDIA renderer](images/gallery-hexxagon-workspace.png) · [All ten trials](images/gallery-hexxagon-trials.png) · [Trial source](images/gallery-hexxagon-trial-source.png).
+- [Live UI and NVIDIA DLSS5 renderer](images/gallery-hexxagon-workspace.png) · [All ten trials](images/gallery-hexxagon-trials.png) · [Trial source](images/gallery-hexxagon-trial-source.png).
 
 ![Hexxagon: same frozen source before and after](images/gallery-hexxagon-comparison.png)
 

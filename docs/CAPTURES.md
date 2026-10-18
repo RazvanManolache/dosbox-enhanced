@@ -17,7 +17,7 @@ connection key, game files or saved game is part of the release.
 ## Earlier maximum-strength captures
 
 - Intensity **2.0**, tone **2.0**, structure **2.0**.
-- **One Phoenix pass**. NVIDIA uses one neural evaluation.
+- **One Phoenix DLSS5 pass**. NVIDIA DLSS5 uses one neural evaluation.
 - Native-resolution NR, followed by 4× NVIDIA Super Resolution; Frame Generation enabled.
 - No preliminary resize. A 320×200 source produces 1280×800 before display aspect correction.
 - Default color style; the warm/cool choices are looks rather than strength sliders.
@@ -59,7 +59,7 @@ The capture key was temporary and is not present in these files.
 
 ## The deliberately overcooked one
 
-`four-passes.png` uses **four Phoenix passes**, with intensity/tone/structure at
+`four-passes.png` uses **four Phoenix DLSS5 passes**, with intensity/tone/structure at
 2.0 and SR/FG enabled. It was captured with the earlier 640×384 processing
 canvas and 1280×768 output, and is kept only in the collapsible joke/example section.
 The current and earlier main galleries use one pass. Repeated neural processing can invent details

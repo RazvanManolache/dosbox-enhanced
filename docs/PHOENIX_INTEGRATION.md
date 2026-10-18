@@ -1,12 +1,12 @@
 # Native graphics integration
 
-The app now executes Phoenix native processing, NVIDIA neural rendering (feature
+The app now executes Phoenix DLSS5 native processing, NVIDIA DLSS5 neural rendering (feature
 18), NVIDIA DLSS Super Resolution and Streamline Frame Generation. Earlier notes
 requesting a bridge are superseded by this implementation.
 
 ## Upstream API
 
-The current source pins public Phoenix **0.8.1-beta** at
+The current source pins public Phoenix DLSS5 **0.8.1-beta** at
 `4c9b75ff42b6945352f66f309dc84404e498f4cf` and builds its native C API directly.
 The former compatibility patch has been removed. See
 [upstream native-library documentation](https://github.com/RazvanManolache/dlss5-phoenix-addon/blob/4c9b75ff42b6945352f66f309dc84404e498f4cf/docs/NATIVE_LIBRARY.md)
@@ -35,10 +35,10 @@ flat R32F depth plane. These are image-derived guides, never engine geometry.
 - Output is 2×, 3× or 4× native size when SR is enabled. A source/layout change
   recreates the session's textures, model features and swapchain; history resets.
 
-Phoenix borrows the D3D12 device/queue through `phoenix_native_frame_d3d12`.
-The NVIDIA choice executes signed `nvngx_dlssnr.dll` through its NGX exports.
+Phoenix DLSS5 borrows the D3D12 device/queue through `phoenix_native_frame_d3d12`.
+The NVIDIA DLSS5 choice executes signed `nvngx_dlssnr.dll` through its NGX exports.
 Host composition applies intensity, Warm/Cool looks and the same-source split.
-SR and FG are independent switches. Phoenix supports repeated passes; NVIDIA
+SR and FG are independent switches. Phoenix DLSS5 supports repeated passes; NVIDIA DLSS5
 uses one pass. Tone and structure are supplied to the selected renderer.
 
 Intensity zero equals the original spatially displayed input. Enable/bypass,
@@ -55,7 +55,7 @@ VSync. Streamline receives frame tokens, camera constants, estimated motion,
 flat depth, HUD-less composition and the actual backbuffer, plus Reflex markers.
 The renderer waits for tagged-input completion before modifying resources.
 
-NVIDIA skips generated presentation for child windows and background windows.
+NVIDIA DLSS5 skips generated presentation for child windows and background windows.
 `NativeView` therefore owns a native top-level presentation window following a
 WPF layout placeholder. It preserves the surrounding app controls and forwards
 input. An owned popup places the fullscreen menu above the game image.
@@ -72,8 +72,8 @@ textures, swapchains and queues are released on shutdown.
 
 ## Configuration and ABI
 
-`setup-graphics.ps1` stages Phoenix's native DLL/kernel bundle and the required
-signed NVIDIA/Streamline libraries under `runtime/`. `graphics.json` records
+`setup-graphics.ps1` stages Phoenix DLSS5's native DLL/kernel bundle and the required
+signed NVIDIA DLSS5/Streamline libraries under `runtime/`. `graphics.json` records
 their absolute paths, a writable app cache and the external model DLL/hash.
 The bridge and SDK have matching x64 C++ headers/libraries. Runtime versions and
 hashes are recorded in `GRAPHICS_RUNTIME_MANIFEST.json`. Python is not used by

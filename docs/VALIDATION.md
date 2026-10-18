@@ -42,8 +42,8 @@ pause and menu reveal. Source input was 320 × 200. These counts prove execution
 they are not a performance or image-quality guarantee.
 
 The original v0.5 host build and its patched Phoenix/native bridge build both
-completed locally. Native dependency inspection confirms the packaged Phoenix
-and bridge DLLs depend on Windows system libraries (plus the packaged Phoenix
+completed locally. Native dependency inspection confirms the packaged Phoenix DLSS5
+and bridge DLLs depend on Windows system libraries (plus the packaged Phoenix DLSS5
 DLL), without a separate MSVC runtime installation. The managed application
 bundles its native .NET libraries for extraction rather than relying on build
 machine sidecars.
@@ -54,7 +54,7 @@ runtime counter snapshots](CAPTURES.md) accompany the screenshots.
 
 Release packaging uses a file allowlist. User data, profiles, host mappings,
 connection keys, games, save states, caches, debug symbols, generated graphics
-configuration, NVIDIA runtime DLLs and model weights are excluded. Runtime and
+configuration, NVIDIA DLSS5 runtime DLLs and model weights are excluded. Runtime and
 archive SHA-256 manifests accompany the prepared assets. See the release audit
 report next to the archives for the final file/privacy checks.
 
@@ -67,4 +67,4 @@ The CPU fixture queried DOSBox itself with `config -get "cpu cycles"`: 10000 →
 
 Four additional live game captures (SkyRoads, Titus the Fox, Hexxagon and Fate of Atlantis) verified new generated presentations in every session with status bits 0. Ten combinations per game were compared on a frozen source (40 candidates). This is a visual preset selection for specific scenes, not a quality or performance benchmark. [Gallery evidence](GALLERY_EVIDENCE.json).
 
-The current source now builds Phoenix 0.8.1-beta directly from its published API. The compatibility patch is removed. [Upstream update verification](PHOENIX_UPSTREAM_UPDATE.md) records source/machine-code equivalence and checks of the rebuilt SDK. The original v0.5 downloads retain their tested binaries.
+The current source now builds Phoenix DLSS5 0.8.1-beta directly from its published API. The compatibility patch is removed. [Upstream update verification](PHOENIX_UPSTREAM_UPDATE.md) records source/machine-code equivalence and checks of the rebuilt SDK. The original v0.5 downloads retain their tested binaries.

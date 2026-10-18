@@ -44,9 +44,9 @@ The bootstrap checks exact revisions and skips optional LFS-only documentation.
 It never resets an existing checkout or silently changes its selected revision.
 The full recursive clone may also fetch NVIDIA's optional Image Scaling module.
 
-### Public Phoenix native API
+### Public Phoenix DLSS5 native API
 
-Phoenix is pinned to public tag **0.8.1-beta**, commit
+Phoenix DLSS5 is pinned to public tag **0.8.1-beta**, commit
 `4c9b75ff42b6945352f66f309dc84404e498f4cf`. Its native C API is now upstream:
 [Native library documentation](https://github.com/RazvanManolache/dlss5-phoenix-addon/blob/4c9b75ff42b6945352f66f309dc84404e498f4cf/docs/NATIVE_LIBRARY.md)
 and [C header](https://github.com/RazvanManolache/dlss5-phoenix-addon/blob/4c9b75ff42b6945352f66f309dc84404e498f4cf/native_runtime/phoenix_native.h).
@@ -59,7 +59,7 @@ build's cache. Generated SDK files remain under `out/phoenix-sdk`.
 ## Native graphics
 
 Add CMake 3.22+ and Visual Studio 2022 C++ tools / Windows SDK. With a matching
-Phoenix native SDK (`bin`, `include`, `lib`, and compiled `native` kernel bundle):
+Phoenix DLSS5 native SDK (`bin`, `include`, `lib`, and compiled `native` kernel bundle):
 
 ```powershell
 .\build.ps1 -Graphics -PhoenixSdk C:\SDKs\Phoenix-native
@@ -71,7 +71,7 @@ Or build the native library directly from the pinned public source:
 .\build.ps1 -Graphics -BuildPhoenix
 ```
 
-Phoenix's CMake configure step requires a Python interpreter for its development
+Phoenix DLSS5's CMake configure step requires a Python interpreter for its development
 tooling. The native library target itself does not require CUDA. For neural
 inference, also compile the model-free production kernels with CUDA 13.1:
 

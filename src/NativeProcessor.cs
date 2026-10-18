@@ -98,7 +98,7 @@ public sealed class PhoenixProcessor : IDisposable
                     try { statusFn(session, ptr, size); RuntimeStatus = Marshal.PtrToStringUTF8(ptr) ?? "{}"; }
                     finally { Marshal.FreeHGlobal(ptr); }
                     using var report = JsonDocument.Parse(RuntimeStatus); var stats = report.RootElement;
-                    var name = settings.Renderer == "nvidia" ? "NVIDIA DLSS 5" : "Phoenix DLSS 5";
+                    var name = settings.Renderer == "nvidia" ? "NVIDIA DLSS5" : "Phoenix DLSS5";
                     Status = settings.Enabled ? $"{name} active · {stats.GetProperty("neural_ms").GetDouble():F1} ms" : "Neural rendering off";
                     var entry = layout.InputWidth != layout.SourceWidth || layout.InputHeight != layout.SourceHeight ? $"Input {layout.SourceWidth}×{layout.SourceHeight} → {layout.InputWidth}×{layout.InputHeight}\n" : "";
                     UpscalingStatus = entry + (layout.Upscaling ? $"NVIDIA SR · {layout.InputWidth}×{layout.InputHeight} → {layout.OutputWidth}×{layout.OutputHeight} · {(layout.UpscaleFirst ? "before NR" : "after NR")}" : $"Processing · {layout.InputWidth}×{layout.InputHeight} · NVIDIA SR off");

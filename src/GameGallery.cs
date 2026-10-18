@@ -101,7 +101,7 @@ public sealed partial class MainWindow
         var panel = new StackPanel { Width = 1344, Background = Brush(15, 20, 29) };
         panel.Children.Add(new TextBlock { Text = profile.Name + " · selected settings", FontSize = 26, Foreground = Brushes.WhiteSmoke, Margin = new Thickness(24, 20, 24, 16) });
         var grid = new Grid { Margin = new Thickness(24, 0, 24, 0) }; grid.ColumnDefinitions.Add(new()); grid.ColumnDefinitions.Add(new());
-        string name = effects.Renderer == "nvidia" ? "NVIDIA NR" : "Phoenix";
+        string name = effects.Renderer == "nvidia" ? "NVIDIA DLSS5 NR" : "Phoenix DLSS5";
         foreach (var (frame, label, col) in new[] { (before, $"Original · {before.Width} × {before.Height}", 0), (after, $"{name} + NVIDIA SR · {after.Width} × {after.Height}", 1) })
         {
             var cell = new StackPanel { Margin = new Thickness(0, 0, 12, 0) };

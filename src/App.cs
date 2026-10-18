@@ -151,7 +151,7 @@ public static class SelfTest
             var fullPcm = (short[])originalPcm.Clone(); WaveAudio.ApplyGain(fullPcm, new(100)); Check(fullPcm.SequenceEqual(originalPcm), "full volume retains exact PCM");
             var effects = new EffectSettings(Renderer: "nvidia", NvidiaUpscaling: true, NvidiaFrameGeneration: true);
             var restoredEffects = JsonSerializer.Deserialize<EffectSettings>(JsonSerializer.Serialize(effects))!;
-            Check(restoredEffects.Renderer == "nvidia" && restoredEffects.NvidiaUpscaling && restoredEffects.NvidiaFrameGeneration, "NVIDIA renderer preserves independent NVIDIA SR and FG preferences");
+            Check(restoredEffects.Renderer == "nvidia" && restoredEffects.NvidiaUpscaling && restoredEffects.NvidiaFrameGeneration, "NVIDIA DLSS5 renderer preserves independent NVIDIA SR and FG preferences");
             Check((restoredEffects with { Renderer = "phoenix" }).NvidiaUpscaling && (restoredEffects with { Renderer = "phoenix" }).NvidiaFrameGeneration, "renderer switching does not change NVIDIA SR or FG preferences");
             var legacyEffects = JsonSerializer.Deserialize<EffectSettings>("{\"Enabled\":true,\"Intensity\":0.65}")!;
             Check(legacyEffects.Renderer == "phoenix" && legacyEffects.NvidiaUpscaling && legacyEffects.NvidiaFrameGeneration, "existing environment profiles receive compatible renderer defaults");
