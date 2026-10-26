@@ -1,8 +1,13 @@
-# Building DOSBox Enhanced 0.5
+# Building DOSBox Enhanced 0.6
 
 ## Host and DOS engine
 
 Use Windows x64, PowerShell, Git and the .NET 9 SDK. From the repository root:
+
+This is the same folder used for local development and GitHub. Source stays in
+`src/` and `native/`; pinned dependencies stay in `external/`. Do not create a
+separate publishing checkout under `release/`. Installed app files (`app/`,
+`runtime/`) and personal state (`data/`, graphics configuration) are ignored by Git.
 
 ```powershell
 .\build.ps1
@@ -10,8 +15,9 @@ Use Windows x64, PowerShell, Git and the .NET 9 SDK. From the repository root:
 
 This downloads the pinned DOSBox Pure 1.0-preview7 Windows x64 release, verifies
 both archive and DLL hashes, publishes the self-contained app, and runs the
-regression checks. No C++ compiler, GPU, Python or external NuGet package is needed
-for this host build. It runs DOS games with their original graphics.
+regression checks. No C++ compiler, GPU or Python is needed
+for this host build. NuGet restores the pinned SharpCompress library for optional
+RAR model downloads. It runs DOS games with their original graphics.
 
 `setup-runtime.ps1 -CoreLibrary C:\SDKs\dosbox_pure_libretro.dll` can instead use
 a core you built. Its source is pinned under `external/dosbox-pure`; upstream's
@@ -46,15 +52,16 @@ The full recursive clone may also fetch NVIDIA's optional Image Scaling module.
 
 ### Public Phoenix DLSS5 native API
 
-Phoenix DLSS5 is pinned to public tag **0.8.1-beta**, commit
-`4c9b75ff42b6945352f66f309dc84404e498f4cf`. Its native C API is now upstream:
-[Native library documentation](https://github.com/RazvanManolache/dlss5-phoenix-addon/blob/4c9b75ff42b6945352f66f309dc84404e498f4cf/docs/NATIVE_LIBRARY.md)
-and [C header](https://github.com/RazvanManolache/dlss5-phoenix-addon/blob/4c9b75ff42b6945352f66f309dc84404e498f4cf/native_runtime/phoenix_native.h).
+Phoenix DLSS5 source is pinned to **0.17**, commit `f8f4ddf729e8d9a117269ade006314b87845649d`.
+The native C API includes the shared tuning and pipeline calls used by the UI.
+The build applies `tools/phoenix-msvc-shader.patch` while compiling: it splits
+an oversized NIS raw string into adjacent literals without changing shader bytes.
+The patch is reversed after compilation so the submodule stays clean.
+Generated SDK output includes both `phoenix_native.h` and `phoenix.h`.
 
-The build compiles the submodule directly; no compatibility patch, private
-remote or unpublished Git object is required. CMake output uses
-`out/phoenix-build-<revision>` so changing the pin does not reuse another source
-build's cache. Generated SDK files remain under `out/phoenix-sdk`.
+Source builds use `out/phoenix-build-<revision>` and `out/phoenix-sdk`; these are
+ignored compiler outputs. Keep one working app, and use `Cleanup-Generated.cmd`
+when the compiler outputs are no longer needed.
 
 ## Native graphics
 

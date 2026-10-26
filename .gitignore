@@ -19,3 +19,16 @@
 *.7z
 *.dmp
 .vs/
+/src/Phoenix.cs
+/src/NvidiaRuntimes.cs
+/docs/core-options-reference.h
+/docs/core-reference.cpp
+/docs/libretro.h
+/docs/DOSBOX_PURE_UPSTREAM.md
+/docs/PHOENIX_LICENSE
+/phoenix.example.json
+/tools/dos-mcp-check.py
+/tests/graphics_probe.py
+
+__pycache__/
+*.pyc

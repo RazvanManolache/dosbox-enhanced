@@ -13,6 +13,8 @@ The Git submodules are separately maintained projects, pinned in
 | NVIDIA NVAPI headers | NVIDIA Corporation; Phoenix build input | Retained upstream header/SDK terms; `licenses/phoenix/NVIDIA-NVAPI-headers-MIT.txt` |
 | NVIDIA Streamline headers | NVIDIA Corporation | `external/streamline/license.txt` and `3rd-party-licenses.md` |
 | NVIDIA DLSS SDK | NVIDIA Corporation | `licenses/nvidia-sdk/LICENSE.txt`, `external/dlss`; headers/helper library are build inputs |
+| SharpCompress | Adam Hathcock and contributors; pinned NuGet 0.50.7 | MIT; `licenses/SharpCompress-MIT.txt` |
+| NVIDIA Image Scaling | NVIDIA Corporation; embedded in Phoenix native pipeline | `licenses/NVIDIA-Image-Scaling-LICENSE.txt`, `licenses/NVIDIA-Image-Scaling-NOTICE.txt` |
 | .NET / WPF / ASP.NET Core | Microsoft and contributors | MIT and third-party notices from the self-contained runtime distribution; `licenses/dotnet/` |
 
 The portable archive includes DOSBox Pure and a model-free Phoenix build. It does
@@ -33,3 +35,5 @@ observations are in `docs/CAPTURES.md`.
 Corresponding DOSBox Pure source is pinned at the 1.0-preview7 tag in the
 `external/dosbox-pure` submodule and source bootstrap. The host/bridge source,
 build scripts and public Phoenix source pin accompany the source release.
+
+Optional OpenNR model download: community runtime from NODIX DLSS-5-MANAGER 1.3.7. No manager executable, model DLL or weights are bundled in this release. The external project retains its own terms.

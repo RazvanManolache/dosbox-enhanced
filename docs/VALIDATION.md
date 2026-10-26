@@ -1,3 +1,15 @@
+# 0.6 release checks
+
+- 54 host checks, 56 interactive UI checks, 194 authenticated MCP checks.
+- Real Phoenix and NVIDIA rendering/SR, 48 live resolution/order/resize transitions, exact native bypass.
+- Original and Lightweight models, changed pixels from advanced controls, and accepted processing budgets with effective tuning telemetry.
+- Foreground presentation: 1,499 generated frames over 1,500 submitted frames; 2,999 presentations, NVIDIA status bits 0.
+- Clean setup downloaded and authenticated NVIDIA runtime files and the optional OpenNR runtime. Invalid hashes and cancellation are covered by host tests.
+- Tested on RTX 5080. Native bundle targets sm_120. This does not certify older GPUs, every game or a particular frame rate.
+- [Compact evidence and runtime hashes](RELEASE_0.6_VALIDATION.json).
+
+The older measurements below describe the original v0.5 release and retained showcase.
+
 # 0.5 release checks
 
 The Windows x64 release was built and tested locally. GitHub Actions runs the

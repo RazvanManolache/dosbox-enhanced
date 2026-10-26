@@ -1,12 +1,13 @@
 # Changelog
 
-## Unreleased
+## 0.6
 
-- Pin Phoenix DLSS5 0.8.1-beta (`4c9b75ff42b6`) and build its published native C API
-  directly; remove the former compatibility patch and generated-source export.
-- Reuse a CMake build directory per Phoenix DLSS5 revision.
-- Verify identical native machine code and production-kernel inputs against v0.5;
-  its tested portable download and historical release tag remain unchanged.
+- Phoenix DLSS5 0.17, Original and Lightweight model selection.
+- Per-environment temporal, conditioning, skin, processing-size, block and color controls.
+- Processing budgets, priority and optional monitoring; matching MCP access.
+- In-app graphics inventory, authenticated runtime/model downloads and bundled engine repair.
+- One source/Git root, build cleanup instructions and preserved saved environments.
+- 54 self-tests, 56 UI checks, 194 MCP checks and real GPU/presentation validation.
 
 ## 0.5
 

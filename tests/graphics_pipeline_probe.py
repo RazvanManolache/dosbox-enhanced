@@ -22,8 +22,10 @@ parser.add_argument("--input-factor", type=float, default=1)
 parser.add_argument("--input-filter", choices=["nearest", "linear"], default="nearest")
 parser.add_argument("--reconfigure", action="store_true", help="Stress live order/size and DOS resolution changes on one device")
 parser.add_argument("--config", type=Path)
+parser.add_argument("--phoenix-options", help="JSON object containing current Phoenix advanced controls")
 parser.add_argument("--interval", type=float, default=1/30)
 parser.add_argument("--intensity", type=float, default=2)
+parser.add_argument("--style", type=int, choices=[0,1,2],default=0)
 parser.add_argument("--tone", type=float, default=2)
 parser.add_argument("--structure", type=float, default=2)
 args = parser.parse_args()
@@ -112,7 +114,8 @@ try:
     pixels = (ctypes.c_ubyte * len(source)).from_buffer_copy(source)
     output = (ctypes.c_ubyte * (ow * oh * 4))()
     options = dict(Renderer=args.renderer, Enabled=args.renderer!="off", Intensity=args.intensity, Tone=args.tone, Structure=args.structure,
-                   Style=0, Passes=1, Compare=False, NvidiaUpscaling=args.upscale, NvidiaFrameGeneration=args.window)
+                   Style=args.style, Passes=1, Compare=False, NvidiaUpscaling=args.upscale, NvidiaFrameGeneration=args.window)
+    if args.phoenix_options: options["Phoenix"] = json.loads(args.phoenix_options)
     results["controls"] = options
     for frame in range(args.frames):
         target=time.perf_counter()+args.interval; pump()

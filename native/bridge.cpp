@@ -22,6 +22,7 @@
 #include <stdexcept>
 #include <chrono>
 #include <thread>
+#include <sstream>
 #include <cmath>
 #include <algorithm>
 #include <fstream>
@@ -168,13 +169,28 @@ void Bridge::run_nr(const Json& o,bool reset){
  begin();ngx(nr_eval(command.Get(),nr_handle,parameters,nullptr),"NVIDIA NR evaluation");submit();++nr_frames;
 }
 void Bridge::run_phoenix(const Json& o,bool reset){
- if(!phoenix){Json c={{"width",nw},{"height",nh},{"bundle_path",config.at("native_bundle")},{"weight_source",config.at("weight_source")}};auto s=c.dump();phoenix=phoenix_native_create(s.c_str(),device.Get(),queue.Get());require(phoenix!=nullptr,phoenix_native_error());}
- PhoenixNativeControls controls;phoenix_native_default_controls(&controls);controls.reset=reset;controls.local_tone=o.value("Tone",1.f);controls.local_structure=o.value("Structure",1.f);
- int passes=std::clamp(o.value("Passes",1),1,4);
- for(int pass=0;pass<passes;pass++){
-  if(pass){begin();transition(command.Get(),neural.image.Get(),D3D12_RESOURCE_STATE_UNORDERED_ACCESS,D3D12_RESOURCE_STATE_COPY_SOURCE);transition(command.Get(),feedback.image.Get(),D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,D3D12_RESOURCE_STATE_COPY_DEST);command->CopyResource(feedback.image.Get(),neural.image.Get());transition(command.Get(),neural.image.Get(),D3D12_RESOURCE_STATE_COPY_SOURCE,D3D12_RESOURCE_STATE_UNORDERED_ACCESS);transition(command.Get(),feedback.image.Get(),D3D12_RESOURCE_STATE_COPY_DEST,D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);submit();controls.reset=1;}
-  require(phoenix_native_frame_d3d12(phoenix,pass?feedback.image.Get():(upscale_first?upscaled:color).image.Get(),D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,(upscale_first?neural_motion:motion).image.Get(),D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,neural.image.Get(),D3D12_RESOURCE_STATE_UNORDERED_ACCESS,&controls)==0,phoenix_native_error());++phoenix_frames;
- }
+ const auto p=o.value("Phoenix",Json::object());
+ std::array<int,8> repeats{1,1,1,1,1,1,1,1};
+ if(p.contains("Repeats")){std::istringstream parts(p.at("Repeats").get<std::string>());std::string v;for(auto& n:repeats){require(bool(std::getline(parts,v,',')),"Eight block repeat counts required");n=std::stoi(v);}require(!std::getline(parts,v,','),"Eight block repeat counts required");}
+ Json tuning={{"intensity",1.f},{"style",o.value("Style",0u)},{"local_tone",o.value("Tone",1.f)},{"local_structure",o.value("Structure",1.f)},
+  {"skin_structure",p.value("Skin",-1.f)},{"auto_mask",p.value("AutoMask",true)},{"temporal",p.value("Temporal",true)},
+  {"neural_scale",p.value("NeuralScale",100.f)},{"central_blocks",p.value("Blocks",8u)},{"repeats",repeats},
+  {"network_passes",std::clamp(o.value("Passes",1),1,4)},{"color_strength",p.value("ColorStrength",1.f)},
+  {"target_fps",p.value("TargetFps",0.f)},{"max_processing_ms",p.value("MaxMilliseconds",0.f)}};
+ Json pipeline={{"PipelineMonitoring",p.value("Monitoring",0)},{"PipelinePriority",p.value("Priority",0)},
+  {"AdjustCentralBlocks",true},{"AdjustNeuralResolution",true},{"AdjustNetworkPasses",true},
+  {"SceneDetection",p.value("SceneDetection",false)},{"ProcessingChain",true},
+  {"ChainBrightness",p.value("Brightness",0.f)},{"ChainContrast",p.value("Contrast",1.f)},
+  {"ChainSaturation",p.value("Saturation",1.f)},{"ChainGamma",p.value("Gamma",1.f)}};
+ if(!phoenix){Json c={{"width",nw},{"height",nh},{"bundle_path",config.at("native_bundle")},{"weight_source",config.at("weight_source")},{"tuning",tuning},{"pipeline",pipeline}};auto s=c.dump();phoenix=phoenix_native_create(s.c_str(),device.Get(),queue.Get());require(phoenix!=nullptr,phoenix_native_error());}
+ auto t=tuning.dump(),pc=pipeline.dump();
+ require(phoenix_native_set_tuning(phoenix,t.c_str())==0,phoenix_native_error());
+ require(phoenix_native_set_pipeline(phoenix,pc.c_str())==0,phoenix_native_error());
+ PhoenixNativeControls controls;phoenix_native_default_controls(&controls);controls.reset=reset;
+ controls.local_tone=o.value("Tone",1.f);controls.local_structure=o.value("Structure",1.f);controls.skin_structure=p.value("Skin",-1.f);controls.auto_mask=p.value("AutoMask",true);
+ require(phoenix_native_frame_d3d12(phoenix,(upscale_first?upscaled:color).image.Get(),D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,(upscale_first?neural_motion:motion).image.Get(),D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,neural.image.Get(),D3D12_RESOURCE_STATE_UNORDERED_ACCESS,&controls)==0,phoenix_native_error());
+ ++phoenix_frames;
+ auto size=phoenix_native_status(phoenix,nullptr,0);std::vector<char> result(size);phoenix_native_status(phoenix,result.data(),size);status["phoenix"]=Json::parse(result.data());
 }
 void Bridge::ensure_sr(){
  if(sr_handle)return;sr_params->Reset();sr_params->Set(NVSDK_NGX_Parameter_Width,iw);sr_params->Set(NVSDK_NGX_Parameter_Height,ih);sr_params->Set(NVSDK_NGX_Parameter_OutWidth,ow);sr_params->Set(NVSDK_NGX_Parameter_OutHeight,oh);sr_params->Set(NVSDK_NGX_Parameter_PerfQualityValue,0);sr_params->Set("DLSS.Feature.Create.Flags",2);sr_params->Set("CreationNodeMask",1u);sr_params->Set("VisibilityNodeMask",1u);begin();ngx(NVSDK_NGX_D3D12_CreateFeature(command.Get(),NVSDK_NGX_Feature_SuperSampling,sr_params,&sr_handle),"NVIDIA SR creation");submit();
@@ -234,7 +250,7 @@ void Bridge::frame(const uint8_t* input,size_t capacity,unsigned w,unsigned h,co
  if(upscale_first){begin();transition(command.Get(),upscaled.image.Get(),D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,D3D12_RESOURCE_STATE_UNORDERED_ACCESS);submit();}
  if(upscale&&!upscale_first){auto sr_start=std::chrono::steady_clock::now();run_sr(reset);sr_ms=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-sr_start).count();}
  auto* processed=upscale&&!upscale_first?upscaled.image.Get():neural.image.Get();D3D12_SHADER_RESOURCE_VIEW_DESC view{};view.Format=DXGI_FORMAT_R16G16B16A16_FLOAT;view.ViewDimension=D3D12_SRV_DIMENSION_TEXTURE2D;view.Shader4ComponentMapping=D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;view.Texture2D.MipLevels=1;auto handle=descriptors->GetCPUDescriptorHandleForHeapStart();auto step=device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);device->CreateShaderResourceView(color.image.Get(),&view,handle);handle.ptr+=step;device->CreateShaderResourceView(processed,&view,handle);handle.ptr+=step;D3D12_UNORDERED_ACCESS_VIEW_DESC uav{};uav.Format=DXGI_FORMAT_R8G8B8A8_UNORM;uav.ViewDimension=D3D12_UAV_DIMENSION_TEXTURE2D;device->CreateUnorderedAccessView(final.image.Get(),nullptr,&uav,handle);
- begin();transition(command.Get(),processed,D3D12_RESOURCE_STATE_UNORDERED_ACCESS,D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);command->SetPipelineState(compose.Get());command->SetComputeRootSignature(root.Get());ID3D12DescriptorHeap* heaps[]={descriptors.Get()};command->SetDescriptorHeaps(1,heaps);command->SetComputeRootDescriptorTable(0,descriptors->GetGPUDescriptorHandleForHeapStart());struct {float strength;unsigned compare,width,height,look,sharp;} constants{enabled?o.value("Intensity",.65f):1.f,unsigned(o.value("Compare",false)),ow,oh,enabled?o.value("Style",0u):0u,unsigned(o.value("SharpPixels",false))};command->SetComputeRoot32BitConstants(1,6,&constants,0);command->Dispatch((ow+7)/8,(oh+7)/8,1);transition(command.Get(),processed,D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,D3D12_RESOURCE_STATE_UNORDERED_ACCESS);transition(command.Get(),final.image.Get(),D3D12_RESOURCE_STATE_UNORDERED_ACCESS,D3D12_RESOURCE_STATE_COPY_SOURCE);
+ begin();transition(command.Get(),processed,D3D12_RESOURCE_STATE_UNORDERED_ACCESS,D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);command->SetPipelineState(compose.Get());command->SetComputeRootSignature(root.Get());ID3D12DescriptorHeap* heaps[]={descriptors.Get()};command->SetDescriptorHeaps(1,heaps);command->SetComputeRootDescriptorTable(0,descriptors->GetGPUDescriptorHandleForHeapStart());struct {float strength;unsigned compare,width,height,look,sharp;} constants{enabled?o.value("Intensity",.65f):1.f,unsigned(o.value("Compare",false)),ow,oh,enabled&&renderer!="phoenix"?o.value("Style",0u):0u,unsigned(o.value("SharpPixels",false))};command->SetComputeRoot32BitConstants(1,6,&constants,0);command->Dispatch((ow+7)/8,(oh+7)/8,1);transition(command.Get(),processed,D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,D3D12_RESOURCE_STATE_UNORDERED_ACCESS);transition(command.Get(),final.image.Get(),D3D12_RESOURCE_STATE_UNORDERED_ACCESS,D3D12_RESOURCE_STATE_COPY_SOURCE);
  D3D12_TEXTURE_COPY_LOCATION from{},to{};from.pResource=final.image.Get();from.Type=D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;to.pResource=final.transfer.Get();to.Type=D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;to.PlacedFootprint=final.footprint;command->CopyTextureRegion(&to,0,0,0,&from,nullptr);transition(command.Get(),final.image.Get(),D3D12_RESOURCE_STATE_COPY_SOURCE,D3D12_RESOURCE_STATE_UNORDERED_ACCESS);submit();void* mapped=nullptr;hr(final.transfer->Map(0,nullptr,&mapped));for(unsigned y=0;y<oh;y++){auto* row=static_cast<uint8_t*>(mapped)+final.footprint.Offset+y*final.footprint.Footprint.RowPitch;for(unsigned x=0;x<ow;x++){auto i=(size_t(y)*ow+x)*4;output[i]=row[x*4+2];output[i+1]=row[x*4+1];output[i+2]=row[x*4];output[i+3]=255;}}final.transfer->Unmap(0,nullptr);
  present(o.value("NvidiaFrameGeneration",true)&&!o.value("paused",false)&&!o.value("menu",false)&&!o.value("background",false),reset);++frames;total_ms=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-started).count();status["source_width"]=w;status["source_height"]=h;status["renderer"]=enabled?renderer:"off";status["nr_frames"]=nr_frames;status["phoenix_frames"]=phoenix_frames;status["sr_frames"]=sr_frames;status["frames"]=frames;status["presented"]=presented;status["generated"]=generated;status["fg_active"]=fg_active;status["fg_error"]=fg_error;status["neural_ms"]=neural_ms;status["sr_ms"]=sr_ms;status["total_ms"]=total_ms;status["reset"]=reset;status["upscaler"]=upscale?"nvidia_dlss_sr":"off_native";
 }

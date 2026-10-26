@@ -88,7 +88,7 @@ public sealed class PhoenixProcessor : IDisposable
                     }
                     if (sessionEpoch != source.Epoch) { sessionEpoch = source.Epoch; lastWidth = lastHeight = 0; }
                     var metadata = JsonSerializer.Serialize(new { settings.Enabled, settings.Intensity, settings.Tone, settings.Structure, settings.Style, settings.Compare,
-                        settings.Passes, settings.Renderer, settings.NvidiaUpscaling, settings.NvidiaFrameGeneration,
+                        settings.Passes, settings.Renderer, settings.Phoenix, settings.NvidiaUpscaling, settings.NvidiaFrameGeneration,
                         SharpPixels, paused = Paused, menu = MenuOpen, background = Background, reset = lastWidth != source.Width || lastHeight != source.Height });
                     var output = new byte[checked(layout.OutputWidth * layout.OutputHeight * 4)]; var clock = Stopwatch.StartNew();
                     if (process(session, source.Pixels, (nuint)source.Pixels.Length, (uint)source.Width, (uint)source.Height, metadata, output, (nuint)output.Length) != 0)
@@ -100,6 +100,12 @@ public sealed class PhoenixProcessor : IDisposable
                     using var report = JsonDocument.Parse(RuntimeStatus); var stats = report.RootElement;
                     var name = settings.Renderer == "nvidia" ? "NVIDIA DLSS5" : "Phoenix DLSS5";
                     Status = settings.Enabled ? $"{name} active · {stats.GetProperty("neural_ms").GetDouble():F1} ms" : "Neural rendering off";
+                    if(settings.Renderer=="phoenix"&&settings.Phoenix.Monitoring>0&&stats.TryGetProperty("phoenix",out var detail)) {
+                        if(detail.TryGetProperty("complete_call_ms",out var call)) Status+=$" · SDK {call.GetDouble():F1} ms";
+                        if(detail.TryGetProperty("gpu_processing_ms",out var gpu)&&gpu.GetDouble()>0) Status+=$" · sampled GPU {gpu.GetDouble():F1} ms";
+                        if(detail.TryGetProperty("model_id",out var model)) Status+="\nModel · "+model.GetString();
+                        if(detail.TryGetProperty("tuning",out var tuning)) Status+=$" · {tuning.GetProperty("neural_scale").GetDouble():0}% · {tuning.GetProperty("central_blocks").GetInt32()} block limit";
+                    }
                     var entry = layout.InputWidth != layout.SourceWidth || layout.InputHeight != layout.SourceHeight ? $"Input {layout.SourceWidth}×{layout.SourceHeight} → {layout.InputWidth}×{layout.InputHeight}\n" : "";
                     UpscalingStatus = entry + (layout.Upscaling ? $"NVIDIA SR · {layout.InputWidth}×{layout.InputHeight} → {layout.OutputWidth}×{layout.OutputHeight} · {(layout.UpscaleFirst ? "before NR" : "after NR")}" : $"Processing · {layout.InputWidth}×{layout.InputHeight} · NVIDIA SR off");
                     var fg = stats.GetProperty("fg_active").GetBoolean(); var generated = stats.GetProperty("generated").GetInt64();

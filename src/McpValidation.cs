@@ -91,6 +91,12 @@ public sealed partial class MainWindow
             var injection=await Tool("dosbox_configure",new {environment_id=profile.Id,settings=new{cpu=new{cycles="auto\n[autoexec]\nexit"}}});Check(injection["isError"]!.GetValue<bool>(),"INI command injection rejected");
             var created=await Tool("dosbox_create_folder",new{environment_id=profile.Id,drive="C",name="MCPTEST"});Check(!created["isError"]!.GetValue<bool>()&&Directory.Exists(Path.Combine(profile.Drives[0].Folder,"MCPTEST")),"folder created through MCP");
             var configCatalog=await Tool("dosbox_get_configuration",new{environment_id=profile.Id});Check(configCatalog["structuredContent"]?["settingsCatalog"] is JsonArray catalog&&catalog.Count>40&&configCatalog["structuredContent"]?["coreOptionsCatalog"] is JsonArray pureCatalog&&pureCatalog.Count>10,"configuration tool advertises structured settings and installed core options");
+            var advanced=await Tool("dosbox_effects",new{phoenix=new{NeuralScale=75,Blocks=4,Repeats="1,0,2,1,1,1,1,1",Temporal=false,Gamma=1.2}});
+            Check(!advanced["isError"]!.GetValue<bool>()&&phoenix.Settings.Phoenix.NeuralScale==75&&!phoenix.Settings.Phoenix.Temporal,"MCP updates the current Phoenix SDK controls");
+            var beforeAdvanced=phoenix.Settings;
+            var badAdvanced=await Tool("dosbox_effects",new{intensity=.12,phoenix=new{NeuralScale=9}});
+            Check(badAdvanced["isError"]!.GetValue<bool>()&&phoenix.Settings==beforeAdvanced,"invalid Phoenix controls cannot partially change effects");
+            await Tool("dosbox_effects",new{phoenix=new{}});
             var independentPanels=await Tool("dosbox_display",new{environment_panel=false,effects_panel=true});Check(!independentPanels["isError"]!.GetValue<bool>()&&!environmentVisible&&effectsVisible,"display tool independently hides environment and shows effects");
             Check(!ApplicationPreferences.Load().EnvironmentVisible&&ApplicationPreferences.Load().EffectsVisible,"MCP panel visibility persists to app preferences");
             FocusForValidation();stage.Focus();await Task.Delay(100);

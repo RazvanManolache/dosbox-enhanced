@@ -1,0 +1,2 @@
+NVIDIA Image Scaling SDK, MIT. https://github.com/NVIDIAGameWorks/NVIDIAImageScaling
+Shader source is embedded from the retained SDK sources; D3D12 adapter is Phoenix code.

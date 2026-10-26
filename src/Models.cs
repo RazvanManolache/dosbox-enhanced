@@ -22,7 +22,26 @@ public record EffectSettings(bool Enabled = true, double Intensity = .65, double
     double Structure = 1, int Style = 0, bool Compare = false, int Passes = 1,
     string Renderer = "phoenix", bool NvidiaUpscaling = true, bool NvidiaFrameGeneration = true,
     string UpscaleOrder = "after_nr", int UpscaleFactor = 4,
-    bool InputResize = false, double InputScale = 2, string InputFilter = "nearest");
+    bool InputResize = false, double InputScale = 2, string InputFilter = "nearest")
+{
+    public PhoenixOptions Phoenix { get; init; } = new();
+}
+public sealed record PhoenixOptions(double Skin = -1, bool AutoMask = true, bool Temporal = true,
+    double NeuralScale = 100, int Blocks = 8, string Repeats = "1,1,1,1,1,1,1,1",
+    double ColorStrength = 1, double TargetFps = 0, double MaxMilliseconds = 0,
+    int Priority = 0, int Monitoring = 0, bool SceneDetection = false,
+    double Brightness = 0, double Contrast = 1, double Saturation = 1, double Gamma = 1)
+{
+    public void Validate()
+    {
+        static void Range(double x, double min, double max) { if (!double.IsFinite(x) || x < min || x > max) throw new ArgumentException("Phoenix setting is outside its supported range."); }
+        Range(Skin,-1,2); Range(NeuralScale,10,100); Range(Blocks,1,8); Range(ColorStrength,0,1);
+        Range(TargetFps,0,240); Range(MaxMilliseconds,0,1000); Range(Priority,0,2); Range(Monitoring,0,2);
+        Range(Brightness,-2,2); Range(Contrast,0,4); Range(Saturation,0,2); Range(Gamma,.1,4);
+        var parts = Repeats.Split(',');
+        if (parts.Length != 8 || parts.Any(p => !int.TryParse(p, out int n) || n < 0 || n > 4)) throw new ArgumentException("Use eight block repeat counts, each from 0 to 4.");
+    }
+}
 public readonly record struct GraphicsLayout(int SourceWidth, int SourceHeight, int InputWidth, int InputHeight, int NeuralWidth, int NeuralHeight,
     int OutputWidth, int OutputHeight, bool Upscaling, bool UpscaleFirst, int Factor, double InputFactor, string InputFilter)
 {

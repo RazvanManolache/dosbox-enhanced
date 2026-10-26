@@ -2,7 +2,7 @@
   "schema": 1,
   "dependencies": [
     {
-      "revision": "4c9b75ff42b6945352f66f309dc84404e498f4cf",
+      "revision": "f8f4ddf729e8d9a117269ade006314b87845649d",
       "name": "phoenix",
       "path": "external/phoenix",
       "url": "https://github.com/RazvanManolache/dlss5-phoenix-addon.git"

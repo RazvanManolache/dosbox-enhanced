@@ -1,28 +1,14 @@
-# DOSBox Enhanced 0.5
+# DOSBox Enhanced 0.6
 
-- Saved environments with mapped drives, startup programs and separate DOSBox/graphics settings.
-- Searchable program tree, friendly names, environment copies and direct EXE/COM/BAT launch.
-- Per-environment DOSBox settings editor, volume controls and configurable mouse-release shortcut.
-- Optional Phoenix DLSS5 / NVIDIA DLSS5 neural rendering, NVIDIA Super Resolution and Frame Generation.
-- Native input by default; optional 0.25×–4× fractional resize slider with a pixel preview, plus independent NVIDIA SR before or after NR.
-- CPU Auto checkbox, live manual cycle slider and exact value, with per-environment manual-speed memory.
-- Built-in MCP: 23 tools; disabled by default, authenticated and local-only. Remote access is opt-in.
-- Four-game capture gallery, per-game starting presets and 40 same-source settings comparisons.
+- Updated Phoenix DLSS5 to 0.17 (`f8f4ddf729e8`).
+- Original / Lightweight selection; advanced temporal, detail, block, processing-scale and color controls.
+- Processing budgets, priority, GPU monitoring and matching per-environment MCP settings.
+- Graphics setup with verified NVIDIA runtime downloads, optional pinned OpenNR compatibility runtime, existing-model import and bundled engine repair.
+- Numeric quick sliders and collapsible advanced panels.
+- Existing environments and one-pass game presets are retained.
 
-## Downloads
+Validation: 54 self-tests, 56 UI checks, 194 MCP checks, both renderers, 48 live layout changes, Original/Lightweight GPU execution, advanced-control pixel changes and verified setup downloads. Foreground presentation test: 1,499 generated frames, NVIDIA status bits 0. RTX 5080; bundled native kernels target sm_120.
 
-- `DOSBox-Enhanced-0.5-win-x64.zip`: portable Windows app, DOSBox Pure, model-free Phoenix DLSS5 library/kernels, documentation and setup.
-- `DOSBox-Enhanced-0.5-source.zip`: source, pinned submodules, Phoenix DLSS5 API patch, build scripts and CI.
-- `SHA256SUMS.txt`: archive checksums.
+No games, personal settings, model DLLs or weights are bundled. Game showcase images are retained from v0.5; setup/control images show v0.6. Other GPU generations are not certified by this DOSBox release.
 
-## Requirements and limits
-
-- Windows 10 build 19041+ or Windows 11; no separate .NET, Python or Node installation needed to run.
-- Standard DOSBox use works without neural graphics.
-- Optional graphics setup downloads verified NVIDIA runtimes and requires a separately supplied compatible model DLL.
-- Graphics tested on RTX 5080; bundled Phoenix DLSS5 kernels target sm_120.
-- Image-derived motion and flat depth can produce artifacts.
-- Save states require compatible core, settings and game files.
-- Main screenshots use individual one-pass presets for four games, with SR and FG enabled. Earlier maximum-strength and four-pass examples are separately labeled.
-- No games, personal profiles, host mappings, saves, connection keys, caches, model DLLs or extracted weights included.
-- Component attribution and terms: `THIRD_PARTY_NOTICES.md`.
+Download the Windows portable ZIP to run, or the source ZIP to build with the documented pinned dependencies. Existing users can replace app/runtime files while preserving their data folder.

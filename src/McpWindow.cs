@@ -193,7 +193,10 @@ public sealed partial class MainWindow
         if(args["upscale_factor"]!=null && args["upscale_factor"]!.GetValue<int>() is <2 or >4)throw new ArgumentException("Upscale factor must be 2, 3 or 4.");
         if(args["input_scale"] is JsonNode resizeScale && (!double.IsFinite(resizeScale.GetValue<double>()) || resizeScale.GetValue<double>() is < .25 or > 4))throw new ArgumentException("Input scale must be between 0.25 and 4, including fractions.");
         if(args["input_filter"]!=null && args["input_filter"]!.GetValue<string>() is not ("nearest" or "linear"))throw new ArgumentException("Input filter must be nearest or linear.");
+        PhoenixOptions? advanced = null;
+        if(args["phoenix"] is JsonObject advancedJson) { advanced=System.Text.Json.JsonSerializer.Deserialize<PhoenixOptions>(advancedJson.ToJsonString(),new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive=true })!; advanced.Validate(); }
         changing=true;
+        if(advanced!=null) LoadPhoenixPanel(advanced);
         if(args["input_resize"]!=null)inputResize.IsChecked=args["input_resize"]!.GetValue<bool>();
         if(args["input_scale"]!=null)inputScale.Value=args["input_scale"]!.GetValue<double>();
         if(args["input_filter"]!=null)inputFilter.SelectedIndex=args["input_filter"]!.GetValue<string>()=="linear"?1:0;

@@ -1,0 +1,280 @@
+{
+  "version": "0.6",
+  "phoenix_tag": "0.17",
+  "phoenix_commit": "f8f4ddf729e8d9a117269ade006314b87845649d",
+  "tested_gpu": "RTX 5080",
+  "kernel_architecture": "sm_120",
+  "neural_passes": 1,
+  "checks": {
+    "self-test": {
+      "passed": true,
+      "count": 54
+    },
+    "ui-validation": {
+      "passed": true,
+      "count": 56
+    },
+    "mcp-integration": {
+      "passed": true,
+      "count": 194
+    }
+  },
+  "graphics": {
+    "phoenix": {
+      "passed": true,
+      "frames": 8,
+      "phoenix_frames": 8,
+      "nr_frames": 0,
+      "sr_frames": 8,
+      "layout_changes": 24,
+      "pixel_difference": 8.818386067708333,
+      "model": "original",
+      "tuning": {
+        "auto_mask": true,
+        "central_blocks": 8,
+        "color_strength": 1.0,
+        "intensity": 1.0,
+        "local_structure": 1.100000023841858,
+        "local_tone": 1.0,
+        "max_processing_ms": 0.0,
+        "minimum_central_blocks": 1,
+        "network_passes": 1,
+        "neural_scale": 100.0,
+        "repeats": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "skin_structure": -1.0,
+        "style": 0,
+        "target_fps": 0.0,
+        "temporal": true
+      },
+      "pipeline_priority": 0
+    },
+    "nvidia": {
+      "passed": true,
+      "frames": 8,
+      "phoenix_frames": 0,
+      "nr_frames": 8,
+      "sr_frames": 8,
+      "layout_changes": 24,
+      "pixel_difference": 8.818386067708333
+    },
+    "lightweight": {
+      "passed": true,
+      "frames": 8,
+      "phoenix_frames": 8,
+      "nr_frames": 0,
+      "sr_frames": 8,
+      "layout_changes": 0,
+      "pixel_difference": 5.023974283854167,
+      "model": "small-fp8",
+      "tuning": {
+        "auto_mask": true,
+        "central_blocks": 8,
+        "color_strength": 1.0,
+        "intensity": 1.0,
+        "local_structure": 1.100000023841858,
+        "local_tone": 1.0,
+        "max_processing_ms": 0.0,
+        "minimum_central_blocks": 1,
+        "network_passes": 1,
+        "neural_scale": 100.0,
+        "repeats": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "skin_structure": -1.0,
+        "style": 0,
+        "target_fps": 0.0,
+        "temporal": true
+      },
+      "pipeline_priority": 0
+    },
+    "advanced": {
+      "passed": true,
+      "frames": 8,
+      "phoenix_frames": 8,
+      "nr_frames": 0,
+      "sr_frames": 8,
+      "layout_changes": 0,
+      "pixel_difference": 11.400837565104167,
+      "model": "original",
+      "tuning": {
+        "auto_mask": true,
+        "central_blocks": 4,
+        "color_strength": 1.0,
+        "intensity": 1.0,
+        "local_structure": 1.100000023841858,
+        "local_tone": 1.0,
+        "max_processing_ms": 0.0,
+        "minimum_central_blocks": 1,
+        "network_passes": 1,
+        "neural_scale": 75.0,
+        "repeats": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "skin_structure": -1.0,
+        "style": 0,
+        "target_fps": 0.0,
+        "temporal": false
+      },
+      "pipeline_priority": 0
+    },
+    "budget": {
+      "passed": true,
+      "frames": 8,
+      "phoenix_frames": 8,
+      "nr_frames": 0,
+      "sr_frames": 8,
+      "layout_changes": 0,
+      "pixel_difference": 11.891210611979167,
+      "model": "original",
+      "tuning": {
+        "auto_mask": true,
+        "central_blocks": 4,
+        "color_strength": 1.0,
+        "intensity": 1.0,
+        "local_structure": 1.100000023841858,
+        "local_tone": 1.0,
+        "max_processing_ms": 12.0,
+        "minimum_central_blocks": 1,
+        "network_passes": 1,
+        "neural_scale": 75.0,
+        "repeats": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "skin_structure": -1.0,
+        "style": 0,
+        "target_fps": 60.0,
+        "temporal": true
+      },
+      "pipeline_priority": 1
+    },
+    "native": {
+      "passed": true,
+      "frames": 2,
+      "phoenix_frames": 0,
+      "nr_frames": 0,
+      "sr_frames": 0,
+      "layout_changes": 0,
+      "pixel_difference": 0.0
+    },
+    "style": {
+      "passed": true,
+      "frames": 8,
+      "phoenix_frames": 8,
+      "nr_frames": 0,
+      "sr_frames": 8,
+      "layout_changes": 0,
+      "pixel_difference": 8.3807626953125,
+      "model": "original",
+      "tuning": {
+        "auto_mask": true,
+        "central_blocks": 8,
+        "color_strength": 0.30000001192092896,
+        "intensity": 1.0,
+        "local_structure": 1.100000023841858,
+        "local_tone": 1.0,
+        "max_processing_ms": 0.0,
+        "minimum_central_blocks": 1,
+        "network_passes": 1,
+        "neural_scale": 100.0,
+        "repeats": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "skin_structure": -1.0,
+        "style": 1,
+        "target_fps": 0.0,
+        "temporal": true
+      },
+      "pipeline_priority": 0
+    },
+    "frame-generation": {
+      "passed": true,
+      "frames": 1500,
+      "phoenix_frames": 1500,
+      "nr_frames": 0,
+      "sr_frames": 1500,
+      "layout_changes": 0,
+      "pixel_difference": 10.143365234375,
+      "generated": 1499,
+      "presented": 2999,
+      "status_bits": 0,
+      "model": "original",
+      "tuning": {
+        "auto_mask": true,
+        "central_blocks": 8,
+        "color_strength": 1.0,
+        "intensity": 1.0,
+        "local_structure": 1.100000023841858,
+        "local_tone": 1.0,
+        "max_processing_ms": 0.0,
+        "minimum_central_blocks": 1,
+        "network_passes": 1,
+        "neural_scale": 100.0,
+        "repeats": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "skin_structure": -1.0,
+        "style": 0,
+        "target_fps": 0.0,
+        "temporal": true
+      },
+      "pipeline_priority": 0
+    }
+  },
+  "downloads": {
+    "passed": true,
+    "runtimes_verified": true,
+    "model_downloaded": true
+  },
+  "models_or_games_bundled": false,
+  "advanced_pixels_changed": true,
+  "runtime_sha256": {
+    "dosbox_pure_libretro.dll": "a828f188b3ed60920b876a83c9d8fd50b21a1855dba86d5510d9610dcb469363",
+    "dosbox_nvngx.dll": "ae8a1fc5fb302353bf817d378c685c52f0b40f6178c7b8c6d562a48c8ebd1268",
+    "phoenix_native.dll": "68d1b8dc326427946288856462342de52f8b7540419e01bb5b2b6b543e346f0b"
+  },
+  "passed": true
+}

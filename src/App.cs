@@ -10,9 +10,20 @@ public static class App
     [STAThread]
     public static int Main(string[] args)
     {
+        if(args.Length==2&&args[0]=="--restart-after"&&int.TryParse(args[1],out int previous)) {
+            try{using var process=System.Diagnostics.Process.GetProcessById(previous);if(!process.WaitForExit(30000))return 1;}catch(ArgumentException){}
+            args=[];
+        }
         Paths.Root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, ".."));
         Directory.CreateDirectory(Paths.Data);
         if (args.Contains("--self-test")) return SelfTest.Run();
+        if(args.Contains("--repair-test")) { try { GraphicsSetup.RepairBundled(Path.Combine(Paths.Root,"tests/fixtures/repair-check"),new Progress<string>(),CancellationToken.None).GetAwaiter().GetResult();return 0; } catch(Exception e){Paths.AtomicWrite(Path.Combine(Paths.Root,"tests/results/repair-error.txt"),e.ToString());return 1;} }
+        if(args.Contains("--download-test")) {
+            string folder=Path.Combine(Paths.Root,"tests/fixtures/download-check");Directory.CreateDirectory(folder);
+            File.Copy(Path.Combine(Paths.Root,"runtime.lock.json"),Path.Combine(folder,"runtime.lock.json"),true);
+            try { GraphicsSetup.Install(folder,args.Contains("--with-model"),new Progress<string>(),CancellationToken.None).GetAwaiter().GetResult();Paths.AtomicWrite(Path.Combine(Paths.Root,"tests/results/download-test.json"),JsonSerializer.Serialize(new {passed=true,runtimes_verified=true,model_downloaded=args.Contains("--with-model")}));return 0; }
+            catch(Exception e){Paths.AtomicWrite(Path.Combine(Paths.Root,"tests/results/download-error.txt"),e.ToString());return 1;}
+        }
         if (args.Contains("--mcp-stdio")) return McpStdio.Run().GetAwaiter().GetResult();
         var app = new Application { ShutdownMode = ShutdownMode.OnMainWindowClose };
         app.DispatcherUnhandledException += (_, e) =>
@@ -27,6 +38,7 @@ public static class App
         if (args.Contains("--ui-test")) window.Loaded += async (_, _) => await window.RunUiValidation();
         if (args.Contains("--mcp-test")) window.Loaded += async (_, _) => await window.RunMcpValidation();
         if (args.Contains("--cpu-test")) window.Loaded += async (_, _) => await window.RunCpuValidation();
+        if (args.Contains("--release-capture")) window.Loaded += async (_, _) => await window.CaptureReleaseUi();
         if (args.Contains("--profile")) window.Loaded += (_, _) =>
         {
             var path = args.First(a => !a.StartsWith("--"));
@@ -194,6 +206,7 @@ public static class SelfTest
             Reject(() => DriveFolders.Create(folderRoot, gamesFolder, "..\\ESCAPE"), "folder names cannot escape their parent");
             Reject(() => DriveFolders.Create(folderRoot, folder, "OUTSIDE"), "folder creation stays inside the mapped drive");
             Directory.Delete(gameFolder); Directory.Delete(gamesFolder); Directory.Delete(folderRoot);
+            GraphicsSetupTests.Run(Check);
             Paths.AtomicWrite(Path.Combine(Paths.Root, "tests", "results", "self-test.json"), JsonSerializer.Serialize(new { passed = true, count = results.Count, checks = results }, Paths.Json)); return 0;
         }
         catch (Exception e) { Paths.AtomicWrite(Path.Combine(Paths.Root, "tests", "results", "self-test.json"), JsonSerializer.Serialize(new { passed = false, error = e.ToString(), checks = results }, Paths.Json)); return 1; }

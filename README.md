@@ -2,7 +2,7 @@
 
 DOSBox with saved environments, optional DLSS graphics, and built-in MCP.
 
-[Download Windows v0.5](https://github.com/RazvanManolache/dosbox-enhanced/releases/download/v0.5/DOSBox-Enhanced-0.5-win-x64.zip) · [All release files](https://github.com/RazvanManolache/dosbox-enhanced/releases/tag/v0.5)
+[Download Windows v0.6](https://github.com/RazvanManolache/dosbox-enhanced/releases/download/v0.6/DOSBox-Enhanced-0.6-win-x64.zip) · [All release files](https://github.com/RazvanManolache/dosbox-enhanced/releases/tag/v0.6)
 
 - Set up drives and settings once, then pick a game and press Play.
 - Keep multiple environments, each with its own DOSBox and graphics settings.
@@ -12,6 +12,7 @@ DOSBox with saved environments, optional DLSS graphics, and built-in MCP.
 ![SkyRoads, Titus the Fox, Hexxagon and Fate of Atlantis with individual graphics settings](docs/images/games-overview.png)
 
 - Four games, four saved environments; all captures use **one neural pass**.
+- Game showcase images are retained from v0.5; new setup/control screenshots are from v0.6.
 - [Selected settings, before/after images and all 40 trials](docs/GAME_GALLERY.md).
 
 ## Features
@@ -26,6 +27,18 @@ DOSBox with saved environments, optional DLSS graphics, and built-in MCP.
 - **Fullscreen:** F11; hold the free pointer still at the top for one second to reveal the menu.
 - **Mouse capture:** Caps Lock releases the pointer; the shortcut is configurable.
 - **Quick run:** open or drop a DOS EXE, COM or BAT with an 8.3 filename; its folder mounts as C:.
+
+## New in 0.6
+
+- **Phoenix 0.17:** Original and Lightweight models, with compatible native graphics integration.
+- **Advanced controls:** temporal reuse, auto mask, skin detail, neural processing scale, eight block repeat counts and central block count.
+- **Performance:** target FPS / processing-time budgets, priority and optional GPU monitoring.
+- **Color finishing:** brightness, contrast, saturation and gamma. Advanced controls are grouped into collapsible panels; quick sliders show their values.
+- **Graphics setup:** inspect missing components, download verified NVIDIA runtimes, optionally download the pinned community OpenNR runtime, or choose your signed NVIDIA model. Restart applies the selected files.
+- **Component repair:** restore the bundled engines from this release, with GitHub's release digest and per-file checksums.
+- **MCP:** configure the same advanced Phoenix settings per environment.
+
+![Graphics setup with optional verified downloads](docs/images/graphics-setup.png)
 
 ## DLSS graphics
 
@@ -45,7 +58,7 @@ DOSBox with saved environments, optional DLSS graphics, and built-in MCP.
 - Real app captures; the comparison uses the same frozen source frame. Stills cannot demonstrate Frame Generation.
 - Experimental: image-derived motion and flat depth can cause artifacts in scrolling, text and pixel art.
 - Tested on **RTX 5080**; bundled Phoenix DLSS5 kernels target **sm_120**. Other GPUs are not certified for this release.
-- Graphics are optional; setup requires compatible NVIDIA runtimes and a separately supplied model DLL.
+- Graphics are optional; use the in-app setup panel to download runtimes and an optional model, or choose your own model DLL.
 - [Graphics setup](docs/GRAPHICS.md) · [Capture method and runtime counters](docs/CAPTURES.md)
 
 <details>
@@ -94,6 +107,9 @@ Actual authenticated HTTP tool calls and the returned screenshot; not an AI chat
 
 ## Build
 
+The project root is also the GitHub checkout: one source tree for development,
+builds and releases. `release/` contains generated packages and private receipts.
+
 ```powershell
 git submodule update --init --recursive
 .\build.ps1
@@ -101,7 +117,7 @@ git submodule update --init --recursive
 
 - **Host:** C# / WPF, embedded DOSBox Pure; requires .NET 9 SDK and PowerShell.
 - **Graphics:** native D3D12 bridge; building adds MSVC, CMake and the Phoenix DLSS5 SDK. Phoenix DLSS5 source/kernel builds need additional development tools.
-- **Dependencies:** pinned Git submodules and lock file; Phoenix DLSS5 0.8.1-beta native API builds directly from its public source.
+- **Dependencies:** pinned Git submodules and lock file; Phoenix DLSS5 0.17 source, native tuning and shared processing pipeline.
 - **Portable app:** does not need those development tools.
 - [Build instructions and CI](BUILDING.md) · [Release validation](docs/VALIDATION.md)
 

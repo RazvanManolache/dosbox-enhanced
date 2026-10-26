@@ -1,5 +1,8 @@
 # Phoenix DLSS5 public API update
 
+Historical verification for the original 0.8.1-beta migration. The current
+source pin is documented in [the integration guide](PHOENIX_INTEGRATION.md).
+
 - Public tag: [0.8.1-beta](https://github.com/RazvanManolache/dlss5-phoenix-addon/tree/0.8.1-beta).
 - Pinned commit: [`4c9b75ff42b6945352f66f309dc84404e498f4cf`](https://github.com/RazvanManolache/dlss5-phoenix-addon/commit/4c9b75ff42b6945352f66f309dc84404e498f4cf).
 - The native C API is now published upstream. The compatibility patch is removed.

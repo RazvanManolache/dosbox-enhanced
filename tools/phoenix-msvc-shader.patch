@@ -1,0 +1,54 @@
+diff --git a/third_party/nis/shader_source.h b/third_party/nis/shader_source.h
+index 588bb9b..ae67e48 100644
+--- a/third_party/nis/shader_source.h
++++ b/third_party/nis/shader_source.h
+@@ -177,7 +177,8 @@ NIS_BINDING(5) Texture2D coef_usm              : register(t2);
+ // The game or application calling NVIDIA Image Scaling SDK shaders must ensure that the textures are in
+ // the correct state.
+ // - Input color textures must be in pixel shader read state. Shader Resource View (SRV) in DirectX
+-// - The output texture must be in read/write state. Unordered Access View (UAV) in DirectX
++// - The output texture must be in read/write state. Unor)PHOENIX_NIS"
++R"PHOENIX_NIS(dered Access View (UAV) in DirectX
+ // - The coefficients texture for NVScaler must be in read state. Shader Resource View (SRV) in DirectX
+ // - The configuration variables must be passed as constant buffer. Constant Buffer View (CBV) in DirectX
+ // - The sampler for texture pixel sampling. Linear clamp SamplerState in Direct
+@@ -411,7 +412,8 @@ NVF4 GetEdgeMap(NVF p[5][5], NVI i, NVI j)
+     NVB c_0_90 = (g_0_90_max > (g_0_90_min * kDetectRatio)) && (g_0_90_max > kDetectThres) && (g_0_90_max > g_45_135_min);
+     NVB c_45_135 = (g_45_135_max > (g_45_135_min * kDetectRatio)) && (g_45_135_max > kDetectThres) && (g_45_135_max > g_0_90_min);
+     NVB c_g_0_90 = g_0_90_max == g_0;
+-    NVB c_g_45_135 = g_45_135_max == g_45;
++    NVB c_g_45)PHOENIX_NIS"
++R"PHOENIX_NIS(_135 = g_45_135_max == g_45;
+ 
+     NVF f_e_0_90 = (c_0_90 && c_45_135) ? e_0_90 : 1.0f;
+     NVF f_e_45_135 = (c_0_90 && c_45_135) ? e_45_135 : 1.0f;
+@@ -654,7 +656,8 @@ NVF AddDirFilters(NVF p[6][6], NVF phase_x_frac, NVF phase_y_frac, NVI phase_x_f
+         temp_interp135Deg[5] = lerp(p[1][3], p[2][4], pphase_b135);
+         {
+             pphase_b135 = pphase_b135 - 0.5f;
+-            NVF a = (pphase_b135 >= 0.f) ? p[5][2] : p[3][0];
++            NVF )PHOENIX_NIS"
++R"PHOENIX_NIS(a = (pphase_b135 >= 0.f) ? p[5][2] : p[3][0];
+             NVF b = (pphase_b135 >= 0.f) ? p[4][3] : p[2][1];
+             NVF c = (pphase_b135 >= 0.f) ? p[3][4] : p[1][2];
+             NVF d = (pphase_b135 >= 0.f) ? p[2][5] : p[0][3];
+@@ -846,7 +849,8 @@ void NVScaler(NVU2 blockIdx, NVU threadIdx)
+                 NIS_UNROLL
+                 for (NVI j = 0; j < 2; j++)
+                 {
+-                    // need to shift edge map sampling since it's a 2x2 centered inside 6x6 grid
++         )PHOENIX_NIS"
++R"PHOENIX_NIS(           // need to shift edge map sampling since it's a 2x2 centered inside 6x6 grid
+                     edge[i][j] = shEdgeMap[startEdgeMapIdx + (i * kEdgeMapPitch) + j];
+                 }
+             }
+@@ -1075,7 +1079,8 @@ void NVSharpen(NVU2 blockIdx, NVU threadIdx)
+         // get directional filter bank output
+         NVF4 dirUSM = GetDirUSM(p);
+ 
+-        // generate weights for directional filters
++        // gener)PHOENIX_NIS"
++R"PHOENIX_NIS(ate weights for directional filters
+         NVF4 w = GetEdgeMap(p, kSupportSize / 2 - 1, kSupportSize / 2 - 1);
+ 
+         // final USM is a weighted sum filter outputs

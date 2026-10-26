@@ -69,7 +69,7 @@ public sealed partial class MainWindow : Window
     public string CurrentStatus => status.Text;
     public MainWindow(string? executable = null)
     {
-        Title = "DOSBox Enhanced · v0.5"; Width = 1440; Height = 920; MinWidth = 1050; MinHeight = 640;
+        Title = "DOSBox Enhanced · v0.6"; Width = 1440; Height = 920; MinWidth = 1050; MinHeight = 640;
         Background = Brush(15, 20, 29); Foreground = Brush(221, 231, 241); FontFamily = new FontFamily("Segoe UI"); FontSize = 13;
         environmentVisible = preferences.EnvironmentVisible; effectsVisible = preferences.EffectsVisible;
         root.Background = Background; ConfigureTheme(); BuildUi(); InitializePrograms(); InitializeMouseCapture(); ApplyLayout();
@@ -208,7 +208,7 @@ public sealed partial class MainWindow : Window
         right.Children.Add(Label("Neural renderer", 13));
         renderer.Items.Add("Phoenix DLSS5"); renderer.Items.Add("NVIDIA DLSS5"); renderer.SelectedIndex = 0; right.Children.Add(renderer);
         right.Children.Add(enabled); right.Children.Add(compare);
-        right.Children.Add(Label("Intensity")); right.Children.Add(intensity); right.Children.Add(Label("Local tone")); right.Children.Add(tone); right.Children.Add(Label("Structure")); right.Children.Add(structure);
+        AddQuickSlider(right,"Intensity",intensity); AddQuickSlider(right,"Local tone",tone); AddQuickSlider(right,"Structure",structure);
         right.Children.Add(Label("Style")); foreach (string s in new[] { "Default", "Warm", "Cool" }) style.Items.Add(s); style.SelectedIndex = 0; right.Children.Add(style);
         right.Children.Add(Label("Passes")); foreach (int p in new[] { 1, 2, 3, 4 }) passes.Items.Add(p); passes.SelectedIndex = 0; right.Children.Add(passes);
         right.Children.Add(phoenixStatus);
@@ -222,6 +222,7 @@ public sealed partial class MainWindow : Window
         foreach (string s in new[] { "DOS corrected aspect", "Square pixels", "Fill window" }) aspectMode.Items.Add(s); aspectMode.SelectedIndex = 0; right.Children.Add(aspectMode);
         right.Children.Add(Label("Input", 18)); right.Children.Add(mouseHelp); right.Children.Add(Button("Mouse capture settings…", ShowMouseSettings));
         right.Children.Add(Label("Native rendering uses estimated motion from DOS images and a flat 2D plane. Super Resolution enlarges the image; Frame Generation adds frames. Generated-frame counts come from NVIDIA's presenter."));
+        BuildPhoenixPanel(right);
         var rightScroll = new ScrollViewer { Content = right, VerticalScrollBarVisibility = ScrollBarVisibility.Auto }; Grid.SetColumn(rightScroll, 2); deck.Children.Add(rightScroll);
         Grid.SetRow(status, 2); root.Children.Add(status); Content = root;
         enabled.Checked += (_, _) => UpdateEffects(); enabled.Unchecked += (_, _) => UpdateEffects();
@@ -240,10 +241,12 @@ public sealed partial class MainWindow : Window
     void UpdateEffects()
     {
         if (changing) return;
+        RefreshStyleChoices();
         phoenix.Settings = new(enabled.IsChecked == true, intensity.Value, tone.Value, structure.Value, Math.Max(0, style.SelectedIndex), compare.IsChecked == true, passes.SelectedItem is int n ? n : 1,
             renderer.SelectedIndex == 1 ? "nvidia" : "phoenix", nvidiaUpscaling.IsChecked == true, nvidiaFrameGeneration.IsChecked == true,
             upscaleOrder.SelectedIndex == 1 ? "before_nr" : "after_nr", upscaleFactor.SelectedItem is int factor ? factor : 4,
-            inputResize.IsChecked == true, inputScale.Value, inputFilter.SelectedIndex == 1 ? "linear" : "nearest");
+            inputResize.IsChecked == true, inputScale.Value, inputFilter.SelectedIndex == 1 ? "linear" : "nearest") { Phoenix = advancedSettings };
+        phoenixAdvanced.IsEnabled = renderer.SelectedIndex != 1;
         inputResizeOptions.Visibility = inputResize.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
         UpdateInputPreview();
         upscaleOrder.IsEnabled = upscaleFactor.IsEnabled = nvidiaUpscaling.IsChecked == true;
@@ -273,7 +276,7 @@ public sealed partial class MainWindow : Window
         name.Text = profile?.Name ?? ""; startup.Text = profile?.Startup ?? ""; LoadCpuControls(profile);
         if (profile != null && !memory.Items.Contains(profile.Memory)) memory.Items.Add(profile.Memory); memory.SelectedItem = profile?.Memory ?? 32;
         drives.ItemsSource = profile?.Drives;
-        var effects = profile?.Effects ?? new(); enabled.IsChecked = effects.Enabled; compare.IsChecked = effects.Compare; intensity.Value = effects.Intensity; tone.Value = effects.Tone; structure.Value = effects.Structure; style.SelectedIndex = effects.Style; passes.SelectedItem = effects.Passes;
+        var effects = profile?.Effects ?? new(); LoadPhoenixPanel(effects.Phoenix); enabled.IsChecked = effects.Enabled; compare.IsChecked = effects.Compare; intensity.Value = effects.Intensity; tone.Value = effects.Tone; structure.Value = effects.Structure; style.SelectedIndex = effects.Style; passes.SelectedItem = effects.Passes;
         renderer.SelectedIndex = effects.Renderer == "nvidia" ? 1 : 0; nvidiaUpscaling.IsChecked = effects.NvidiaUpscaling; nvidiaFrameGeneration.IsChecked = effects.NvidiaFrameGeneration;
         upscaleOrder.SelectedIndex = effects.UpscaleOrder == "before_nr" ? 1 : 0; upscaleFactor.SelectedItem = Math.Clamp(effects.UpscaleFactor, 2, 4);
         upscaleOrder.IsEnabled = upscaleFactor.IsEnabled = effects.NvidiaUpscaling;
@@ -389,7 +392,7 @@ public sealed partial class MainWindow : Window
     {
         var config = Configuration.Generate(profile); Stop(); running = profile;
         changing = true;
-        var effects = profile.Effects; enabled.IsChecked = effects.Enabled; compare.IsChecked = effects.Compare;
+        var effects = profile.Effects; LoadPhoenixPanel(effects.Phoenix); enabled.IsChecked = effects.Enabled; compare.IsChecked = effects.Compare;
         intensity.Value = effects.Intensity; tone.Value = effects.Tone; structure.Value = effects.Structure;
         style.SelectedIndex = effects.Style; passes.SelectedItem = effects.Passes; renderer.SelectedIndex = effects.Renderer == "nvidia" ? 1 : 0;
         nvidiaUpscaling.IsChecked = effects.NvidiaUpscaling; nvidiaFrameGeneration.IsChecked = effects.NvidiaFrameGeneration;

@@ -6,11 +6,13 @@ requesting a bridge are superseded by this implementation.
 
 ## Upstream API
 
-The current source pins public Phoenix DLSS5 **0.8.1-beta** at
-`4c9b75ff42b6945352f66f309dc84404e498f4cf` and builds its native C API directly.
-The former compatibility patch has been removed. See
-[upstream native-library documentation](https://github.com/RazvanManolache/dlss5-phoenix-addon/blob/4c9b75ff42b6945352f66f309dc84404e498f4cf/docs/NATIVE_LIBRARY.md)
-and [the update verification](PHOENIX_UPSTREAM_UPDATE.md).
+The source pins public Phoenix DLSS5 **0.17** at `f8f4ddf729e8d9a117269ade006314b87845649d`.
+It calls `phoenix_native_set_tuning` and `phoenix_native_set_pipeline` for the
+advanced controls and reads actual model/timing telemetry from the native API.
+The native SDK includes `phoenix.h`. A source-preserving MSVC string-literal
+compatibility patch is applied during the build and then reversed.
+
+[Current integration and validation](PHOENIX_0.17_UPDATE.md).
 
 ## Frame path
 
@@ -72,12 +74,14 @@ textures, swapchains and queues are released on shutdown.
 
 ## Configuration and ABI
 
-`setup-graphics.ps1` stages Phoenix DLSS5's native DLL/kernel bundle and the required
-signed NVIDIA DLSS5/Streamline libraries under `runtime/`. `graphics.json` records
-their absolute paths, a writable app cache and the external model DLL/hash.
-The bridge and SDK have matching x64 C++ headers/libraries. Runtime versions and
-hashes are recorded in `GRAPHICS_RUNTIME_MANIFEST.json`. Python is not used by
-the app.
+`build.ps1 -Graphics` stages Phoenix DLSS5's native DLL/kernel bundle under `runtime/`.
+`setup-graphics.ps1` installs the pinned, signed NVIDIA DLSS5/Streamline libraries and
+writes `graphics.json`, using app-relative runtime/cache paths and the external
+model DLL/hash. The bridge and SDK have matching x64 C++ headers/libraries.
+Public runtime versions and hashes are in `runtime.lock.json`; local receipts
+belong in ignored `data/maintenance/`. Python is not used by the app. The legacy
+`PortablePhoenixProcessor` is retained as a reference adapter; the app uses the
+native `PhoenixProcessor` in `src/NativeProcessor.cs`.
 
 `native/bridge.h` defines the cdecl C ABI:
 

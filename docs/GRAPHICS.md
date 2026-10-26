@@ -1,30 +1,27 @@
-# One-time graphics setup
+# Graphics setup
 
-The portable app plays DOS games immediately. Neural rendering is optional.
+Open **Graphics setup / download files…** in the effects panel.
 
-1. Obtain a compatible, signed `nvngx_dlssnr.dll` model separately. No model DLL
-   or extracted weights are supplied by this project.
-2. Close DOSBox Enhanced, double-click **Setup graphics.cmd**, and select that
-   file. The setup downloads NVIDIA's pinned Streamline 2.14.1 SDK, verifies the
-   archive hash, extracts the required signed runtimes and retains their terms.
-3. Start the app again. Choose Phoenix DLSS5 or NVIDIA DLSS5 in the effects panel and adjust
-   the controls. Keep your selected model DLL at its chosen location.
+- The component list shows the DOS engine, Phoenix library, bridge, kernels, model and NVIDIA runtimes found on disk.
+- **Download / repair missing graphics files** installs the pinned NVIDIA Streamline SR/FG runtime. Archive and file hashes and Windows signatures are checked before activation.
+- Optional: tick **OpenNR compatibility runtime** to download NODIX DLSS-5-MANAGER 1.3.7. This is community-modified runtime code, not an NVIDIA-signed DLL; both archive and DLL hashes are pinned. Only its model DLL is extracted. The manager is never installed or run.
+- Or choose your own **signed NVIDIA model DLL**. Select Original or Lightweight and press **Use selected model**; unavailable model resources are refused.
+- **Repair bundled engines** downloads this exact DOSBox release and checks GitHub's asset digest plus the file manifest before extracting only DOS/Phoenix runtime components.
+- Restart from the panel to apply changed runtimes/models. The replacement waits for the old process to exit, including its MCP listener and GPU work.
+- All downloaded files and model settings stay in ignored local runtime/data folders. Models and vendor runtimes are excluded from our release assets.
 
-The app includes the model-free Phoenix DLSS5 native library and sm_120 kernels in the
-portable package. These were tested on RTX 5080; other GPU architectures are not
-certified. DLSS Super Resolution / Frame Generation also require a compatible
-NVIDIA GPU and driver. A graphics error falls back to the original DOS picture.
+## Phoenix 0.17 controls
 
-For offline setup, run:
+Settings are saved per environment. Quick NR/SR order, input resize, NVIDIA FG and one-pass defaults remain available.
 
-```powershell
-.\setup-graphics.ps1 -Model C:\Models\nvngx_dlssnr.dll -NvidiaSdkArchive C:\Downloads\streamline-sdk-v2.14.1.zip
-```
+- **Detail & temporal:** reuse history, automatic mask, scene-change detection, skin conditioning (−1 follows structure), color strength, neural size 10–100%, 1–8 central blocks and eight repeat counts (0–4).
+- **Performance:** fixed / responsiveness / quality priority, target processing FPS and maximum processing milliseconds (0 disables each budget). Targets do not guarantee game FPS.
+- **Monitoring:** off, basic or detailed. Status shows actual model and effective tuning; GPU timings are sampled and add overhead.
+- **Color finishing:** brightness, contrast, saturation and gamma, applied through Phoenix's shared processing pipeline.
+- These advanced controls apply to the Phoenix renderer. NVIDIA NR, SR and FG remain independent choices. The Original / Lightweight choice is app-wide and takes effect after restart.
+- Start with one network pass. Block repeats and whole-network passes are separate controls. The shared block limit is 1–8; Original has eight central blocks, while Lightweight uses its two available blocks and repeat counts.
 
-The official SDK URL, file hashes and version are in `runtime.lock.json`.
-Configuration is generated locally in ignored `graphics.json`; caches and
-downloads go under ignored `data/`. Your model is referenced, not copied. It is
-never included by the release packager. NVIDIA components keep their own terms.
+![Setup and downloads](images/graphics-setup.png)
 
 ## Processing order
 

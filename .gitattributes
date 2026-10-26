@@ -3,3 +3,5 @@
 *.cmd text eol=crlf
 *.patch text eol=lf
 *.png binary
+
+*.patch -whitespace

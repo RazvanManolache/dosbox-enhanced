@@ -1,11 +1,11 @@
 {
-  "version": "0.5",
-  "scope": "Staged first-party Git blobs; external projects are pinned submodule gitlinks. This manifest excludes itself.",
+  "version": "0.6",
+  "scope": "First-party staged Git blobs; external projects are pinned submodule gitlinks. Excludes this manifest.",
   "files": [
     {
       "path": ".gitattributes",
-      "bytes": 85,
-      "sha256": "79db9f3871fe6e6710b8682ddbc7f780cebfdc9805a591691c94d9dca3e277f6"
+      "bytes": 106,
+      "sha256": "85f55182a4964e9c056d9bf3aa9f98a3f6f5f0eb7410360b51e6d0affbb82488"
     },
     {
       "path": ".github/workflows/build.yml",
@@ -14,8 +14,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 203,
-      "sha256": "b837834286342e6eae5302d083b13d31ad80d9e4c3b485b0c76f08e5e9dae300"
+      "bytes": 458,
+      "sha256": "3404855b4b1f7851f84e0bdf5f0370531b401a6c8727a21f7c12a9151ad6afb6"
     },
     {
       "path": ".gitmodules",
@@ -23,14 +23,29 @@
       "sha256": "59f9346b1a2b253a695ff2decbe314c54d38e0c486726ee9b2947edf8b3b9478"
     },
     {
+      "path": "AGENTS.md",
+      "bytes": 2773,
+      "sha256": "899f0f57a21d1be423c288df58b6bb4a328b22b5d2a061642474af0e021ec8ba"
+    },
+    {
       "path": "BUILDING.md",
-      "bytes": 5555,
-      "sha256": "9b185864ae42823c66def26b799dd88d9f49bf597d64c34cfe2d0bb8c0360e77"
+      "bytes": 5911,
+      "sha256": "b2244008a76df403157247700c155f0eec23e781158ac6e52c8ac558c3de3fe7"
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 2005,
-      "sha256": "3d10d7c0c8cbbed6b5f349183d67385071ef2ad1803c4d0675643c396af7a5e1"
+      "bytes": 2134,
+      "sha256": "3ff5de1e690893d6a73a5a49cf14aff44c43cd210df4389291a41d779c5791f0"
+    },
+    {
+      "path": "Cleanup-Generated.cmd",
+      "bytes": 122,
+      "sha256": "7a05f2214ee7b93aed71f641d173edf5b5e095a8e28eaefe7f326f92886204d4"
+    },
+    {
+      "path": "DOS Games.cmd",
+      "bytes": 59,
+      "sha256": "1c344c1ddfe17064d1b05d16912ba655cc9b45fe789d733565b4639e99fdeeb9"
     },
     {
       "path": "DOSBox Enhanced.cmd",
@@ -44,13 +59,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 7385,
-      "sha256": "8a621f36fc834a78f2da40fd7751898e781627fd3cd5653ad8fa58704fa2d276"
+      "bytes": 8728,
+      "sha256": "cd8d9c5ac7448eced340d2bcacbcdcb7914e0ffd3c0d8611a3497b11193dfe87"
     },
     {
       "path": "RELEASE_NOTES.md",
-      "bytes": 1989,
-      "sha256": "974ec2951d1569c2a72d3ab2ae18db130a0d7e22c5a5ab2309749acc02abf676"
+      "bytes": 1260,
+      "sha256": "e6b928a22bb6985875ccd7ea6d7c0d00b29732280ccaf2605a253f18163afecc"
     },
     {
       "path": "Setup graphics.cmd",
@@ -59,23 +74,23 @@
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
-      "bytes": 2609,
-      "sha256": "09ee3bc99d6a0b2ffd8b8dc940c945f825a42fb8129add66bbe2c5733caeafd3"
+      "bytes": 3095,
+      "sha256": "530fa108fd3ec31780c947cf8b3cdac5c9cb1d37315bcee073d066d1b5ef2f5f"
     },
     {
       "path": "build.ps1",
-      "bytes": 3691,
-      "sha256": "4bfcb55a07abc9ef4bba4f5b1ca28ee44be620835a815b4c4aabd7d33cfd6e41"
+      "bytes": 4856,
+      "sha256": "07b57d6ddae5fe3c022eafa1478bdd44d8074edd5d02979749f9cac2242f1013"
     },
     {
       "path": "dependencies.lock.json",
       "bytes": 832,
-      "sha256": "42fd0e32dac4156b64e750f99666abd1e22c77429cb7a7065d275b3408f07645"
+      "sha256": "1bd4f99d4c16662eed41cc2baa29f2ff689c49dbe53256630023ac6e9b0b581e"
     },
     {
       "path": "docs/CAPTURES.md",
-      "bytes": 4588,
-      "sha256": "13f7590c3ec57992203fa0105d2e6e6ba4d0999961ec282048fd30a63c3b007c"
+      "bytes": 4606,
+      "sha256": "95edfaab6c1280b2922e3bc0855d1a2b2bb0eea69e49657199fa360e8f91a199"
     },
     {
       "path": "docs/CAPTURE_EVIDENCE.json",
@@ -94,8 +109,8 @@
     },
     {
       "path": "docs/GAME_GALLERY.md",
-      "bytes": 4185,
-      "sha256": "d4f07cfbb25f96e1cb667ed5e9bd9ca4198fc8c81e6fc0dd5b82b7514c1cd546"
+      "bytes": 4227,
+      "sha256": "022b7853e441130cd31b733ee1d8ff68d06187adbc0de5936b619715dc1965d4"
     },
     {
       "path": "docs/GAME_PRESETS.json",
@@ -104,18 +119,23 @@
     },
     {
       "path": "docs/GRAPHICS.md",
-      "bytes": 3426,
-      "sha256": "72b4c74afaf46a04d3fd8601f7ad0a328664802ac80a65399a7bfcd409af8d50"
+      "bytes": 4560,
+      "sha256": "fd1cbe6c4ef0b61e87ebc0704501b984c54f6e4eb83faecbb7e59cb26624aa98"
     },
     {
       "path": "docs/MCP.md",
-      "bytes": 12640,
-      "sha256": "b194f06094ea202104b0bb001260871bf8c1b513b7ad8857e3138023a5411531"
+      "bytes": 13541,
+      "sha256": "405622db7bfccd8f519ee50fb17678d260d1c8d1a3e3f4f02b254e5f45ab6d0d"
+    },
+    {
+      "path": "docs/PHOENIX_0.17_UPDATE.md",
+      "bytes": 1076,
+      "sha256": "ee94d33aec61d25733cb4f0ba28682a04725697cef83c5cdf45d2395c87d8669"
     },
     {
       "path": "docs/PHOENIX_INTEGRATION.md",
-      "bytes": 6998,
-      "sha256": "fa0d1b6a77f19803649c8127290d0ce6605d15c73d436d1aaf3987a099fc2a4a"
+      "bytes": 7306,
+      "sha256": "48972f7caa6665e9bd3585cb0b8b1b16035ffc9c19001cd69c8e1813796621f4"
     },
     {
       "path": "docs/PHOENIX_UPSTREAM_UPDATE.json",
@@ -124,13 +144,18 @@
     },
     {
       "path": "docs/PHOENIX_UPSTREAM_UPDATE.md",
-      "bytes": 1901,
-      "sha256": "fe92be5e646e1f9114732ee94c64f4268a035f9f7c050ee365880dbb7441b4b7"
+      "bytes": 2084,
+      "sha256": "d82b301d96f380c566f3e472f0ba5d14a8b498a8ae4cfbf18d80e3262b0db049"
     },
     {
       "path": "docs/PIPELINE_EVIDENCE.json",
       "bytes": 59145,
       "sha256": "55a110bda0bbf4355b8dfc115ab780efbe90760f2f9b5f4ec338b147ee92bb20"
+    },
+    {
+      "path": "docs/RELEASE_0.6_VALIDATION.json",
+      "bytes": 6539,
+      "sha256": "3fec46bf4cfcdabf08f56e733d7e2385abc461b7d584859f9bf5feecb8eadb68"
     },
     {
       "path": "docs/USER_GUIDE.md",
@@ -139,8 +164,8 @@
     },
     {
       "path": "docs/VALIDATION.md",
-      "bytes": 4880,
-      "sha256": "8fa6ab05875b0b197ae3dcdf39e0467d9197b033a03246dbb91e15cdf3c39743"
+      "bytes": 5807,
+      "sha256": "5714e3ad9aa2b6362d98804711374d168315f2463749a55201cf2359cd91be7b"
     },
     {
       "path": "docs/images/cpu-controls.png",
@@ -303,6 +328,11 @@
       "sha256": "1c460cdc53ce3fa1e39d93f891ad1f6cbe688e91b35ee7b62b432f5ad67f74ce"
     },
     {
+      "path": "docs/images/graphics-setup.png",
+      "bytes": 40566,
+      "sha256": "a2b701a850323e0c3f039e1dd5bc594e38e5fa95b7399c807ed8a58ba24e3cc4"
+    },
+    {
       "path": "docs/images/input-resize.png",
       "bytes": 1036742,
       "sha256": "04ecd10b0b7c1b3792472f3542d488142419dec02d6404bb220182f5c469c2d0"
@@ -316,6 +346,11 @@
       "path": "docs/images/nvidia.png",
       "bytes": 1086139,
       "sha256": "2bd5dcff5898e622aa51b83be75aff3b1ce9235ca05d8172d4cba8380fcd29d7"
+    },
+    {
+      "path": "docs/images/phoenix-controls.png",
+      "bytes": 83962,
+      "sha256": "2218b32dbad882df00646f381ab1ffaee9cd57a19ec120f47a148573e3817af0"
     },
     {
       "path": "docs/images/program-picker.png",
@@ -336,6 +371,21 @@
       "path": "docs/images/workspace.png",
       "bytes": 1078439,
       "sha256": "0dff9ea2e5730fbef2697b6b78d01df1c1517d73487d53ae30261e06f514b988"
+    },
+    {
+      "path": "licenses/NVIDIA-Image-Scaling-LICENSE.txt",
+      "bytes": 1119,
+      "sha256": "180f077f3448ba84b03edea5be905d5ed53e258aa98228242e0e2da07b18b5be"
+    },
+    {
+      "path": "licenses/NVIDIA-Image-Scaling-NOTICE.txt",
+      "bytes": 173,
+      "sha256": "ece3634bf6090c455477011e8a9ee52a4de84a5e03c96b66a4e4d1eaacf139f7"
+    },
+    {
+      "path": "licenses/SharpCompress-MIT.txt",
+      "bytes": 1081,
+      "sha256": "b7ca2b6174cee11afe41d78b48527e3d7659a4435c25019a4a5e072299a2f8ed"
     },
     {
       "path": "licenses/dotnet/LICENSE.TXT",
@@ -414,8 +464,8 @@
     },
     {
       "path": "native/bridge.cpp",
-      "bytes": 42979,
-      "sha256": "fe4dbab221e322886bc3d5f3760d258b8a324b047ff98ade0a27cd0f8810308a"
+      "bytes": 44249,
+      "sha256": "ddf28a4b2a67345dec71994272586ada70e5a901faf224afef861079aa3f9cab"
     },
     {
       "path": "native/bridge.h",
@@ -439,8 +489,8 @@
     },
     {
       "path": "src/App.cs",
-      "bytes": 20270,
-      "sha256": "0c4d0bc63ae188565b4a796a365ca8a959ad8109776735f6b9592942629a9a59"
+      "bytes": 21833,
+      "sha256": "8a22ff7036a0a504560efa1878c1df2152d9c6130a322afc62796f74d4561be6"
     },
     {
       "path": "src/Audio.cs",
@@ -479,8 +529,8 @@
     },
     {
       "path": "src/DosboxEnhanced.csproj",
-      "bytes": 1016,
-      "sha256": "687ce4f4d55b2e445852573c49d2fc3c55547fd452b320e5b8f6e4c5c9045bcc"
+      "bytes": 1178,
+      "sha256": "497a0b6e48856ae8e2d7ccff782b4dc0b113fa656709be923202740af4bdea26"
     },
     {
       "path": "src/DosboxSettings.cs",
@@ -489,8 +539,8 @@
     },
     {
       "path": "src/GameGallery.cs",
-      "bytes": 9218,
-      "sha256": "17a8052965e428a857433cc0e7bc44ff802ec5a98db593d77fb65b48c4dc3a86"
+      "bytes": 9230,
+      "sha256": "9320551789fb3dbab1c2329ec6cd9a25dccd8f5f9e7c53608edd44bfa0b547aa"
     },
     {
       "path": "src/GraphicsConfiguration.cs",
@@ -498,9 +548,24 @@
       "sha256": "36546614f4c1a8d2c7db95272d6e52b17420fa85bb5e2c351b0558082aec87b8"
     },
     {
+      "path": "src/GraphicsSetup.cs",
+      "bytes": 14046,
+      "sha256": "00c1be51eccb9edd5f9447a672adbaf5c6133c4516287ab5c9976954f34ddab8"
+    },
+    {
+      "path": "src/GraphicsSetupTests.cs",
+      "bytes": 2968,
+      "sha256": "571a8520c8e877e7122503566c8e81fbd8a9cd715d951fe0481050c4d4981844"
+    },
+    {
+      "path": "src/GraphicsSetupWindow.cs",
+      "bytes": 4950,
+      "sha256": "ee3ae0d9f2f4a6b5186e1b3ae9b07eee1d9e3f50f74e5b547aae5ea45cf2de17"
+    },
+    {
       "path": "src/MainWindow.cs",
-      "bytes": 55415,
-      "sha256": "29ff1e44df44329428a272fb86b48336fc71a4a49fea5fcf2f13c878b83c580d"
+      "bytes": 55574,
+      "sha256": "b87284614e9bd6006b4cbcc25834e62fdb98c2047ad2642ea3f8b1b0a5bdebaf"
     },
     {
       "path": "src/McpServer.cs",
@@ -509,18 +574,18 @@
     },
     {
       "path": "src/McpTools.cs",
-      "bytes": 22566,
-      "sha256": "55864ba659ef39c98edae41b8a70be07a3df58460fd6faffda8e2aad000f22d7"
+      "bytes": 23133,
+      "sha256": "5a69c60530e0e9219c129458dde320fd2bd8452fd53bf82a6e4acae1664a7c47"
     },
     {
       "path": "src/McpValidation.cs",
-      "bytes": 32498,
-      "sha256": "05519c6961563b49202eb249a5cdfb71af8cb99d1c3c16030e6b681bb28099fa"
+      "bytes": 33198,
+      "sha256": "f111cf65c9d9627c82f8dcc998eddf055cbf25949dd4bad4b1747cebd9dea733"
     },
     {
       "path": "src/McpWindow.cs",
-      "bytes": 23849,
-      "sha256": "438fe97d6e0877e65e1ee69b3e43f691dff4d781ac870e34c4905bd2fe4e34c8"
+      "bytes": 24205,
+      "sha256": "7ee5536c88d19e9b32ef5fa894abf7806ae4389b46ae0894b942cbdeb4bf9079"
     },
     {
       "path": "src/McpWorkspace.cs",
@@ -529,8 +594,8 @@
     },
     {
       "path": "src/Models.cs",
-      "bytes": 11397,
-      "sha256": "cb30035d221cfd9166d5d824ec32a76cb223898e66a214fd75079c42b230fa02"
+      "bytes": 12629,
+      "sha256": "5ce096edcd39eb26c36a380410ff0b2576e1ecde8205ac644c3b8c75899456d8"
     },
     {
       "path": "src/MouseCapture.cs",
@@ -544,13 +609,18 @@
     },
     {
       "path": "src/NativeProcessor.cs",
-      "bytes": 9630,
-      "sha256": "de049e9b85dbd913080ac30bde650fd126a37752d8353f448b1f172d59f0dcb0"
+      "bytes": 10409,
+      "sha256": "7be2e6631a772257c572f3c55cdd35d7b9347d7625003e56fccf53ff8cd1c80d"
     },
     {
       "path": "src/NativeView.cs",
       "bytes": 6626,
       "sha256": "b12deb0a711f8d974c9b101d075859413985d7a5b732cd60e78b8fc820f81680"
+    },
+    {
+      "path": "src/PhoenixPanel.cs",
+      "bytes": 8146,
+      "sha256": "856db44109b85a614d5327f6baf05b2d4b7edda2afaf0b96318ae734d1fdd991"
     },
     {
       "path": "src/ProgramPicker.cs",
@@ -569,8 +639,8 @@
     },
     {
       "path": "src/Showcase.cs",
-      "bytes": 19809,
-      "sha256": "c975445e85b6f4a58090e89759e637d1cb8790182bffec97f24120ce39f6f1b4"
+      "bytes": 19821,
+      "sha256": "da1d6c47d66274e234a258a5ba4a4bc4097ff1f1a9a61e74aed428585caaca6a"
     },
     {
       "path": "src/Toolbar.cs",
@@ -583,9 +653,19 @@
       "sha256": "45d485bd4b3054bdd1a5d076a07523b2211f8edc75ccd52264973fd21844454d"
     },
     {
+      "path": "tests/create_fixture.py",
+      "bytes": 2493,
+      "sha256": "64bb773b1a900db300e2848f5158de52c00fb50ae88141c92e35d5050eccb69b"
+    },
+    {
       "path": "tests/graphics_pipeline_probe.py",
-      "bytes": 14125,
-      "sha256": "9e0d752e9bc0e5bd249f8d5691613273ea751f6a75bfa341fd4d362ddfd2011b"
+      "bytes": 14391,
+      "sha256": "b1888476610bed370ba3bdf6d03aba3fd4f5959a504705d75c84a6f05f9cbf8f"
+    },
+    {
+      "path": "tools/Cleanup-Generated.ps1",
+      "bytes": 3903,
+      "sha256": "20bd1b0bc178ec7d43500da2fdb50edd13f0d164d89b16594cb1573428d20fee"
     },
     {
       "path": "tools/Initialize-Dependencies.ps1",
@@ -594,8 +674,18 @@
     },
     {
       "path": "tools/Package-Release.ps1",
-      "bytes": 3038,
-      "sha256": "b1de2864dace5c1b91cc6fe5c408dde43fc60411003b8352497435f5f7f9be4c"
+      "bytes": 3151,
+      "sha256": "003de857c724b883732ab92bee72e5782bfc094bb1803c4945fe2901a7df63b2"
+    },
+    {
+      "path": "tools/phoenix-msvc-shader.patch",
+      "bytes": 3101,
+      "sha256": "5d71051213d45696c5597f34b2fd3828e1bdca5d0f50d71c8145a270ff52774b"
+    },
+    {
+      "path": "tools/release.py",
+      "bytes": 7871,
+      "sha256": "4bd3d200c2cbc530669c4ab6f260cb6c98f6b64b6c566bd5a3ae10ae13fd2de3"
     }
   ],
   "submodules": [
@@ -609,7 +699,7 @@
     },
     {
       "path": "external/phoenix",
-      "revision": "4c9b75ff42b6945352f66f309dc84404e498f4cf"
+      "revision": "f8f4ddf729e8d9a117269ade006314b87845649d"
     },
     {
       "path": "external/streamline",

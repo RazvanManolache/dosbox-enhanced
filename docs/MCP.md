@@ -222,3 +222,21 @@ HTTP service and executable rather than its Python bridge.
 - `dosbox_status.cpu` reports the requested value, live-control availability and acknowledged frontend updates.
 - Exact values are verified separately through DOSBox's own `config -get "cpu cycles"`, not inferred from the UI label.
 - Advanced CPU syntax remains supported through configuration and may require reload. Per-environment Auto/manual history is preserved.
+
+## Phoenix 0.17 advanced controls
+
+`dosbox_effects` accepts a `phoenix` object with the same per-environment settings
+as the advanced panel. Omitted members in that object use defaults; omitted
+`phoenix` retains the current advanced settings. Invalid values leave effects
+unchanged. Example:
+
+```json
+{"phoenix":{"NeuralScale":75,"Blocks":4,"Repeats":"1,1,1,1,1,1,1,1","Temporal":true,"Monitoring":1,"TargetFps":60,"Gamma":1.1}}
+```
+
+Additional members: `Skin` (−1–2), `AutoMask`, `ColorStrength` (0–1),
+`MaxMilliseconds` (0–1000), `Priority` (0 fixed / 1 responsiveness / 2 quality),
+`SceneDetection`, `Brightness` (−2–2), `Contrast` (0–4), `Saturation` (0–2).
+`Gamma` is 0.1–4. `NeuralScale` is 10–100; `Blocks` is 1–8.
+Runtime status contains the native SDK's actual model, tuning and pipeline
+telemetry. Model downloads and app-wide runtime selection are in Graphics setup.
