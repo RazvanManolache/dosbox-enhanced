@@ -124,7 +124,7 @@ git submodule update --init --recursive
 
 - **Host:** C# / WPF, embedded DOSBox Pure; requires .NET 9 SDK and PowerShell.
 - **Graphics:** native D3D12 bridge; building adds MSVC, CMake and the Phoenix DLSS5 SDK. Phoenix DLSS5 source/kernel builds need additional development tools.
-- **Dependencies:** pinned Git submodules and lock file; Phoenix DLSS5 0.17 source, native tuning and shared processing pipeline.
+- **Dependencies:** pinned Git submodules and lock file; Phoenix DLSS5 0.18 source, native tuning and shared processing pipeline.
 - **Portable app:** does not need those development tools.
 - [Build instructions and CI](BUILDING.md) · [Release validation](docs/VALIDATION.md)
 
