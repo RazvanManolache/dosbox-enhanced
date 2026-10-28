@@ -53,7 +53,8 @@ public sealed partial class MainWindow
         menu.Children.Add(IconButton("pause", "Pause / resume", () => core?.Pause(!core.IsPaused)));
         menu.Children.Add(IconButton("save", "Save state", () => _ = State(true))); menu.Children.Add(IconButton("load", "Load state", () => _ = State(false)));
         menu.Children.Add(IconButton("restart", "Restart DOS", () => { core?.Reset(); phoenix.Reset(); })); menu.Children.Add(IconButton("stop", "Stop", Stop));
-        menu.Children.Add(IconButton("camera", "Screenshot", Screenshot)); menu.Children.Add(IconButton("fullscreen", "Fullscreen · F11", ToggleFullscreen));
+        Button camera = null!; camera = IconButton("camera", "Screenshots · displayed, original or matching pair", () => ShowScreenshotMenu(camera));
+        menu.Children.Add(camera); menu.Children.Add(IconButton("fullscreen", "Fullscreen · F11", ToggleFullscreen));
         effectsButton = IconButton("beautify", "Beautify · show / hide effects", () => TogglePane(false)); menu.Children.Add(effectsButton);
         mouseButton = IconButton("mouse", "Mouse capture settings", ShowMouseSettings); menu.Children.Add(mouseButton);
         muted.Content = ToolbarIcon("volume"); muted.ToolTip = "Mute"; muted.Margin = new Thickness(8, 0, 2, 0); AutomationProperties.SetName(muted, "Mute audio"); menu.Children.Add(muted);

@@ -81,3 +81,7 @@ remote access. The app's options panel supplies client settings and instructions
 - Advanced cycle syntax stays in the DOSBox configuration editor. Replacing an advanced fixed setting may need a DOS reload; the panel reports this.
 
 ![Manual CPU cycles in the environment panel](images/cpu-controls.png)
+
+## Screenshot menu
+
+Click the camera icon to save the displayed image, original DOS pixels, or an original + enhanced pair in `data/screenshots`. A pair has `-original.png`, `-enhanced.png` and a JSON receipt with matching frame identity, dimensions, effects and PNG checksums. Original and processed images retain their own resolutions. Captures use the most recently completed graphics frame, require no pause and exclude Frame Generation presentations. The saved-path notice stays visible for eight seconds.

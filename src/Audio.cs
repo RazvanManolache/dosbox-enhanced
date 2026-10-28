@@ -23,6 +23,7 @@ public sealed class WaveAudio : IDisposable
     volatile bool stopping;
     public AudioSettings Settings;
     public double LastGain = double.NaN;
+    internal bool OutputAvailable => handle != IntPtr.Zero;
     readonly int chunk;
     readonly uint headerSize = (uint)Marshal.SizeOf<Header>();
     public WaveAudio(int rate, AudioSettings? settings = null)

@@ -14,7 +14,7 @@ namespace DosboxEnhanced;
 
 public sealed partial class MainWindow
 {
-    public async Task RunMcpValidation()
+    public async Task RunMcpValidation(bool interactive = true)
     {
         var checks=new List<string>(); var report=new Dictionary<string,object?>();
         var original=preferences.Mcp; var audioBefore=preferences.Audio;var mouseBefore=preferences.Mouse;var selectedBefore=selected;var envPanelBefore=preferences.EnvironmentVisible;var effectsPanelBefore=preferences.EffectsVisible;
@@ -62,11 +62,17 @@ public sealed partial class MainWindow
             Check((await Tool("dosbox_list_files",new{environment_id=profile.Id,drive="C",path="..\\.."}))["isError"]?.GetValue<bool>()==true,"path traversal rejected");
             Check((await Tool("dosbox_audio",new{volume=101}))["isError"]?.GetValue<bool>()==true,"numeric bounds rejected");
             var shot=await Tool("dosbox_screenshot");var encoded=shot["content"]![1]!["data"]!.GetValue<string>();var bytes=Convert.FromBase64String(encoded);Check(bytes.Take(8).SequenceEqual(new byte[]{137,80,78,71,13,10,26,10}),"screenshot is valid PNG image content");File.WriteAllBytes(Path.Combine(Paths.Root,"tests","results","mcp-screen.png"),bytes);
+            Check((await Tool("dosbox_screenshot",new{pair=true,enhanced=true}))["isError"]!.GetValue<bool>(),"MCP rejects conflicting screenshot modes");
+            for(int i=0;i<200&&phoenix.LatestPair==null;i++)await Task.Delay(50);
+            var pairShot=await Tool("dosbox_screenshot",new{pair=true});
+            Check(pairShot["isError"]!.GetValue<bool>()==false&&pairShot["content"]!.AsArray().Count==3&&pairShot["structuredContent"]?["schema"]?.GetValue<string>()=="dosbox-screenshot-pair/1","authenticated HTTP returns the matching pair and structured metadata");
             var before=SHA256.HashData(core.Latest!.Pixels);Check((await Tool("dosbox_press_keys",new{keys=new[]{"a"},hold_ms=80}))["isError"]!.GetValue<bool>()==false,"keyboard tool completed");await Task.Delay(250);Check(!before.SequenceEqual(SHA256.HashData(core.Latest!.Pixels)),"MCP keyboard changed real DOS screen");
             var text=await Tool("dosbox_read_text");report["text_result"]=text.DeepClone();Check(!text["isError"]!.GetValue<bool>()&&text["structuredContent"]?["text"]?.GetValue<string>().Contains("VERIFIED",StringComparison.OrdinalIgnoreCase)==true,"real DOS screen text read through native Windows OCR/RAM");
             Check(!(await Tool("dosbox_type_text",new{text="abc",delay_ms=15}))["isError"]!.GetValue<bool>(),"ASCII typing tool");
             Check(!(await Tool("dosbox_mouse",new{dx=10,dy=-5,button="left"}))["isError"]!.GetValue<bool>(),"mouse tool stays inside DOS");
-            var gains=await Tool("dosbox_audio",new{volume=50,muted=false});await Task.Delay(100);Check(!gains["isError"]!.GetValue<bool>()&&core.ActualAudioGain==.5,"audio tool affects live PCM gain");
+            var gains=await Tool("dosbox_audio",new{volume=50,muted=false});
+            if(core.AudioOutputAvailable) { for(int i=0;i<40&&core.ActualAudioGain!=.5;i++)await Task.Delay(50);Check(!gains["isError"]!.GetValue<bool>()&&core.ActualAudioGain==.5,"audio tool affects live PCM gain"); }
+            else { report["audio_limitation"]="No Windows audio output device available; live PCM gain was not verified.";Check(!gains["isError"]!.GetValue<bool>()&&preferences.Audio.Gain==.5,"audio settings apply without an output device"); }
             Check(!(await Tool("dosbox_display",new{aspect="pixels",sampling="sharp"}))["isError"]!.GetValue<bool>()&&scaler.SelectedIndex==1&&aspectMode.SelectedIndex==1,"display tool controls actual view");
             Check(!(await Tool("dosbox_effects",new{intensity=.3,tone=.8,upscaling=true,frame_generation=false}))["isError"]!.GetValue<bool>()&&phoenix.Settings.Intensity==.3&&!phoenix.Settings.NvidiaFrameGeneration,"graphics tool updates actual effect settings");
             Check(!(await Tool("dosbox_effects",new{upscale_order="before_nr",upscale_factor=3}))["isError"]!.GetValue<bool>()&&phoenix.Settings.UpscaleOrder=="before_nr"&&phoenix.Settings.UpscaleFactor==3,"MCP selects SR before NR and the native-resolution multiplier");
@@ -99,15 +105,17 @@ public sealed partial class MainWindow
             await Tool("dosbox_effects",new{phoenix=new{}});
             var independentPanels=await Tool("dosbox_display",new{environment_panel=false,effects_panel=true});Check(!independentPanels["isError"]!.GetValue<bool>()&&!environmentVisible&&effectsVisible,"display tool independently hides environment and shows effects");
             Check(!ApplicationPreferences.Load().EnvironmentVisible&&ApplicationPreferences.Load().EffectsVisible,"MCP panel visibility persists to app preferences");
-            FocusForValidation();stage.Focus();await Task.Delay(100);
+            if(interactive) { FocusForValidation();stage.Focus();await Task.Delay(100); }
             var mouseConfigured=await Tool("dosbox_mouse_capture",new{capture_on_click=true,hide_pointer=true,release_shortcut="Ctrl+Alt+M",sensitivity=1.25});Check(!mouseConfigured["isError"]!.GetValue<bool>()&&preferences.Mouse.ReleaseShortcut=="Ctrl+Alt+M"&&ApplicationPreferences.Load().Mouse.Sensitivity==1.25,"MCP configures and persists the real mouse shortcut, pointer options and sensitivity");
             var invalidShortcut=await Tool("dosbox_mouse_capture",new{release_shortcut="F11",hide_pointer=false});Check(invalidShortcut["isError"]!.GetValue<bool>()&&preferences.Mouse.HidePointer&&preferences.Mouse.ReleaseShortcut=="Ctrl+Alt+M","invalid mouse shortcut is rejected without partially saving other changes");
+            if(interactive) {
             var capturedMouse=await Tool("dosbox_mouse_capture",new{captured=true});Check(!capturedMouse["isError"]!.GetValue<bool>()&&mouseCaptured,"MCP captures the foreground DOS window through the real capture mechanism");
             Check((await Tool("dosbox_status"))["structuredContent"]?["mouse"]?["captured"]?.GetValue<bool>()==true,"MCP status exposes active capture and all configured controls");
             Check(!(await Tool("dosbox_mouse",new{dx=4,dy=2,button="middle"}))["isError"]!.GetValue<bool>(),"MCP supports middle mouse input independently of host capture");
             await Tool("dosbox_mouse_capture",new{captured=false});Check(!mouseCaptured,"MCP releases Windows capture explicitly");
             var otherCaptureWindow=new Window{Owner=this,Width=200,Height=90,Title="MCP capture foreground boundary"};otherCaptureWindow.Show();await Task.Delay(70);
             Check((await Tool("dosbox_mouse_capture",new{captured=true}))["isError"]!.GetValue<bool>()&&!mouseCaptured,"MCP refuses capture while a settings/other window is foreground");otherCaptureWindow.Close();FocusForValidation();
+            } else { report["interactive_limitation"]="Explicit non-interactive run: foreground mouse-capture and secondary-window interaction checks omitted."; }
             await Tool("dosbox_display",new{fullscreen=true,environment_panel=true,effects_panel=false,menu_visible=true});Check(fullscreen&&environmentVisible&&!effectsVisible&&fullscreenMenu.IsOpen,"MCP controls the independent fullscreen environment and menu");
             await Tool("dosbox_mouse_capture",new{captured=true});await Tool("dosbox_mouse_capture",new{captured=false});Check(!mouseCaptured&&fullscreenMenu.IsOpen,"MCP fullscreen release reveals the menu immediately");
             await Tool("dosbox_display",new{fullscreen=false,panels=true});
@@ -159,6 +167,7 @@ public sealed partial class MainWindow
             settings=settings with {AllowRemote=false,AllowControl=false};await ConfigureMcp(settings);session="";await Request("initialize",new JsonObject{["protocolVersion"]="2025-11-25"});await Request("notifications/initialized",notify:true);
             if(localIp!=null){bool blockedAgain=false;try{await Request("ping",url:$"http://{localIp}:{port}/mcp");}catch(HttpRequestException){blockedAgain=true;}Check(blockedAgain,"unchecking remote closes LAN listener again");}
             var observe=await Request("tools/list");Check(((JsonArray)observe.body!["result"]!["tools"]!).Count==8,"observation mode hides control tools");Check((await Tool("dosbox_press_keys",new{keys=new[]{"a"}}))["isError"]!.GetValue<bool>(),"observation mode rejects direct control calls");
+            Check(((JsonArray)observe.body!["result"]!["tools"]!).Any(t => t?["name"]?.GetValue<string>() == "dosbox_screenshot" && t?["inputSchema"]?["properties"]?["pair"]?["type"]?.GetValue<string>() == "boolean"),"paired screenshots remain available in observation mode");
             foreach(var control in new[]{("dosbox_mouse_capture",new JsonObject{["captured"]=true}),("dosbox_manage_programs",new JsonObject{["environment_id"]=profile.Id,["scan"]=true}),("dosbox_environment",new JsonObject{["action"]="copy",["environment_id"]=profile.Id}),("dosbox_drive",new JsonObject{["environment_id"]=profile.Id,["action"]="remove",["drive"]="D"}),("dosbox_quick_run",new JsonObject{["environment_id"]=profile.Id,["drive"]="C",["path"]="VERIFY.COM"})})Check((await Tool(control.Item1,control.Item2))["isError"]!.GetValue<bool>(),"observation mode rejects "+control.Item1);
             Check(!(await Tool("dosbox_list_programs",new{environment_id=profile.Id}))["isError"]!.GetValue<bool>(),"observation mode reads the managed program menu");
             // The same published executable is the entire stdio bridge.

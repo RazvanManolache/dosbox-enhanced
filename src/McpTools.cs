@@ -29,7 +29,7 @@ public static class McpTools
         Tool("dosbox_list_environments", "List saved DOS environments and mounted drives; use their IDs and DOS paths.", true, []),
         Tool("dosbox_list_programs", "Read the managed executable dropdown, including visibility, order and availability. Newly found files require a scan/automatic discovery.", true, ["environment_id"], ("environment_id",Field("string","Environment ID")),("include_hidden",Field("boolean","Include hidden entries; defaults to true")),("offset",Field("integer","List offset",0,20000)),("count",Field("integer","Entries per page; default 200",1,1000))),
         Tool("dosbox_list_files", "Browse a mapped DOS drive. Results include friendly category names and curated launchers.", true, ["environment_id", "drive"], ("environment_id", Field("string", "Saved environment ID")), ("drive", Field("string", "DOS drive letter, e.g. C")), ("path", Field("string", "Relative folder, e.g. ACTION; blank means drive root"))),
-        Tool("dosbox_screenshot", "Capture the DOS picture as PNG image content. Original pixels by default; enhanced=true requests available neural output.", true, [], ("enhanced", Field("boolean", "Capture enhanced output instead of raw DOS pixels"))),
+        Tool("dosbox_screenshot", "Capture PNG image content. Original pixels by default; enhanced=true requests processed output. pair=true returns the original and enhanced output from one completed graphics call, with settings, dimensions and PNG checksums. Does not save files. Pair capture requires ready graphics; no unmatched fallback. Generated presentation frames are excluded.", true, [], ("enhanced", Field("boolean", "Capture enhanced output instead of raw DOS pixels; cannot be true with pair")), ("pair", Field("boolean", "Return matching original and enhanced PNGs, in that order, plus metadata"))),
         Tool("dosbox_read_text", "Read DOS screen text. Uses VGA RAM when available, otherwise the built-in Windows OCR engine; verify uncertain OCR against screenshots.", true, []),
         Tool("dosbox_read_memory", "Read a bounded range of emulator RAM, never host-process memory. Available only if the core exposes RAM.", true, ["offset", "count"], ("offset", Field("integer", "Physical RAM byte offset", 0, 268435455)), ("count", Field("integer", "Bytes to read", 1, 4096))),
         Tool("dosbox_get_configuration", "Get effective DOSBox INI settings, drive mappings and startup. Any supported section/key can be configured.", true, ["environment_id"], ("environment_id", Field("string", "Saved environment ID"))),
@@ -100,6 +100,18 @@ public static class McpTools
             case "dosbox_effects": return Text(await Ui(window, () => window.McpEffects(args), token));
             case "dosbox_mouse_capture": return Text(await Ui(window,()=>window.McpMouseCapture(args),token));
             case "dosbox_screenshot":
+                if (B(args,"pair")) {
+                    if (B(args,"enhanced")) throw new ArgumentException("Use pair=true or enhanced=true, not both.");
+                    return await Ui(window, () => {
+                        var pair = window.McpFramePair(); var original = Screenshots.Encode(pair.Original); var enhanced = Screenshots.Encode(pair.Enhanced);
+                        var metadata = JsonSerializer.SerializeToNode(Screenshots.Describe(pair, original, enhanced))!;
+                        return new JsonObject { ["content"] = new JsonArray(
+                            new JsonObject { ["type"] = "text", ["text"] = metadata.ToJsonString() },
+                            new JsonObject { ["type"] = "image", ["mimeType"] = "image/png", ["data"] = Convert.ToBase64String(original) },
+                            new JsonObject { ["type"] = "image", ["mimeType"] = "image/png", ["data"] = Convert.ToBase64String(enhanced) }),
+                            ["structuredContent"] = metadata, ["isError"] = false };
+                    }, token);
+                }
                 var frame = await Ui(window, () => window.McpFrame(B(args,"enhanced")), token);
                 var png = await Ui(window, () => { var image = BitmapSource.Create(frame.Width, frame.Height, 96, 96, PixelFormats.Bgra32, null, frame.Pixels, frame.Width*4); var encoder = new PngBitmapEncoder(); encoder.Frames.Add(BitmapFrame.Create(image)); using var stream = new MemoryStream(); encoder.Save(stream); return Convert.ToBase64String(stream.ToArray()); }, token);
                 return new JsonObject { ["content"] = new JsonArray(new JsonObject { ["type"] = "text", ["text"] = JsonSerializer.Serialize(new { width=frame.Width, height=frame.Height, frame=frame.Sequence, enhanced=B(args,"enhanced") }) }, new JsonObject { ["type"] = "image", ["mimeType"] = "image/png", ["data"] = png }), ["isError"] = false };

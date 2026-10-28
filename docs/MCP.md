@@ -240,3 +240,11 @@ Additional members: `Skin` (−1–2), `AutoMask`, `ColorStrength` (0–1),
 `Gamma` is 0.1–4. `NeuralScale` is 10–100; `Blocks` is 1–8.
 Runtime status contains the native SDK's actual model, tuning and pipeline
 telemetry. Model downloads and app-wide runtime selection are in Graphics setup.
+
+## Matching screenshot pairs
+
+Call `dosbox_screenshot` with `{"pair":true}`. The response contains metadata, then the original PNG, then the enhanced PNG. `structuredContent` repeats the metadata: frame sequence, graphics epoch, completion time, aspect, both dimensions, SHA-256 hashes of the PNG bytes, and the effects used for that frame.
+
+Both images come from one completed graphics call, even while DOS continues running. The original keeps native DOS dimensions; the processed image keeps its actual resize/SR dimensions. Compare mode remains visible if enabled. Generated presentation frames are excluded. This observation tool saves no files and changes no settings or pause state.
+
+A pair requires a running environment and completed graphics output. Reset, stop or processing failure clears the pair; unavailable output returns an error instead of mismatched images. Do not combine `pair: true` with `enhanced: true`. Existing single-image requests are unchanged.

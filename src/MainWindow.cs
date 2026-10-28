@@ -69,7 +69,7 @@ public sealed partial class MainWindow : Window
     public string CurrentStatus => status.Text;
     public MainWindow(string? executable = null)
     {
-        Title = "DOSBox Enhanced · v0.6"; Width = 1440; Height = 920; MinWidth = 1050; MinHeight = 640;
+        Title = "DOSBox Enhanced · v0.6.1"; Width = 1440; Height = 920; MinWidth = 1050; MinHeight = 640;
         Background = Brush(15, 20, 29); Foreground = Brush(221, 231, 241); FontFamily = new FontFamily("Segoe UI"); FontSize = 13;
         environmentVisible = preferences.EnvironmentVisible; effectsVisible = preferences.EffectsVisible;
         root.Background = Background; ConfigureTheme(); BuildUi(); InitializePrograms(); InitializeMouseCapture(); ApplyLayout();
@@ -442,7 +442,7 @@ public sealed partial class MainWindow : Window
         if (source != null)
         {
             if (source.Sequence != submitted) { phoenix.Submit(source); submitted = source.Sequence; }
-            var enhanced = Volatile.Read(ref phoenix.Latest);
+            var enhanced = phoenix.Latest;
             if (enhanced != null && enhanced.Sequence != enhancedSeen) { enhancedSeen = enhanced.Sequence; processedAt = clock.Elapsed.TotalSeconds; }
             // Keep emulation responsive even while a model initializes or fails.
             var frame = enhanced != null && enhanced.SourceWidth == source.Width && enhanced.SourceHeight == source.Height && clock.Elapsed.TotalSeconds - processedAt < .5 ? enhanced : source;
@@ -453,6 +453,7 @@ public sealed partial class MainWindow : Window
         else { nativeView.Visibility = Visibility.Hidden; if (core != null) status.Text = core.Status; }
         phoenixStatus.Text = phoenix.Status;
         nvidiaStatus.Text = phoenix.UpscalingStatus + "\n" + phoenix.FrameGenerationStatus;
+        if (source != null && clock.Elapsed.TotalSeconds < captureNoticeUntil) status.Text += "\n" + captureNotice;
         UpdateMcpUi();
         nativeView.UpdatePlacement();
         if (fullscreen)
@@ -462,7 +463,7 @@ public sealed partial class MainWindow : Window
             if (dwell.Update(local.X, local.Y, clock.Elapsed.TotalSeconds, top)) ShowMenu(true);
             if (menu.Visibility == Visibility.Visible && !panels)
             {
-                if (local.Y <= menu.ActualHeight + 12 || menu.IsKeyboardFocusWithin || programPicker.IsOpen) hideSince = clock.Elapsed.TotalSeconds;
+                if (local.Y <= menu.ActualHeight + 12 || menu.IsKeyboardFocusWithin || programPicker.IsOpen || screenshotPopup?.IsOpen == true) hideSince = clock.Elapsed.TotalSeconds;
                 else if (clock.Elapsed.TotalSeconds - hideSince > .75) ShowMenu(false);
             }
         }
@@ -565,9 +566,7 @@ public sealed partial class MainWindow : Window
     }
     public void Screenshot()
     {
-        if (bitmap == null) return;
-        var directory = Path.Combine(Paths.Data, "screenshots"); Directory.CreateDirectory(directory); var path = Path.Combine(directory, DateTime.Now.ToString("yyyyMMdd-HHmmss-fff") + ".png");
-        var encoder = new PngBitmapEncoder(); encoder.Frames.Add(BitmapFrame.Create(bitmap)); using var stream = File.Create(path); encoder.Save(stream); status.Text = "Screenshot saved: " + path;
+        if (displayed != null) SaveScreenshot(displayed);
     }
     public void CaptureWindow(string path)
     {

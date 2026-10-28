@@ -65,6 +65,7 @@ public sealed class DosCore : IDisposable
     public bool IsPaused => paused;
     public long AudioFrames;
     public double ActualAudioGain => audio == null ? double.NaN : Volatile.Read(ref audio.LastGain);
+    internal bool AudioOutputAvailable => audio?.OutputAvailable == true;
     public string CoreVersion = "";
     public long MemoryBytes;
     public readonly ConcurrentDictionary<string,string> OptionDefinitions = new();

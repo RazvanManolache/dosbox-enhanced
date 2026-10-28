@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.1
+
+- Camera dropdown: displayed image, original DOS pixels, or matching original/enhanced PNGs.
+- Paired capture retains the exact source used by the completed processing call, even while DOS advances.
+- JSON capture receipts include effects, dimensions, frame identity and PNG checksums.
+- MCP `dosbox_screenshot` accepts `pair: true`, including in observation mode; returns two images without saving files.
+- Reset, stop and processing failures clear capture availability; mismatched fallback is never returned.
+- Phoenix source pinned to 0.18; its standalone rendering code is unchanged from 0.17.
+- NVIDIA NGX initializes on demand for NR/SR, allowing Phoenix without SR to run independently of NGX initialization.
+
 ## 0.6
 
 - Phoenix DLSS5 0.17, Original and Lightweight model selection.

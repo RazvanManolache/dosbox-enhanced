@@ -1,4 +1,4 @@
-param([string]$OutputDirectory = '', [string]$Version = '0.6')
+param([string]$OutputDirectory = '', [string]$Version = '0.6.1')
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 if (-not $OutputDirectory) { $OutputDirectory = Join-Path $root 'release' }
@@ -18,7 +18,7 @@ if (-not (Test-Path -LiteralPath (Join-Path $kernels 'native_manifest.json'))) {
 Copy-Item -LiteralPath $kernels -Destination (Join-Path $folder 'runtime') -Recurse
 foreach ($name in @('README.md','LICENSE','THIRD_PARTY_NOTICES.md','CHANGELOG.md','DOSBox Enhanced.cmd','Setup graphics.cmd','setup-graphics.ps1','runtime.lock.json')) { Copy-Item -LiteralPath (Join-Path $root $name) -Destination $folder }
 New-Item -ItemType Directory -Path (Join-Path $folder 'docs') -Force | Out-Null
-foreach ($name in @('USER_GUIDE.md','GRAPHICS.md','MCP.md','CAPTURES.md','CAPTURE_EVIDENCE.json','PIPELINE_EVIDENCE.json','GAME_GALLERY.md','GAME_PRESETS.json','GALLERY_EVIDENCE.json','VALIDATION.md','RELEASE_0.6_VALIDATION.json','PHOENIX_0.17_UPDATE.md','DOSBOX_LICENSE')) { Copy-Item -LiteralPath (Join-Path $root ('docs/' + $name)) -Destination (Join-Path $folder 'docs') }
+foreach ($name in @('USER_GUIDE.md','GRAPHICS.md','MCP.md','CAPTURES.md','CAPTURE_EVIDENCE.json','PIPELINE_EVIDENCE.json','GAME_GALLERY.md','GAME_PRESETS.json','GALLERY_EVIDENCE.json','VALIDATION.md','RELEASE_0.6_VALIDATION.json','RELEASE_0.6.1_VALIDATION.json','PHOENIX_0.17_UPDATE.md','DOSBOX_LICENSE')) { Copy-Item -LiteralPath (Join-Path $root ('docs/' + $name)) -Destination (Join-Path $folder 'docs') }
 Copy-Item -LiteralPath (Join-Path $root 'docs/images') -Destination (Join-Path $folder 'docs') -Recurse
 Copy-Item -LiteralPath (Join-Path $root 'licenses') -Destination $folder -Recurse
 if (Test-Path -LiteralPath (Join-Path $folder 'data')) { throw 'A package must not contain user data.' }

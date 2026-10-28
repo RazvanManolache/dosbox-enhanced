@@ -72,7 +72,7 @@ public sealed partial class MainWindow
         panel.Children.Add(Label("2. Give this to the AI", 18));
         var instructions = new TextBox { Text = McpInstructions.Agent, IsReadOnly = true, AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, Height = 128, VerticalScrollBarVisibility = ScrollBarVisibility.Auto }; panel.Children.Add(instructions);
         panel.Children.Add(Button("Copy instructions for AI", () => Clipboard.SetText(McpInstructions.Agent)));
-        panel.Children.Add(Label("Available: status, environments, mapped files, screenshots, screen text through built-in Windows OCR (or RAM when exposed), keys, mouse, pause/state control, audio, effects and all supported DOSBox INI settings. RAM reads depend on the core. Unavailable: Lua, debugger/CPU registers, port I/O and video recording."));
+        panel.Children.Add(Label("Available: status, environments, mapped files, matching original/enhanced screenshot pairs, screen text through built-in Windows OCR (or RAM when exposed), keys, mouse, pause/state control, audio, effects and all supported DOSBox INI settings. RAM reads depend on the core. Unavailable: Lua, debugger/CPU registers, port I/O and video recording."));
         dialog.Content = new ScrollViewer { Content = panel, Background = Background, VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
         dialog.Closed += (_, _) => { mcpPanel = null; mcpPanelStatus = null; panelEnabled = panelRemote = panelControl = null; panelPort = panelConfig = null; };
         UpdateMcpUi(); dialog.Show();
@@ -207,5 +207,5 @@ public sealed partial class MainWindow
         if(args["style"]!=null)style.SelectedIndex=args["style"]!.GetValue<int>();if(args["passes"]!=null)passes.SelectedItem=args["passes"]!.GetValue<int>();if(args["compare"]!=null)compare.IsChecked=args["compare"]!.GetValue<bool>();if(args["upscaling"]!=null)nvidiaUpscaling.IsChecked=args["upscaling"]!.GetValue<bool>();if(args["frame_generation"]!=null)nvidiaFrameGeneration.IsChecked=args["frame_generation"]!.GetValue<bool>();
         changing=false;UpdateEffects();if(running!=null)running.Effects=phoenix.Settings;return phoenix.Settings;
     }
-    internal VideoFrame McpFrame(bool enhanced) => enhanced ? Volatile.Read(ref phoenix.Latest)??throw new InvalidOperationException("Enhanced image not ready; request the original screenshot.") : core?.Latest??throw new InvalidOperationException("No DOS image available.");
+    internal VideoFrame McpFrame(bool enhanced) => enhanced ? phoenix.Latest??throw new InvalidOperationException("Enhanced image not ready; request the original screenshot.") : core?.Latest??throw new InvalidOperationException("No DOS image available.");
 }

@@ -77,16 +77,16 @@ public static class GraphicsSetup
     }
     public static async Task RepairBundled(string root,IProgress<string> progress,CancellationToken token)
     {
-        using var http=new HttpClient { Timeout=TimeSpan.FromMinutes(15) };http.DefaultRequestHeaders.UserAgent.ParseAdd("DOSBox-Enhanced/0.6");
-        const string api="https://api.github.com/repos/RazvanManolache/dosbox-enhanced/releases/tags/v0.6";
+        using var http=new HttpClient { Timeout=TimeSpan.FromMinutes(15) };http.DefaultRequestHeaders.UserAgent.ParseAdd("DOSBox-Enhanced/0.6.1");
+        const string api="https://api.github.com/repos/RazvanManolache/dosbox-enhanced/releases/tags/v0.6.1";
         var release=JsonNode.Parse(await http.GetStringAsync(api,token))!;
-        var asset=release["assets"]!.AsArray().Single(a=>a!["name"]!.GetValue<string>()=="DOSBox-Enhanced-0.6-win-x64.zip")!;
+        var asset=release["assets"]!.AsArray().Single(a=>a!["name"]!.GetValue<string>()=="DOSBox-Enhanced-0.6.1-win-x64.zip")!;
         string url=asset["browser_download_url"]!.GetValue<string>();
-        if(!url.StartsWith("https://github.com/RazvanManolache/dosbox-enhanced/releases/download/v0.6/",StringComparison.Ordinal))throw new InvalidDataException("Unexpected release download location.");
+        if(!url.StartsWith("https://github.com/RazvanManolache/dosbox-enhanced/releases/download/v0.6.1/",StringComparison.Ordinal))throw new InvalidDataException("Unexpected release download location.");
         string? digest=asset["digest"]?.GetValue<string>();
         if(digest is null||!digest.StartsWith("sha256:")||digest.Length!=71)throw new InvalidDataException("GitHub did not provide a release checksum. Re-extract the verified portable release.");
-        string archive=Path.Combine(root,"data/downloads/dosbox-components-0.6.zip");await Download(http,url,archive,digest[7..],progress,token);
-        using var zip=ZipFile.OpenRead(archive);const string prefix="DOSBox-Enhanced-0.6-win-x64/";
+        string archive=Path.Combine(root,"data/downloads/dosbox-components-0.6.1.zip");await Download(http,url,archive,digest[7..],progress,token);
+        using var zip=ZipFile.OpenRead(archive);const string prefix="DOSBox-Enhanced-0.6.1-win-x64/";
         var manifest=JsonNode.Parse(new StreamReader((zip.GetEntry(prefix+"FILES.json")??throw new InvalidDataException("Release manifest missing.")).Open()).ReadToEnd())!.AsArray();
         foreach(var item in manifest)
         {
@@ -105,7 +105,7 @@ public static class GraphicsSetup
     }
     public static async Task Install(string root,bool model,IProgress<string> progress,CancellationToken token)
     {
-        using var http=new HttpClient { Timeout=TimeSpan.FromMinutes(15) }; http.DefaultRequestHeaders.UserAgent.ParseAdd("DOSBox-Enhanced/0.6");
+        using var http=new HttpClient { Timeout=TimeSpan.FromMinutes(15) }; http.DefaultRequestHeaders.UserAgent.ParseAdd("DOSBox-Enhanced/0.6.1");
         var spec=JsonNode.Parse(File.ReadAllText(Path.Combine(root,"runtime.lock.json")))!["nvidia"]!;
         var downloads=Path.Combine(root,"data/downloads"); Directory.CreateDirectory(downloads);
         string archive=Path.Combine(downloads,"streamline-"+spec["version"]!.GetValue<string>()+".zip");
@@ -154,6 +154,6 @@ public static class GraphicsSetup
         string PathStatus(string label,string path)=>$"{(File.Exists(path)?"✓":"○")} {label}";
         JsonObject c=new();try{c=JsonNode.Parse(File.ReadAllText(Path.Combine(root,"graphics.json")))!.AsObject();}catch{}
         string P(string key){try{var p=c[key]?.GetValue<string>()??"";return string.IsNullOrWhiteSpace(p)?"":Path.GetFullPath(Path.Combine(root,p));}catch{return "";}}
-        return string.Join("\n",new[]{PathStatus("DOS engine",Path.Combine(root,"runtime/dosbox_pure_libretro.dll")),PathStatus("Phoenix 0.17 library",Path.Combine(root,"runtime/phoenix_native.dll")),PathStatus("DOS graphics bridge",Path.Combine(root,"runtime/dosbox_nvngx.dll")),PathStatus("Neural kernel bundle",Path.Combine(root,"runtime/native/native_manifest.json")),PathStatus("Model DLL",P("nr_dll")),PathStatus("NVIDIA upscaling",P("sr_dll")),PathStatus("NVIDIA frame generation / Streamline",P("streamline"))});
+        return string.Join("\n",new[]{PathStatus("DOS engine",Path.Combine(root,"runtime/dosbox_pure_libretro.dll")),PathStatus("Phoenix 0.18 library",Path.Combine(root,"runtime/phoenix_native.dll")),PathStatus("DOS graphics bridge",Path.Combine(root,"runtime/dosbox_nvngx.dll")),PathStatus("Neural kernel bundle",Path.Combine(root,"runtime/native/native_manifest.json")),PathStatus("Model DLL",P("nr_dll")),PathStatus("NVIDIA upscaling",P("sr_dll")),PathStatus("NVIDIA frame generation / Streamline",P("streamline"))});
     }
 }

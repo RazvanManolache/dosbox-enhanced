@@ -80,7 +80,7 @@ struct Bridge {
   hr(device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,IID_PPV_ARGS(&allocator)));hr(device->CreateCommandList(0,D3D12_COMMAND_LIST_TYPE_DIRECT,allocator.Get(),nullptr,IID_PPV_ARGS(&command)));hr(command->Close());
   hr(device->CreateFence(0,D3D12_FENCE_FLAG_NONE,IID_PPV_ARGS(&fence)));fence_event=CreateEventW(nullptr,FALSE,FALSE,nullptr);require(fence_event!=nullptr,"Graphics fence event unavailable");
   images();
-  init_shader();init_ngx();if(hwnd)create_swap(false);
+  init_shader();if(hwnd)create_swap(false);
   } catch (...) { cleanup(); throw; }
  }
  void geometry(const Json& c) {
@@ -104,7 +104,7 @@ struct Bridge {
   if(phoenix){require(phoenix_native_destroy(phoenix)==0,phoenix_native_error());phoenix=nullptr;}
   if(nr_handle){ngx(nr_release(nr_handle),"Release NR for layout change");nr_handle=nullptr;}
   if(sr_handle){ngx(NVSDK_NGX_D3D12_ReleaseFeature(sr_handle),"Release SR for layout change");sr_handle=nullptr;}
-  parameters->Reset();sr_params->Reset();color={};motion={};depth={};neural_motion={};neural={};feedback={};upscaled={};final={};
+  if(parameters)parameters->Reset();if(sr_params)sr_params->Reset();color={};motion={};depth={};neural_motion={};neural={};feedback={};upscaled={};final={};
   geometry(c);images();previous_luma.clear();reset_needed=true;if(hwnd)create_swap(false);
  }
  void sl_check(sl::Result r,const char* stage) { require(r==sl::Result::eOk,std::string(stage)+": Streamline result "+std::to_string(int(r))); }
@@ -152,6 +152,7 @@ void Bridge::init_shader(){
 }
 void Bridge::ensure_nr(){
  if(nr_handle)return;
+ if(!ngx_ready)init_ngx();
  if(!nr_module){auto dll=fs::u8path(config.at("nr_dll").get<std::string>());nr_module=LoadLibraryExW(dll.c_str(),nullptr,LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);require(nr_module!=nullptr,"Cannot load NVIDIA NR runtime");
  auto init=symbol<NrInit>(nr_module,"NVSDK_NGX_D3D12_Init_Ext");auto cache=fs::u8path(config.at("cache").get<std::string>()).wstring();ngx(init(0x1000000ULL,cache.c_str(),device.Get(),NVSDK_NGX_Version_API,parameters),"NVIDIA NR initialization");
  nr_create=symbol<NrCreate>(nr_module,"NVSDK_NGX_D3D12_CreateFeature");nr_eval=symbol<NrEval>(nr_module,"NVSDK_NGX_D3D12_EvaluateFeature");nr_release=symbol<NrRelease>(nr_module,"NVSDK_NGX_D3D12_ReleaseFeature");}parameters->Reset();
@@ -193,7 +194,7 @@ void Bridge::run_phoenix(const Json& o,bool reset){
  auto size=phoenix_native_status(phoenix,nullptr,0);std::vector<char> result(size);phoenix_native_status(phoenix,result.data(),size);status["phoenix"]=Json::parse(result.data());
 }
 void Bridge::ensure_sr(){
- if(sr_handle)return;sr_params->Reset();sr_params->Set(NVSDK_NGX_Parameter_Width,iw);sr_params->Set(NVSDK_NGX_Parameter_Height,ih);sr_params->Set(NVSDK_NGX_Parameter_OutWidth,ow);sr_params->Set(NVSDK_NGX_Parameter_OutHeight,oh);sr_params->Set(NVSDK_NGX_Parameter_PerfQualityValue,0);sr_params->Set("DLSS.Feature.Create.Flags",2);sr_params->Set("CreationNodeMask",1u);sr_params->Set("VisibilityNodeMask",1u);begin();ngx(NVSDK_NGX_D3D12_CreateFeature(command.Get(),NVSDK_NGX_Feature_SuperSampling,sr_params,&sr_handle),"NVIDIA SR creation");submit();
+ if(sr_handle)return;if(!ngx_ready)init_ngx();sr_params->Reset();sr_params->Set(NVSDK_NGX_Parameter_Width,iw);sr_params->Set(NVSDK_NGX_Parameter_Height,ih);sr_params->Set(NVSDK_NGX_Parameter_OutWidth,ow);sr_params->Set(NVSDK_NGX_Parameter_OutHeight,oh);sr_params->Set(NVSDK_NGX_Parameter_PerfQualityValue,0);sr_params->Set("DLSS.Feature.Create.Flags",2);sr_params->Set("CreationNodeMask",1u);sr_params->Set("VisibilityNodeMask",1u);begin();ngx(NVSDK_NGX_D3D12_CreateFeature(command.Get(),NVSDK_NGX_Feature_SuperSampling,sr_params,&sr_handle),"NVIDIA SR creation");submit();
 }
 void Bridge::run_sr(bool reset){
  ensure_sr();auto* input=upscale_first?color.image.Get():neural.image.Get();auto input_state=upscale_first?D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE:D3D12_RESOURCE_STATE_UNORDERED_ACCESS;sr_params->Reset();sr_params->Set(NVSDK_NGX_Parameter_Color,input);sr_params->Set(NVSDK_NGX_Parameter_Output,upscaled.image.Get());sr_params->Set(NVSDK_NGX_Parameter_Depth,depth.image.Get());sr_params->Set(NVSDK_NGX_Parameter_MotionVectors,motion.image.Get());sr_params->Set(NVSDK_NGX_Parameter_Reset,int(reset));sr_params->Set("MV.Scale.X",1.f);sr_params->Set("MV.Scale.Y",1.f);sr_params->Set("Jitter.Offset.X",0.f);sr_params->Set("Jitter.Offset.Y",0.f);sr_params->Set("DLSS.Pre.Exposure",1.f);sr_params->Set("DLSS.Exposure.Scale",1.f);sr_params->Set("DLSS.Render.Subrect.Dimensions.Width",iw);sr_params->Set("DLSS.Render.Subrect.Dimensions.Height",ih);

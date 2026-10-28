@@ -1,4 +1,4 @@
-# Building DOSBox Enhanced 0.6
+# Building DOSBox Enhanced 0.6.1
 
 ## Host and DOS engine
 
@@ -52,7 +52,7 @@ The full recursive clone may also fetch NVIDIA's optional Image Scaling module.
 
 ### Public Phoenix DLSS5 native API
 
-Phoenix DLSS5 source is pinned to **0.17**, commit `f8f4ddf729e8d9a117269ade006314b87845649d`.
+Phoenix DLSS5 source is pinned to **0.18**, commit `76aaad6200d2d670e1ad22c2d57c54cd2cbafa90`.
 The native C API includes the shared tuning and pipeline calls used by the UI.
 The build applies `tools/phoenix-msvc-shader.patch` while compiling: it splits
 an oversized NIS raw string into adjacent literals without changing shader bytes.
@@ -125,3 +125,7 @@ belong in Git. `tools/Package-Release.ps1` uses an allowlist to make the portabl
 archive and excludes `data/`, generated graphics configuration, and model DLLs.
 
 `--cpu-test` generates a small DOS program and queries actual CPU settings before/after live updates. The GPU probe accepts `--input-factor 0.25`–`4` (including fractions), `--input-filter nearest|linear` and `--reconfigure`. With NR/SR off it verifies exact nearest-neighbor enlargement, bilinear reference error, and native identity.
+
+### Paired capture validation
+
+`app/DosboxEnhanced.exe --screenshot-test` runs an animated, locally generated DOS fixture and verifies matching source/output capture, PNG round-trips, receipts, both renderer routes when available, menu actions, reset and stop. The receipt records unavailable NGX routes explicitly. `--mcp-test --non-interactive` runs HTTP/stdio integration without foreground mouse-capture checks; the default `--mcp-test` still requires an interactive desktop. Audio-device availability and skipped interaction checks are recorded in test receipts.

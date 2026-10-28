@@ -36,7 +36,8 @@ public static class App
         var window = new MainWindow(executable);
         if (args.Contains("--mouse-test")) window.Loaded += async (_, _) => await window.RunMouseValidation();
         if (args.Contains("--ui-test")) window.Loaded += async (_, _) => await window.RunUiValidation();
-        if (args.Contains("--mcp-test")) window.Loaded += async (_, _) => await window.RunMcpValidation();
+        if (args.Contains("--mcp-test")) window.Loaded += async (_, _) => await window.RunMcpValidation(!args.Contains("--non-interactive"));
+        if (args.Contains("--screenshot-test")) window.Loaded += async (_, _) => await window.RunScreenshotValidation();
         if (args.Contains("--cpu-test")) window.Loaded += async (_, _) => await window.RunCpuValidation();
         if (args.Contains("--release-capture")) window.Loaded += async (_, _) => await window.CaptureReleaseUi();
         if (args.Contains("--profile")) window.Loaded += (_, _) =>
@@ -121,6 +122,7 @@ public static class App
         if (args.Contains("--mouse-test")) return File.ReadAllText(Path.Combine(Paths.Root,"tests","results","mouse-validation.json")).Contains("\"passed\": true") ? 0 : 1;
         if (args.Contains("--ui-test")) return File.ReadAllText(Path.Combine(Paths.Root,"tests","results","ui-validation.json")).Contains("\"passed\": true") ? 0 : 1;
         if (args.Contains("--mcp-test")) return File.ReadAllText(Path.Combine(Paths.Root,"tests","results","mcp-integration.json")).Contains("\"passed\": true") ? 0 : 1;
+        if (args.Contains("--screenshot-test")) return File.ReadAllText(Path.Combine(Paths.Root,"tests","results","screenshot-pair.json")).Contains("\"passed\": true") ? 0 : 1;
         if (args.Contains("--cpu-test")) return File.ReadAllText(Path.Combine(Paths.Root,"tests","results","cpu-validation.json")).Contains("\"passed\": true") ? 0 : 1;
         return smoke && File.Exists(Path.Combine(Paths.Root, "tests", "results", "smoke.json")) && File.ReadAllText(Path.Combine(Paths.Root, "tests", "results", "smoke.json")).Contains("\"passed\": true") ? 0 : smoke ? 1 : 0;
     }
@@ -207,6 +209,7 @@ public static class SelfTest
             Reject(() => DriveFolders.Create(folderRoot, folder, "OUTSIDE"), "folder creation stays inside the mapped drive");
             Directory.Delete(gameFolder); Directory.Delete(gamesFolder); Directory.Delete(folderRoot);
             GraphicsSetupTests.Run(Check);
+            ScreenshotTests.Run(Check);
             Paths.AtomicWrite(Path.Combine(Paths.Root, "tests", "results", "self-test.json"), JsonSerializer.Serialize(new { passed = true, count = results.Count, checks = results }, Paths.Json)); return 0;
         }
         catch (Exception e) { Paths.AtomicWrite(Path.Combine(Paths.Root, "tests", "results", "self-test.json"), JsonSerializer.Serialize(new { passed = false, error = e.ToString(), checks = results }, Paths.Json)); return 1; }

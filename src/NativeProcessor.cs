@@ -22,14 +22,19 @@ public sealed class PhoenixProcessor : IDisposable
     public volatile bool Paused, MenuOpen, Background;
     public volatile bool SharpPixels;
     public EffectSettings Settings = new();
-    public VideoFrame? Latest;
+    ScreenshotPair? latestPair;
+    public ScreenshotPair? LatestPair {
+        get { var pair = Volatile.Read(ref latestPair); return pair?.Original.Epoch == Interlocked.Read(ref epoch) ? pair : null; }
+    }
+    public VideoFrame? Latest => LatestPair?.Enhanced;
     public string Status = "Graphics: waiting for DOS";
     public string UpscalingStatus = "NVIDIA Super Resolution: waiting for DOS";
     public string FrameGenerationStatus = "NVIDIA Frame Generation: waiting for DOS";
     public string RuntimeStatus = "{}";
     public long Completed;
     public double Milliseconds;
-    long epoch;
+    long epoch, failedEpoch = -1;
+    internal bool HasFailed => Interlocked.Read(ref failedEpoch) == Interlocked.Read(ref epoch);
     IntPtr window;
     public PhoenixProcessor()
     {
@@ -37,12 +42,12 @@ public sealed class PhoenixProcessor : IDisposable
     }
     public void AttachWindow(IntPtr hwnd) { Interlocked.Exchange(ref window, hwnd); Reset(); }
     public void Submit(VideoFrame frame) { Interlocked.Exchange(ref pending, frame with { Epoch = Interlocked.Read(ref epoch) }); wake.Set(); }
-    public void Reset() { Interlocked.Increment(ref epoch); Volatile.Write(ref Latest, null); }
+    public void Reset() { Interlocked.Increment(ref epoch); Volatile.Write(ref latestPair, null); }
     void Loop()
     {
         IntPtr library = IntPtr.Zero, session = IntPtr.Zero;
         Destroy? destroy = null;
-        long sessionEpoch = -1, failedEpoch = -1;
+        long sessionEpoch = -1;
         IntPtr sessionWindow = IntPtr.Zero;
         int lastWidth = 0, lastHeight = 0;
         GraphicsLayout? sessionLayout = null;
@@ -112,10 +117,11 @@ public sealed class PhoenixProcessor : IDisposable
                     var reason = stats.GetProperty("fg_error").GetString();
                     FrameGenerationStatus = fg ? $"NVIDIA FG · {generated} generated · status {stats.GetProperty("frame_generation_status_bits").GetInt32()}" :
                         (settings.NvidiaFrameGeneration ? "NVIDIA FG suspended" + (Paused ? " · paused" : Background ? " · app in background" : MenuOpen ? " · menu / window changing" : string.IsNullOrWhiteSpace(reason) ? "" : " · " + reason) : "NVIDIA FG off");
-                    if (source.Epoch == Interlocked.Read(ref epoch)) Volatile.Write(ref Latest, new(layout.OutputWidth, layout.OutputHeight, output, source.Aspect, source.Sequence, source.Epoch, source.Width, source.Height));
+                    if (source.Epoch == Interlocked.Read(ref epoch)) Volatile.Write(ref latestPair, new(source,
+                        new(layout.OutputWidth, layout.OutputHeight, output, source.Aspect, source.Sequence, source.Epoch, source.Width, source.Height), settings, DateTimeOffset.UtcNow));
                     lastWidth = source.Width; lastHeight = source.Height; Interlocked.Increment(ref Completed);
                 }
-                catch (Exception e) { Status = "Graphics unavailable: " + e.Message; UpscalingStatus = FrameGenerationStatus = "Graphics stopped · original DOS image"; failedEpoch = source.Epoch; Volatile.Write(ref Latest, null); }
+                catch (Exception e) { Status = "Graphics unavailable: " + e.Message; UpscalingStatus = FrameGenerationStatus = "Graphics stopped · original DOS image"; Interlocked.Exchange(ref failedEpoch, source.Epoch); Volatile.Write(ref latestPair, null); }
             }
         }
         catch (Exception e) { Status = "Graphics unavailable: " + e.Message; UpscalingStatus = FrameGenerationStatus = "Original DOS image"; }

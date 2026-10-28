@@ -2,7 +2,7 @@
 
 DOSBox with saved environments, optional DLSS graphics, and built-in MCP.
 
-[Download Windows v0.6](https://github.com/RazvanManolache/dosbox-enhanced/releases/download/v0.6/DOSBox-Enhanced-0.6-win-x64.zip) · [All release files](https://github.com/RazvanManolache/dosbox-enhanced/releases/tag/v0.6)
+[Download Windows v0.6.1](https://github.com/RazvanManolache/dosbox-enhanced/releases/download/v0.6.1/DOSBox-Enhanced-0.6.1-win-x64.zip) · [All release files](https://github.com/RazvanManolache/dosbox-enhanced/releases/tag/v0.6.1)
 
 - Set up drives and settings once, then pick a game and press Play.
 - Keep multiple environments, each with its own DOSBox and graphics settings.
@@ -28,7 +28,14 @@ DOSBox with saved environments, optional DLSS graphics, and built-in MCP.
 - **Mouse capture:** Caps Lock releases the pointer; the shortcut is configurable.
 - **Quick run:** open or drop a DOS EXE, COM or BAT with an 8.3 filename; its folder mounts as C:.
 
-## New in 0.6
+## New in 0.6.1
+
+- **Screenshot menu:** save the displayed image, raw DOS pixels, or a matching original/enhanced pair.
+- **Matching pairs:** both PNGs come from one completed graphics call, at their own resolutions; a JSON receipt records settings, dimensions, frame ID and checksums.
+- **MCP:** `dosbox_screenshot` with `{"pair":true}` returns both images and metadata without writing files. Available in observation mode.
+- **Phoenix 0.18 source pin:** standalone rendering code is unchanged from 0.17; the new upstream fixes concern addon compatibility.
+
+## Added in 0.6
 
 - **Phoenix 0.17:** Original and Lightweight models, with compatible native graphics integration.
 - **Advanced controls:** temporal reuse, auto mask, skin detail, neural processing scale, eight block repeat counts and central block count.

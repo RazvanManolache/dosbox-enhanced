@@ -1,3 +1,15 @@
+# 0.6.1 release checks
+
+- 60 host checks, including exact screenshot PNG round-trips and receipt hashes.
+- 23 paired-capture checks using an animated, locally generated DOS fixture and real Phoenix processing. Checks cover retained source pixels, fractional dimensions, both PNGs, menu actions, settings, reset/stop and explicit failures.
+- 189 authenticated HTTP/stdio MCP checks in explicit non-interactive mode, including paired images, metadata, mode conflicts and observation-mode schema discovery.
+- Native bypass preserves source pixels exactly. Phoenix processes native/fractional input independently of NGX.
+- Current NVIDIA NR/SR validation is unavailable: NGX reports unsupported hardware `0xBAD00001` with driver 616.64, reproduced with the prior v0.6 bridge and pinned runtimes. No new successful NR/SR/FG result is claimed.
+- Foreground interaction and desktop visual inspection were unavailable; Windows exposed no audio output device. Those checks were not certified by this run.
+- [Compact checks and runtime hashes](RELEASE_0.6.1_VALIDATION.json).
+
+Historical validation follows; its GPU and interaction results describe the builds originally tested.
+
 # 0.6 release checks
 
 - 54 host checks, 56 interactive UI checks, 194 authenticated MCP checks.
