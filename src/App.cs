@@ -29,11 +29,11 @@ public static class App
         app.DispatcherUnhandledException += (_, e) =>
         {
             File.AppendAllText(Path.Combine(Paths.Data, "errors.log"), DateTimeOffset.Now + " " + e.Exception + "\n");
-            MessageBox.Show(e.Exception.Message, "DOSBox Enhanced"); e.Handled = true;
+            if (!args.Contains("--background")) MessageBox.Show(e.Exception.Message, "DOSBox Enhanced"); e.Handled = true;
         };
         bool smoke = args.Contains("--smoke");
         var executable = args.Contains("--profile") || args.Contains("--showcase") ? null : args.FirstOrDefault(a => !a.StartsWith("--"));
-        var window = new MainWindow(executable);
+        var window = new MainWindow(executable, backgroundAutomation: args.Contains("--background"));
         if (args.Contains("--mouse-test")) window.Loaded += async (_, _) => await window.RunMouseValidation();
         if (args.Contains("--ui-test")) window.Loaded += async (_, _) => await window.RunUiValidation();
         if (args.Contains("--mcp-test")) window.Loaded += async (_, _) => await window.RunMcpValidation(!args.Contains("--non-interactive"));
@@ -200,6 +200,14 @@ public static class SelfTest
             Reject(() => DosboxIni.Set(advanced.DosboxSettings,"cpu","cycles","auto\nexit"), "advanced setting values cannot inject lines");
             Check(!new McpSettings().Enabled && !new McpSettings().AllowRemote, "MCP is disabled and local-only by default");
             Check(McpTools.List(false).Length == 8 && McpTools.List(true).Length == 23, "MCP observation hides every control tool");
+            // Validate new automation arguments before any emulator/window access.
+            foreach (var hold in new[] { -1, 0, 19, 5001, int.MaxValue })
+                Reject(() => McpTools.Call(null!, "dosbox_mouse", new() { ["hold_ms"] = hold }, CancellationToken.None).GetAwaiter().GetResult(),
+                    "DOS mouse hold duration rejects " + hold);
+            Reject(() => McpTools.Call(null!, "dosbox_read_text", new() { ["x"] = -1 }, CancellationToken.None).GetAwaiter().GetResult(),
+                "OCR rejects negative crop origin before capture");
+            Reject(() => McpTools.Call(null!, "dosbox_read_text", new() { ["width"] = 4097 }, CancellationToken.None).GetAwaiter().GetResult(),
+                "OCR rejects oversized crop before capture");
             var folderRoot = Path.Combine(folder, "folders-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(folderRoot);
             var gamesFolder = DriveFolders.Create(folderRoot, folderRoot, "GAMES");
             var gameFolder = DriveFolders.Create(folderRoot, gamesFolder, "DOOM");

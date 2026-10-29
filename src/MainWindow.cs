@@ -67,9 +67,12 @@ public sealed partial class MainWindow : Window
     public DosCore? Core => core;
     public PhoenixProcessor Phoenix => phoenix;
     public string CurrentStatus => status.Text;
-    public MainWindow(string? executable = null)
+    public bool BackgroundAutomation { get; }
+    public MainWindow(string? executable = null, bool backgroundAutomation = false)
     {
-        Title = "DOSBox Enhanced · v0.6.1"; Width = 1440; Height = 920; MinWidth = 1050; MinHeight = 640;
+        BackgroundAutomation = backgroundAutomation;
+        if (BackgroundAutomation) { ShowActivated = false; ShowInTaskbar = false; WindowState = WindowState.Minimized; }
+        Title = "DOSBox Enhanced · v0.6.2"; Width = 1440; Height = 920; MinWidth = 1050; MinHeight = 640;
         Background = Brush(15, 20, 29); Foreground = Brush(221, 231, 241); FontFamily = new FontFamily("Segoe UI"); FontSize = 13;
         environmentVisible = preferences.EnvironmentVisible; effectsVisible = preferences.EffectsVisible;
         root.Background = Background; ConfigureTheme(); BuildUi(); InitializePrograms(); InitializeMouseCapture(); ApplyLayout();
@@ -153,7 +156,11 @@ public sealed partial class MainWindow : Window
         b.Click += (_, _) => { ReleaseMouseCapture(); Try(action); }; return b;
     }
     void Try(Action action) { try { action(); } catch (Exception e) { Notice(e.Message); } }
-    public void Notice(string message) => MessageBox.Show(this, message, "DOSBox Enhanced", MessageBoxButton.OK, MessageBoxImage.Information);
+    public void Notice(string message)
+    {
+        if (BackgroundAutomation) { File.AppendAllText(Path.Combine(Paths.Data, "errors.log"), DateTimeOffset.Now + " " + message + "\n"); return; }
+        MessageBox.Show(this, message, "DOSBox Enhanced", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
     void BuildUi()
     {
         root.RowDefinitions.Add(new() { Height = GridLength.Auto }); root.RowDefinitions.Add(new()); root.RowDefinitions.Add(new() { Height = GridLength.Auto });
@@ -406,7 +413,7 @@ public sealed partial class MainWindow : Window
         string cpuValue = CpuCycles.Effective(profile);
         core = new DosCore(path, Path.Combine(directory, "saves"), coreOptions: profile.DosboxSettings.GetValueOrDefault("libretro"), initialCycles: CpuCycles.IsSimple(cpuValue) ? cpuValue : null); core.OnMessage = text => Dispatcher.BeginInvoke(() => Notice(text));
         core.SetAudio(preferences.Audio);
-        welcome.Visibility = Visibility.Collapsed; stage.Focus(); phoenix.Reset(); submitted = shown = enhancedSeen = -1; displayed = null;
+        welcome.Visibility = Visibility.Collapsed; if (!BackgroundAutomation) stage.Focus(); phoenix.Reset(); submitted = shown = enhancedSeen = -1; displayed = null;
     }
     public void Stop()
     {
@@ -493,6 +500,7 @@ public sealed partial class MainWindow : Window
     }
     public void ToggleFullscreen()
     {
+        if (BackgroundAutomation) return;
         programPicker.Close();
         ReleaseMouseCapture();
         fullscreen = !fullscreen; environmentVisible = fullscreen ? false : preferences.EnvironmentVisible; effectsVisible = fullscreen ? false : preferences.EffectsVisible;
@@ -605,6 +613,7 @@ public sealed partial class MainWindow : Window
     [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr hwnd);
     public bool FocusForValidation(Window? target = null)
     {
+        if (BackgroundAutomation) return false;
         var focusWindow = target ?? this;
         var hwnd = new WindowInteropHelper(focusWindow).Handle;
         var other = GetWindowThreadProcessId(GetForegroundWindow(), IntPtr.Zero); var own = GetCurrentThreadId();

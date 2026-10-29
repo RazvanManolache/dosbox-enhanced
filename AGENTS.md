@@ -5,7 +5,7 @@
 - The installed app uses the top-level `app`, `runtime`, `system`, configuration files and `data`. Preserve saved environments and external game mappings.
 - Keep one current development build and the final published release ZIPs, checksums, publication audit and final documentation.
 - All first-party source lives in `src/` and `native/`, with shared build scripts, tests and documentation beside them. Ignored legacy adapters are local reference only and excluded from compilation; the app uses `src/NativeProcessor.cs`.
-- `release/v0.6.1/prepared` holds the current published archives and checksums; old published archives remain historical releases. `release/v0.5/private` holds private release receipts and maintenance tools, never another app source tree.
+- `release/v0.6.2/prepared` holds the current published archives and checksums; old published archives remain historical releases. `release/v0.5/private` holds private release receipts and maintenance tools, never another app source tree.
 - Personal inventory scripts and machine-specific receipts belong in ignored `data/maintenance/`. The consolidation receipt there preserves prior local differences without retaining a second source tree.
 - Treat `src/bin`, `src/obj`, `native/build` and `app-update` as disposable staging/compiler output. Do not retain an obsolete `app-update` executable beside the current `app` build. Keep compact test-result JSON receipts; discard raw test screenshots after their useful evidence is retained in final documentation.
 - Keep Git object storage self-contained when relocating checkouts. Do not leave submodule `objects/info/alternates` pointing to an old workspace.

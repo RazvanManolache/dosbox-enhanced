@@ -3,7 +3,7 @@ from pathlib import Path
 import argparse,hashlib,json,os,re,subprocess,urllib.request,urllib.parse,zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
-VERSION='0.6.1'
+VERSION='0.6.2'
 REPO='RazvanManolache/dosbox-enhanced'
 OUT=ROOT/'release'/('v'+VERSION)/'prepared'
 
@@ -83,7 +83,7 @@ def publish():
     assert any(r['conclusion']=='success' and r['event']=='push' for r in status()),'Wait for CI success.'
     audit=json.loads((OUT/'RELEASE_AUDIT.json').read_text());assert audit['passed'] and audit['commit']==git('rev-parse','HEAD')
     prefix=f'/repos/{REPO}'
-    release=api('POST',prefix+'/releases',dict(tag_name='v'+VERSION,target_commitish=audit['commit'],name=f'v{VERSION} · Matching screenshot pairs and Phoenix 0.18',body=(ROOT/'RELEASE_NOTES.md').read_text(encoding='utf-8-sig'),draft=True,prerelease=False),auth=True)
+    release=api('POST',prefix+'/releases',dict(tag_name='v'+VERSION,target_commitish=audit['commit'],name=f'v{VERSION} · Background automation and Phoenix 0.19',body=(ROOT/'RELEASE_NOTES.md').read_text(encoding='utf-8-sig'),draft=True,prerelease=False),auth=True)
     for name in [a['name'] for a in audit['archives']]+['SHA256SUMS.txt']:
         data=(OUT/name).read_bytes();asset=api('POST',release['upload_url'].split('{')[0]+'?name='+urllib.parse.quote(name),raw=data,auth=True)
         assert asset['size']==len(data) and asset['digest']=='sha256:'+sha(data);print('Uploaded and hash-verified:',name,flush=True)

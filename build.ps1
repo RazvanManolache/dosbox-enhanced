@@ -17,7 +17,7 @@ if ($Graphics) {
     if ($BuildPhoenix) {
         $PhoenixSdk = Join-Path $root 'out/phoenix-sdk'
         $phoenixSource = Join-Path $root 'external/phoenix'
-        # Phoenix 0.18 embeds a shader literal larger than MSVC accepts.
+        # The pinned Phoenix source embeds a shader literal larger than MSVC accepts.
         # This patch only splits adjacent literals; shader bytes stay identical.
         $shaderPatch = Join-Path $root 'tools/phoenix-msvc-shader.patch'
         git -C $phoenixSource apply --reverse --check $shaderPatch 2>$null

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.2
+
+- Add non-activating background automation with focus, fullscreen and host mouse capture disabled.
+- Add cropped/color-filtered Windows OCR and configurable DOS mouse-click duration through MCP.
+- Pin Phoenix 0.19 source; preserve the standalone native renderer and external model boundary.
+
 ## 0.6.1
 
 - Camera dropdown: displayed image, original DOS pixels, or matching original/enhanced PNGs.

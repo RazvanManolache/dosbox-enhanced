@@ -2,7 +2,7 @@
 
 DOSBox with saved environments, optional DLSS graphics, and built-in MCP.
 
-[Download Windows v0.6.1](https://github.com/RazvanManolache/dosbox-enhanced/releases/download/v0.6.1/DOSBox-Enhanced-0.6.1-win-x64.zip) · [All release files](https://github.com/RazvanManolache/dosbox-enhanced/releases/tag/v0.6.1)
+[Download Windows v0.6.2](https://github.com/RazvanManolache/dosbox-enhanced/releases/download/v0.6.2/DOSBox-Enhanced-0.6.2-win-x64.zip) · [All release files](https://github.com/RazvanManolache/dosbox-enhanced/releases/tag/v0.6.2)
 
 - Set up drives and settings once, then pick a game and press Play.
 - Keep multiple environments, each with its own DOSBox and graphics settings.
@@ -28,12 +28,12 @@ DOSBox with saved environments, optional DLSS graphics, and built-in MCP.
 - **Mouse capture:** Caps Lock releases the pointer; the shortcut is configurable.
 - **Quick run:** open or drop a DOS EXE, COM or BAT with an 8.3 filename; its folder mounts as C:.
 
-## New in 0.6.1
+## New in 0.6.2
 
-- **Screenshot menu:** save the displayed image, raw DOS pixels, or a matching original/enhanced pair.
-- **Matching pairs:** both PNGs come from one completed graphics call, at their own resolutions; a JSON receipt records settings, dimensions, frame ID and checksums.
-- **MCP:** `dosbox_screenshot` with `{"pair":true}` returns both images and metadata without writing files. Available in observation mode.
-- **Phoenix 0.18 source pin:** standalone rendering code is unchanged from 0.17; the new upstream fixes concern addon compatibility.
+- **Background automation:** `--background` starts minimized without focus, fullscreen or pointer capture. Errors go to the local log instead of blocking on a dialog.
+- **Better small-text inspection:** MCP OCR can crop the DOS frame and isolate yellow or white prompts.
+- **Less impatient clicking:** choose the DOS mouse-button hold time for games that need a longer press.
+- **Phoenix 0.19 source pin:** the addon-only presentation and label controls stay in the addon; DOSBox continues using the standalone native interface.
 
 ## Added in 0.6
 
@@ -124,7 +124,7 @@ git submodule update --init --recursive
 
 - **Host:** C# / WPF, embedded DOSBox Pure; requires .NET 9 SDK and PowerShell.
 - **Graphics:** native D3D12 bridge; building adds MSVC, CMake and the Phoenix DLSS5 SDK. Phoenix DLSS5 source/kernel builds need additional development tools.
-- **Dependencies:** pinned Git submodules and lock file; Phoenix DLSS5 0.18 source, native tuning and shared processing pipeline.
+- **Dependencies:** pinned Git submodules and lock file; Phoenix DLSS5 0.19 source, native tuning and shared processing pipeline.
 - **Portable app:** does not need those development tools.
 - [Build instructions and CI](BUILDING.md) · [Release validation](docs/VALIDATION.md)
 

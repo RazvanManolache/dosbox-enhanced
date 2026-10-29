@@ -102,6 +102,7 @@ public sealed partial class MainWindow
     }
     bool CaptureGameMouse()
     {
+        if (BackgroundAutomation) return false;
         if (mouseCaptured) return true;
         if (core?.IsReady != true || core.IsPaused || !nativeView.PresentationActive || image.ActualWidth < 2 || image.ActualHeight < 2) return false;
         EnsureMouseHooks();

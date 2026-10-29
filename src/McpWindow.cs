@@ -100,6 +100,7 @@ public sealed partial class MainWindow
     object ProfileInfo(EnvironmentProfile p) => new { id=p.Id, name=p.Name, startup=p.Startup, drives=p.Drives.Select(d=>new { letter=d.Letter,label=d.Label,type=d.Type,folder=d.Folder }), settings=DosboxIni.Effective(p), effects=p.Effects,manualCycles=p.ManualCycles,discoverNewPrograms=p.DiscoverPrograms,programCount=p.Programs.Count };
     internal object McpEnvironments() => new { environments=library.Environments.Select(ProfileInfo).ToArray(), running=running==null?null:ProfileInfo(running) };
     internal object McpStatus() => new { running=running==null?null:ProfileInfo(running), ready=core?.IsReady??false, paused=core?.IsPaused??false, coreVersion=core?.CoreVersion,
+        automation=new { background=BackgroundAutomation, windowState=WindowState.ToString() },
         cpu=new { requested=core?.RequestedCpuCycles, liveControl=core?.LiveCpuCycles??false, acknowledgedUpdates=core?.CpuCycleUpdates??0 },
         selectedEnvironmentId=selected?.Id,frame=core?.Latest?.Sequence, width=core?.Latest?.Width,height=core?.Latest?.Height, memoryBytes=core?.MemoryBytes??0, audio=preferences.Audio, mouse=MouseInfo(),
         graphics=JsonNode.Parse(phoenix.RuntimeStatus), graphicsStatus=phoenix.Status, frameGeneration=phoenix.FrameGenerationStatus,display=new{fullscreen,panels,environment_panel=environmentVisible,effects_panel=effectsVisible,menu_visible=menu.Visibility==Visibility.Visible,aspect=aspectMode.SelectedIndex,sampling=scaler.SelectedIndex},
