@@ -218,6 +218,7 @@ public static class SelfTest
             Directory.Delete(gameFolder); Directory.Delete(gamesFolder); Directory.Delete(folderRoot);
             GraphicsSetupTests.Run(Check);
             ScreenshotTests.Run(Check);
+            ReleaseUpdateTests.Run(Check);
             Paths.AtomicWrite(Path.Combine(Paths.Root, "tests", "results", "self-test.json"), JsonSerializer.Serialize(new { passed = true, count = results.Count, checks = results }, Paths.Json)); return 0;
         }
         catch (Exception e) { Paths.AtomicWrite(Path.Combine(Paths.Root, "tests", "results", "self-test.json"), JsonSerializer.Serialize(new { passed = false, error = e.ToString(), checks = results }, Paths.Json)); return 1; }

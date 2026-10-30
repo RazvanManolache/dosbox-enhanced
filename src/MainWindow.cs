@@ -166,6 +166,7 @@ public sealed partial class MainWindow : Window
         root.RowDefinitions.Add(new() { Height = GridLength.Auto }); root.RowDefinitions.Add(new()); root.RowDefinitions.Add(new() { Height = GridLength.Auto });
         menu.Background = Brush(22, 30, 42); menu.Margin = new Thickness(0, 0, 0, 4);
         BuildToolbar();
+        InitializeUpdateNotice();
         Grid.SetZIndex(menu, 2); root.Children.Add(menu);
         deck.ColumnDefinitions.Add(new() { Width = new GridLength(285) }); deck.ColumnDefinitions.Add(new()); deck.ColumnDefinitions.Add(new() { Width = new GridLength(270) });
         Grid.SetRow(deck, 1); root.Children.Add(deck);
@@ -671,7 +672,7 @@ public sealed partial class MainWindow : Window
     }
     [StructLayout(LayoutKind.Sequential)] struct CursorPoint { public int X, Y; }
     [DllImport("user32.dll")] static extern bool GetCursorPos(out CursorPoint point);
-    void DisposeApp() { if (disposed) return; disposed = true; programPicker.Close(); renameProgramWindow?.Close(); DisposeMouseCapture(); programTimer.Stop(); scanCancellation?.Cancel(); mcp?.Dispose(); mcpPanel?.Close(); timer.Stop(); fullscreenMenu.IsOpen = false; preferencesTimer.Stop(); preferences.Save(); core?.Dispose(); phoenix.Dispose(); }
+    void DisposeApp() { if (disposed) return; disposed = true; StopUpdateNotice(); programPicker.Close(); renameProgramWindow?.Close(); DisposeMouseCapture(); programTimer.Stop(); scanCancellation?.Cancel(); mcp?.Dispose(); mcpPanel?.Close(); timer.Stop(); fullscreenMenu.IsOpen = false; preferencesTimer.Stop(); preferences.Save(); core?.Dispose(); phoenix.Dispose(); }
 }
 
 

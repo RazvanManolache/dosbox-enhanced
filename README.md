@@ -135,3 +135,7 @@ git submodule update --init --recursive
 - [NVIDIA DLSS](https://github.com/NVIDIA/DLSS) and [Streamline](https://github.com/NVIDIA-RTX/Streamline) â€” NVIDIA graphics integration.
 - Independent project; **0.5 is an early experimental release**.
 - [Licenses and notices](THIRD_PARTY_NOTICES.md). Game artwork belongs to its respective creators.
+
+## Update notice
+
+A newer published version adds a small **Update available** link to the menu. Click it to open GitHub releases. Checks include betas, run in the background at startup and once a day, and stay quiet offline. Background automation skips the check. This only reads public release metadata; it does not install updates.
