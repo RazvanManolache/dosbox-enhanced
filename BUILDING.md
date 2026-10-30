@@ -1,4 +1,4 @@
-# Building DOSBox Enhanced 0.6.2
+# Building DOSBox Enhanced 1.0 Beta
 
 ## Host and DOS engine
 
@@ -52,7 +52,7 @@ The full recursive clone may also fetch NVIDIA's optional Image Scaling module.
 
 ### Public Phoenix DLSS5 native API
 
-Phoenix DLSS5 source is pinned to **0.19**, commit `a151512eb51438f2ad944c7a4b0ce5ead76c2d39`.
+Phoenix DLSS5 source is pinned to **1.0 Beta**, commit `dfc0fc03b05ec3615b018f11f7bc7e8eee744ef7`.
 The native C API includes the shared tuning and pipeline calls used by the UI.
 The build applies `tools/phoenix-msvc-shader.patch` while compiling: it splits
 an oversized NIS raw string into adjacent literals without changing shader bytes.

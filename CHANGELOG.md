@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0 Beta
+
+- Update the standalone Phoenix native library and model-free kernels to the published Phoenix 1.0 Beta source.
+- Keep background automation, OCR, tuning and separately supplied models.
+- Mark this coordinated release as a beta; retain the earlier release history below.
+
 ## 0.6.2
 
 - Add non-activating background automation with focus, fullscreen and host mouse capture disabled.

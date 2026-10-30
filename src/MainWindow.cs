@@ -72,7 +72,7 @@ public sealed partial class MainWindow : Window
     {
         BackgroundAutomation = backgroundAutomation;
         if (BackgroundAutomation) { ShowActivated = false; ShowInTaskbar = false; WindowState = WindowState.Minimized; }
-        Title = "DOSBox Enhanced · v0.6.2"; Width = 1440; Height = 920; MinWidth = 1050; MinHeight = 640;
+        Title = "DOSBox Enhanced · 1.0 Beta"; Width = 1440; Height = 920; MinWidth = 1050; MinHeight = 640;
         Background = Brush(15, 20, 29); Foreground = Brush(221, 231, 241); FontFamily = new FontFamily("Segoe UI"); FontSize = 13;
         environmentVisible = preferences.EnvironmentVisible; effectsVisible = preferences.EffectsVisible;
         root.Background = Background; ConfigureTheme(); BuildUi(); InitializePrograms(); InitializeMouseCapture(); ApplyLayout();

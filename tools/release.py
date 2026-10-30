@@ -3,7 +3,7 @@ from pathlib import Path
 import argparse,hashlib,json,os,re,subprocess,urllib.request,urllib.parse,zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
-VERSION='0.6.2'
+VERSION='1.0-beta'
 REPO='RazvanManolache/dosbox-enhanced'
 OUT=ROOT/'release'/('v'+VERSION)/'prepared'
 
@@ -42,10 +42,18 @@ def package():
     portable=OUT/f'DOSBox-Enhanced-{VERSION}-win-x64.zip'
     paths=['app/DosboxEnhanced.exe']+['runtime/'+n for n in ('dosbox_pure_libretro.dll','dosbox_nvngx.dll','phoenix_native.dll')]
     native=ROOT/'runtime/native'
-    for file in native.rglob('*'):
-        if file.is_file():
-            assert file.suffix.lower() in ('.json','.cubin','.fatbin','.ptx'),file.name
-            paths.append(file.relative_to(ROOT).as_posix())
+    manifest=json.loads((native/'native_manifest.json').read_text())
+    assert manifest.get('model_weights_included') is False and manifest.get('captured_plans_included') is False
+    native_files={'native_manifest.json','native_graph.json'}
+    for graph,key in [('native_graph.json','native_graph_sha256'),('native_graph_v2.json','native_graph_v2_sha256')]:
+        if key in manifest:
+            assert sha((native/graph).read_bytes())==manifest[key],graph
+            native_files.add(graph)
+    for kernel in manifest['kernels']:
+        relative=Path(kernel['binary']);assert not relative.is_absolute() and '..' not in relative.parts
+        assert sha((native/relative).read_bytes())==kernel['binary_sha256'],relative
+        native_files.add(relative.as_posix())
+    paths.extend('runtime/native/'+name for name in sorted(native_files))
     for path,_ in tracked():
         if path.startswith(('docs/','licenses/')) or path in ('README.md','LICENSE','THIRD_PARTY_NOTICES.md','CHANGELOG.md','RELEASE_NOTES.md','DOSBox Enhanced.cmd','DOS Games.cmd','Setup graphics.cmd','setup-graphics.ps1','runtime.lock.json'):
             paths.append(path)
@@ -83,11 +91,11 @@ def publish():
     assert any(r['conclusion']=='success' and r['event']=='push' for r in status()),'Wait for CI success.'
     audit=json.loads((OUT/'RELEASE_AUDIT.json').read_text());assert audit['passed'] and audit['commit']==git('rev-parse','HEAD')
     prefix=f'/repos/{REPO}'
-    release=api('POST',prefix+'/releases',dict(tag_name='v'+VERSION,target_commitish=audit['commit'],name=f'v{VERSION} · Background automation and Phoenix 0.19',body=(ROOT/'RELEASE_NOTES.md').read_text(encoding='utf-8-sig'),draft=True,prerelease=False),auth=True)
+    release=api('POST',prefix+'/releases',dict(tag_name='v'+VERSION,target_commitish=audit['commit'],name='DOSBox Enhanced 1.0 Beta',body=(ROOT/'RELEASE_NOTES.md').read_text(encoding='utf-8-sig'),draft=True,prerelease=True),auth=True)
     for name in [a['name'] for a in audit['archives']]+['SHA256SUMS.txt']:
         data=(OUT/name).read_bytes();asset=api('POST',release['upload_url'].split('{')[0]+'?name='+urllib.parse.quote(name),raw=data,auth=True)
         assert asset['size']==len(data) and asset['digest']=='sha256:'+sha(data);print('Uploaded and hash-verified:',name,flush=True)
-    release=api('PATCH',prefix+'/releases/'+str(release['id']),dict(draft=False,make_latest='true'),auth=True)
+    release=api('PATCH',prefix+'/releases/'+str(release['id']),dict(draft=False,make_latest='false'),auth=True)
     assert not release['draft'];print('Published:',release['html_url'])
     (OUT/'PUBLICATION.json').write_text(json.dumps(dict(url=release['html_url'],commit=audit['commit'],release_id=release['id']),indent=2)+'\n')
 

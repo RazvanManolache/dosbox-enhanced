@@ -1,11 +1,10 @@
-# DOSBox Enhanced 0.6.2
+# DOSBox Enhanced 1.0 Beta
 
-- Background automation starts minimized and does not steal focus or capture the host pointer. Modal notifications are logged in this mode.
-- MCP OCR supports a bounded crop and optional yellow/white text isolation.
-- DOS mouse clicks accept a 20–5000 ms hold duration (80 ms by default).
-- Phoenix source is pinned to 0.19. DOSBox uses its standalone native library; addon-only presentation and label controls are not DOSBox features.
-- Matching original/enhanced screenshot pairs, existing environments and saved controls are retained.
+- Updated to the published Phoenix DLSS5 1.0 Beta source and rebuilt standalone native library.
+- Refreshed model-free native kernels carry the selected RTX tuning. Automatic/native remains the default strategy.
+- Retains the shared neural/spatial pipeline, appearance controls, paired screenshots and background automation/OCR.
+- DOSBox uses the standalone library; ReShade-only panels and instruction-style selectors are not DOSBox features.
 
-Replace app/runtime files while preserving your data folder. No games, personal settings, model DLLs or weights are bundled. Retained native kernels target sm_120; other GPU generations are not qualified here.
+This is a beta prerelease. Validation covers the host self-tests, rebuilt native bridge and the checks recorded in VALIDATION.json. It does not certify every DOS game or older physical RTX GPU, and earlier Phoenix benchmark figures are not new DOSBox FPS results.
 
-Fresh validation covers the host self-tests and a source build of the pinned native library and bridge. Existing renderer/runtime receipts retain their original hashes and scope; this release makes no new NVIDIA NR/SR, Frame Generation, broad gameplay or performance claim. See BUILDING.md and dependencies.lock.json for reproducible source inputs.
+Download the Windows ZIP, extract it and keep your saved environments when updating. Models remain separately supplied. No NVIDIA model DLLs, weights, games, saves or personal configuration are included. Third-party components retain their licenses and notices.

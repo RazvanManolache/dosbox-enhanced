@@ -2,7 +2,7 @@
 
 DOSBox with saved environments, optional DLSS graphics, and built-in MCP.
 
-[Download Windows v0.6.2](https://github.com/RazvanManolache/dosbox-enhanced/releases/download/v0.6.2/DOSBox-Enhanced-0.6.2-win-x64.zip) · [All release files](https://github.com/RazvanManolache/dosbox-enhanced/releases/tag/v0.6.2)
+[Download Windows v1.0-beta](https://github.com/RazvanManolache/dosbox-enhanced/releases/download/v1.0-beta/DOSBox-Enhanced-1.0-beta-win-x64.zip) Â· [All release files](https://github.com/RazvanManolache/dosbox-enhanced/releases/tag/v1.0-beta)
 
 - Set up drives and settings once, then pick a game and press Play.
 - Keep multiple environments, each with its own DOSBox and graphics settings.
@@ -28,12 +28,12 @@ DOSBox with saved environments, optional DLSS graphics, and built-in MCP.
 - **Mouse capture:** Caps Lock releases the pointer; the shortcut is configurable.
 - **Quick run:** open or drop a DOS EXE, COM or BAT with an 8.3 filename; its folder mounts as C:.
 
-## New in 0.6.2
+## New in 1.0 Beta
 
-- **Background automation:** `--background` starts minimized without focus, fullscreen or pointer capture. Errors go to the local log instead of blocking on a dialog.
-- **Better small-text inspection:** MCP OCR can crop the DOS frame and isolate yellow or white prompts.
-- **Less impatient clicking:** choose the DOS mouse-button hold time for games that need a longer press.
-- **Phoenix 0.19 source pin:** the addon-only presentation and label controls stay in the addon; DOSBox continues using the standalone native interface.
+- **Phoenix 1.0 Beta:** rebuilt standalone library and refreshed model-free kernels, with the selected native RTX tuning.
+- **Your controls stay:** Original/Lightweight models, appearance tuning, scaling and paired captures through the standalone interface.
+- **Still included:** background automation, cropped/color-filtered OCR and adjustable DOS mouse-button hold time from 0.6.2.
+- **Beta boundaries:** separately supplied models; older physical RTX cards remain unvalidated. ReShade-only panels stay in the addon.
 
 ## Added in 0.6
 
@@ -49,24 +49,24 @@ DOSBox with saved environments, optional DLSS graphics, and built-in MCP.
 
 ## DLSS graphics
 
-- **Input resize:** optional 0.25×–4× slider before NR/SR, including fractional sizes such as 1.25× and 1.5×, with a live resolution preview and sharp/smooth filtering. Off by default.
+- **Input resize:** optional 0.25Ã—â€“4Ã— slider before NR/SR, including fractional sizes such as 1.25Ã— and 1.5Ã—, with a live resolution preview and sharp/smooth filtering. Off by default.
 - **Neural renderer:** Phoenix DLSS5 or NVIDIA DLSS5.
 - **Effects:** intensity, tone, structure, color styles and a before/after split. Phoenix DLSS5 supports multiple passes.
 - **Upscaling:** NVIDIA Super Resolution, with a separate enable switch.
 - **Frame Generation:** NVIDIA FG, with its own switch and generated-frame counter.
-- **Processing order:** NR → NVIDIA upscale (default), or NVIDIA upscale → NR.
-- **Upscale size:** NVIDIA SR adds 2×–4× to the processing input. Disable both input resize and SR to keep native-size processing. Display preserves the selected DOS aspect ratio.
+- **Processing order:** NR â†’ NVIDIA upscale (default), or NVIDIA upscale â†’ NR.
+- **Upscale size:** NVIDIA SR adds 2Ã—â€“4Ã— to the processing input. Disable both input resize and SR to keep native-size processing. Display preserves the selected DOS aspect ratio.
 
 ![The same frozen Fate of Atlantis frame before and after the selected Phoenix DLSS5 preset](docs/images/gallery-atlantis-comparison.png)
 
 - Gallery presets were chosen per game from **ten combinations each**; intensity **0.9**, tone **1.0**, structure **1.1**, **one pass**.
-- SkyRoads / Atlantis: SR 4× before Phoenix DLSS5. Titus: sharp 1.5× input → Phoenix DLSS5 → SR 2×. Hexxagon: SR 4× before NVIDIA DLSS5 NR.
+- SkyRoads / Atlantis: SR 4Ã— before Phoenix DLSS5. Titus: sharp 1.5Ã— input â†’ Phoenix DLSS5 â†’ SR 2Ã—. Hexxagon: SR 4Ã— before NVIDIA DLSS5 NR.
 - [Exact presets for the UI or MCP](docs/GAME_PRESETS.json); these are starting points for the pictured scenes.
 - Real app captures; the comparison uses the same frozen source frame. Stills cannot demonstrate Frame Generation.
 - Experimental: image-derived motion and flat depth can cause artifacts in scrolling, text and pixel art.
 - Tested on **RTX 5080**; bundled Phoenix DLSS5 kernels target **sm_120**. Other GPUs are not certified for this release.
 - Graphics are optional; use the in-app setup panel to download runtimes and an optional model, or choose your own model DLL.
-- [Graphics setup](docs/GRAPHICS.md) · [Capture method and runtime counters](docs/CAPTURES.md)
+- [Graphics setup](docs/GRAPHICS.md) Â· [Capture method and runtime counters](docs/CAPTURES.md)
 
 <details>
 <summary>Four passes: too much of a good thing</summary>
@@ -79,9 +79,9 @@ The GPU has started taking artistic liberties. Four passes, maximum strength, ca
 
 ![Four saved game environments and the selected Atlantis graphics controls](docs/images/gallery-workspace.png)
 
-| Titus the Fox · fractional input | Hexxagon · NVIDIA DLSS5 renderer |
+| Titus the Fox Â· fractional input | Hexxagon Â· NVIDIA DLSS5 renderer |
 |:---:|:---:|
-| ![Titus the Fox with sharp 1.5× input resize](docs/images/gallery-titus-workspace.png) | ![Hexxagon with NVIDIA DLSS5 neural rendering](docs/images/gallery-hexxagon-workspace.png) |
+| ![Titus the Fox with sharp 1.5Ã— input resize](docs/images/gallery-titus-workspace.png) | ![Hexxagon with NVIDIA DLSS5 neural rendering](docs/images/gallery-hexxagon-workspace.png) |
 
 ![Searchable programs grouped across the four game environments](docs/images/program-picker.png)
 
@@ -124,14 +124,14 @@ git submodule update --init --recursive
 
 - **Host:** C# / WPF, embedded DOSBox Pure; requires .NET 9 SDK and PowerShell.
 - **Graphics:** native D3D12 bridge; building adds MSVC, CMake and the Phoenix DLSS5 SDK. Phoenix DLSS5 source/kernel builds need additional development tools.
-- **Dependencies:** pinned Git submodules and lock file; Phoenix DLSS5 0.19 source, native tuning and shared processing pipeline.
+- **Dependencies:** pinned Git submodules and lock file; Phoenix DLSS5 1.0 Beta source, native tuning and shared processing pipeline.
 - **Portable app:** does not need those development tools.
-- [Build instructions and CI](BUILDING.md) · [Release validation](docs/VALIDATION.md)
+- [Build instructions and CI](BUILDING.md) Â· [Release validation](docs/VALIDATION.md)
 
 ## Credits
 
-- [DOSBox Pure](https://codeberg.org/schelling/dosbox-pure) — Bernhard Schelling and contributors, based on DOSBox.
-- [Phoenix DLSS5](https://github.com/RazvanManolache/dlss5-phoenix-addon) — standalone neural-rendering library.
-- [NVIDIA DLSS](https://github.com/NVIDIA/DLSS) and [Streamline](https://github.com/NVIDIA-RTX/Streamline) — NVIDIA graphics integration.
+- [DOSBox Pure](https://codeberg.org/schelling/dosbox-pure) â€” Bernhard Schelling and contributors, based on DOSBox.
+- [Phoenix DLSS5](https://github.com/RazvanManolache/dlss5-phoenix-addon) â€” standalone neural-rendering library.
+- [NVIDIA DLSS](https://github.com/NVIDIA/DLSS) and [Streamline](https://github.com/NVIDIA-RTX/Streamline) â€” NVIDIA graphics integration.
 - Independent project; **0.5 is an early experimental release**.
 - [Licenses and notices](THIRD_PARTY_NOTICES.md). Game artwork belongs to its respective creators.
