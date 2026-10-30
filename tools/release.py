@@ -63,10 +63,15 @@ def package():
             data=(ROOT/path).read_bytes();manifest.append(dict(path=path,bytes=len(data),sha256=sha(data)))
             z.writestr(f'DOSBox-Enhanced-{VERSION}-win-x64/'+path,data)
         z.writestr(f'DOSBox-Enhanced-{VERSION}-win-x64/FILES.json',json.dumps(manifest,indent=2)+'\n')
+    validation=json.loads((ROOT/'data/maintenance/release-current/validation.json').read_text())
+    assert validation['passed'] and validation['commit']==git('rev-parse','HEAD')
+    for name,digest in validation['runtime_sha256'].items():
+        assert sha((ROOT/name).read_bytes())==digest,name
+    (OUT/'VALIDATION.json').write_text(json.dumps(validation,indent=2)+'\n',encoding='utf-8')
     archives=[]
     for path,is_source in ((source,True),(portable,False)):
         count=scan(path,is_source);archives.append(dict(name=path.name,bytes=path.stat().st_size,sha256=sha(path.read_bytes()),files=count))
-    (OUT/'SHA256SUMS.txt').write_text(''.join(f"{a['sha256']}  {a['name']}\n" for a in archives),encoding='utf-8')
+    (OUT/'SHA256SUMS.txt').write_text(''.join(f"{a['sha256']}  {a['name']}\n" for a in archives)+sha((OUT/'VALIDATION.json').read_bytes())+'  VALIDATION.json\n',encoding='utf-8')
     audit=dict(passed=True,commit=git('rev-parse','HEAD'),archives=archives,models_games_settings_included=False)
     (OUT/'RELEASE_AUDIT.json').write_text(json.dumps(audit,indent=2)+'\n',encoding='utf-8');print(json.dumps(audit,indent=2))
 
@@ -92,7 +97,7 @@ def publish():
     audit=json.loads((OUT/'RELEASE_AUDIT.json').read_text());assert audit['passed'] and audit['commit']==git('rev-parse','HEAD')
     prefix=f'/repos/{REPO}'
     release=api('POST',prefix+'/releases',dict(tag_name='v'+VERSION,target_commitish=audit['commit'],name='DOSBox Enhanced 1.0 Beta',body=(ROOT/'RELEASE_NOTES.md').read_text(encoding='utf-8-sig'),draft=True,prerelease=True),auth=True)
-    for name in [a['name'] for a in audit['archives']]+['SHA256SUMS.txt']:
+    for name in [a['name'] for a in audit['archives']]+['VALIDATION.json','SHA256SUMS.txt']:
         data=(OUT/name).read_bytes();asset=api('POST',release['upload_url'].split('{')[0]+'?name='+urllib.parse.quote(name),raw=data,auth=True)
         assert asset['size']==len(data) and asset['digest']=='sha256:'+sha(data);print('Uploaded and hash-verified:',name,flush=True)
     release=api('PATCH',prefix+'/releases/'+str(release['id']),dict(draft=False,make_latest='false'),auth=True)
@@ -103,6 +108,7 @@ def verify():
     release=api('GET',f'/repos/{REPO}/releases/tags/v{VERSION}');assert not release['draft']
     audit=json.loads((OUT/'RELEASE_AUDIT.json').read_text());expected={a['name']:a['sha256'] for a in audit['archives']}
     expected['SHA256SUMS.txt']=sha((OUT/'SHA256SUMS.txt').read_bytes())
+    expected['VALIDATION.json']=sha((OUT/'VALIDATION.json').read_bytes())
     checks=[]
     for asset in release['assets']:
         assert asset['name'] in expected
@@ -112,7 +118,7 @@ def verify():
             while data:=response.read(1024*1024):digest.update(data);size+=len(data)
         assert size==asset['size'] and digest.hexdigest()==expected[asset['name']]
         checks.append(dict(name=asset['name'],bytes=size,sha256=digest.hexdigest()));print('Public download verified:',asset['name'],flush=True)
-    assert len(checks)==3
+    assert len(checks)==4
     (OUT/'PUBLIC_DOWNLOADS.json').write_text(json.dumps(dict(passed=True,release=release['html_url'],assets=checks),indent=2)+'\n')
 
 if __name__=='__main__':
