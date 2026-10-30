@@ -1,5 +1,6 @@
 # DOSBox Enhanced 1.0 Beta
 
+- **Quiet update notice:** clickable menu text opens GitHub for newer published releases, including betas. Background automation skips discovery; offline checks never interrupt emulation.
 - Updated to the published Phoenix DLSS5 1.0 Beta source and rebuilt standalone native library.
 - Refreshed model-free native kernels carry the selected RTX tuning. Automatic/native remains the default strategy.
 - Retains the shared neural/spatial pipeline, appearance controls, paired screenshots and background automation/OCR.
