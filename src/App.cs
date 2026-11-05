@@ -17,6 +17,7 @@ public static class App
         Paths.Root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, ".."));
         Directory.CreateDirectory(Paths.Data);
         if (args.Contains("--self-test")) return SelfTest.Run();
+        if (args.Contains("--cheat-test")) return CheatValidation.Run().GetAwaiter().GetResult();
         if(args.Contains("--repair-test")) { try { GraphicsSetup.RepairBundled(Path.Combine(Paths.Root,"tests/fixtures/repair-check"),new Progress<string>(),CancellationToken.None).GetAwaiter().GetResult();return 0; } catch(Exception e){Paths.AtomicWrite(Path.Combine(Paths.Root,"tests/results/repair-error.txt"),e.ToString());return 1;} }
         if(args.Contains("--download-test")) {
             string folder=Path.Combine(Paths.Root,"tests/fixtures/download-check");Directory.CreateDirectory(folder);
@@ -26,6 +27,7 @@ public static class App
         }
         if (args.Contains("--mcp-stdio")) return McpStdio.Run().GetAwaiter().GetResult();
         var app = new Application { ShutdownMode = ShutdownMode.OnMainWindowClose };
+        if(args.Contains("--cheat-ui-test"))System.Windows.Media.RenderOptions.ProcessRenderMode=System.Windows.Interop.RenderMode.SoftwareOnly;
         app.DispatcherUnhandledException += (_, e) =>
         {
             File.AppendAllText(Path.Combine(Paths.Data, "errors.log"), DateTimeOffset.Now + " " + e.Exception + "\n");
@@ -38,6 +40,7 @@ public static class App
         if (args.Contains("--ui-test")) window.Loaded += async (_, _) => await window.RunUiValidation();
         if (args.Contains("--mcp-test")) window.Loaded += async (_, _) => await window.RunMcpValidation(!args.Contains("--non-interactive"));
         if (args.Contains("--screenshot-test")) window.Loaded += async (_, _) => await window.RunScreenshotValidation();
+        if (args.Contains("--cheat-ui-test")) window.Loaded += async (_, _) => await window.RunCheatUiValidation();
         if (args.Contains("--cpu-test")) window.Loaded += async (_, _) => await window.RunCpuValidation();
         if (args.Contains("--release-capture")) window.Loaded += async (_, _) => await window.CaptureReleaseUi();
         if (args.Contains("--profile")) window.Loaded += (_, _) =>
@@ -123,6 +126,7 @@ public static class App
         if (args.Contains("--ui-test")) return File.ReadAllText(Path.Combine(Paths.Root,"tests","results","ui-validation.json")).Contains("\"passed\": true") ? 0 : 1;
         if (args.Contains("--mcp-test")) return File.ReadAllText(Path.Combine(Paths.Root,"tests","results","mcp-integration.json")).Contains("\"passed\": true") ? 0 : 1;
         if (args.Contains("--screenshot-test")) return File.ReadAllText(Path.Combine(Paths.Root,"tests","results","screenshot-pair.json")).Contains("\"passed\": true") ? 0 : 1;
+        if (args.Contains("--cheat-ui-test")) return File.ReadAllText(Path.Combine(Paths.Root,"tests","results","cheat-ui.json")).Contains("\"passed\": true") ? 0 : 1;
         if (args.Contains("--cpu-test")) return File.ReadAllText(Path.Combine(Paths.Root,"tests","results","cpu-validation.json")).Contains("\"passed\": true") ? 0 : 1;
         return smoke && File.Exists(Path.Combine(Paths.Root, "tests", "results", "smoke.json")) && File.ReadAllText(Path.Combine(Paths.Root, "tests", "results", "smoke.json")).Contains("\"passed\": true") ? 0 : smoke ? 1 : 0;
     }
@@ -199,7 +203,7 @@ public static class SelfTest
             Reject(() => DosboxIni.Parse("[cpu]\ncore=normal\n[autoexec]\nexit"), "advanced settings reject injected autoexec commands");
             Reject(() => DosboxIni.Set(advanced.DosboxSettings,"cpu","cycles","auto\nexit"), "advanced setting values cannot inject lines");
             Check(!new McpSettings().Enabled && !new McpSettings().AllowRemote, "MCP is disabled and local-only by default");
-            Check(McpTools.List(false).Length == 8 && McpTools.List(true).Length == 23, "MCP observation hides every control tool");
+            Check(McpTools.List(false).Length == 10 && McpTools.List(true).Length == 29, "MCP observation hides every control tool");
             // Validate new automation arguments before any emulator/window access.
             foreach (var hold in new[] { -1, 0, 19, 5001, int.MaxValue })
                 Reject(() => McpTools.Call(null!, "dosbox_mouse", new() { ["hold_ms"] = hold }, CancellationToken.None).GetAwaiter().GetResult(),
@@ -218,6 +222,8 @@ public static class SelfTest
             Directory.Delete(gameFolder); Directory.Delete(gamesFolder); Directory.Delete(folderRoot);
             GraphicsSetupTests.Run(Check);
             ScreenshotTests.Run(Check);
+            CheatTests.Run(Check);
+            PointerTests.Run(Check);
             ReleaseUpdateTests.Run(Check);
             Paths.AtomicWrite(Path.Combine(Paths.Root, "tests", "results", "self-test.json"), JsonSerializer.Serialize(new { passed = true, count = results.Count, checks = results }, Paths.Json)); return 0;
         }

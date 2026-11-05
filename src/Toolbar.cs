@@ -30,6 +30,7 @@ public sealed partial class MainWindow
         ["settings"] = "M12,7 A5,5 0 1 1 12,17 A5,5 0 1 1 12,7 M12,1 L12,4 M12,20 L12,23 M1,12 L4,12 M20,12 L23,12 M4,4 L6,6 M18,18 L20,20 M4,20 L6,18 M18,6 L20,4",
         ["volume"] = "M3,9 L7,9 L12,4 L12,20 L7,15 L3,15 Z M16,8 Q20,12 16,16 M19,4 Q26,12 19,20",
         ["mcp"] = "M7,3 L7,9 M17,3 L17,9 M4,9 L20,9 L20,13 Q20,18 12,18 Q4,18 4,13 Z M12,18 L12,23",
+        ["cheats"] = "M5,3 L19,3 L19,21 L5,21 Z M8,7 L16,7 M8,11 L12,11 M15,14 L15,19 M12.5,16.5 L17.5,16.5",
         ["mouse"] = "M12,2 Q5,2 5,9 L5,15 Q5,22 12,22 Q19,22 19,15 L19,9 Q19,2 12,2 Z M12,2 L12,10 M5,10 L19,10"
     };
     static Viewbox ToolbarIcon(string name) => new() { Width = 21, Height = 21, Child = new System.Windows.Shapes.Path { Data = Geometry.Parse(Icons[name]), Stroke = Brush(180, 218, 231), StrokeThickness = 1.7, StrokeLineJoin = PenLineJoin.Round, StrokeStartLineCap = PenLineCap.Round, StrokeEndLineCap = PenLineCap.Round, Width = 26, Height = 24 } };
@@ -55,8 +56,9 @@ public sealed partial class MainWindow
         menu.Children.Add(IconButton("restart", "Restart DOS", () => { core?.Reset(); phoenix.Reset(); })); menu.Children.Add(IconButton("stop", "Stop", Stop));
         Button camera = null!; camera = IconButton("camera", "Screenshots · displayed, original or matching pair", () => ShowScreenshotMenu(camera));
         menu.Children.Add(camera); menu.Children.Add(IconButton("fullscreen", "Fullscreen · F11", ToggleFullscreen));
-        effectsButton = IconButton("beautify", "Beautify · show / hide effects", () => TogglePane(false)); menu.Children.Add(effectsButton);
+        effectsButton = IconButton("beautify", "Beautify · show / hide effects", () => ShowToolTab(0, true)); menu.Children.Add(effectsButton);
         mouseButton = IconButton("mouse", "Mouse capture settings", ShowMouseSettings); menu.Children.Add(mouseButton);
+        cheatButton = IconButton("cheats", "Cheats · search, edit and lock DOS values", () => ShowToolTab(1, true)); menu.Children.Add(cheatButton);
         muted.Content = ToolbarIcon("volume"); muted.ToolTip = "Mute"; muted.Margin = new Thickness(8, 0, 2, 0); AutomationProperties.SetName(muted, "Mute audio"); menu.Children.Add(muted);
         volume.Width = 76; volume.Margin = new Thickness(0, 0, 6, 0); AutomationProperties.SetName(volume, "Volume"); menu.Children.Add(volume);
         mcpEnabled.Content = null; mcpEnabled.Margin = new Thickness(3, 0, 0, 0); AutomationProperties.SetName(mcpEnabled, "Enable AI connection"); menu.Children.Add(mcpEnabled);
@@ -79,6 +81,7 @@ public sealed partial class MainWindow
     void UpdatePaneButtons()
     {
         if (environmentButton != null) { environmentButton.Background = environmentVisible ? Brush(40, 77, 88) : Brush(30, 40, 54); environmentButton.ToolTip = environmentVisible ? "Hide environment" : "Show environment"; }
-        if (effectsButton != null) { effectsButton.Background = effectsVisible ? Brush(40, 77, 88) : Brush(30, 40, 54); effectsButton.ToolTip = effectsVisible ? "Beautify · hide effects" : "Beautify · show effects"; }
+        if(cheatButton!=null)cheatButton.Background=effectsVisible&&toolsTabs.SelectedIndex==1?Brush(40,77,88):Brush(30,40,54);
+        if (effectsButton != null) { effectsButton.Background = effectsVisible && toolsTabs.SelectedIndex==0 ? Brush(40, 77, 88) : Brush(30, 40, 54); effectsButton.ToolTip = effectsVisible && toolsTabs.SelectedIndex==0 ? "Beautify · hide right panel" : "Beautify · open DLSS tab"; }
     }
 }

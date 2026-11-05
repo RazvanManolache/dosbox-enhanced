@@ -54,7 +54,13 @@ under `data/preferences.json`, and is not included in tool results or activity.
 | dosbox_list_files | Bounded mapped-folder listing with curated titles/launchers | Yes |
 | dosbox_screenshot | Raw or available enhanced PNG as MCP image content | Yes |
 | dosbox_read_text | VGA text when RAM is exposed, otherwise local Windows OCR | Yes |
-| dosbox_read_memory | Bounded RAM read if the core exposes it | Yes |
+| dosbox_read_memory | Bounded mapped DOS RAM read | Yes |
+| dosbox_cheats | RAM regions, search results and live watches | Yes |
+| dosbox_cheat_scan | Typed RAM search, narrowing and reset | No |
+| dosbox_cheat_write | One-time typed DOS RAM edit | No |
+| dosbox_cheat_watch | Saved watches, edits and frame-by-frame locks | No |
+| dosbox_pointer_scan | Find, rescan and clear saved pointer chains | No |
+| dosbox_disassemble | Read-only 16/32-bit x86 decoding | Yes |
 | dosbox_get_configuration | Effective INI, startup, mappings and core-option catalog | Yes |
 | dosbox_launch | Launch an environment or mapped DOS program/game folder | No |
 | dosbox_session | Pause/resume/reset/reload/stop/save/load state | No |
@@ -72,8 +78,8 @@ under `data/preferences.json`, and is not included in tool results or activity.
 | dosbox_drive | Map an approved drive/subfolder, edit label/type or remove its mapping | No |
 | dosbox_quick_run | Standalone runner using a program inside an approved mapped drive | No |
 
-There are **23 tools**, including **8 read-only tools**. Observation mode omits
-and rejects all 15 control tools. HTTP and the self-contained stdio bridge expose
+There are **29 tools**, including **10 read-only tools**. Observation mode omits
+and rejects all 19 control tools. HTTP and the self-contained stdio bridge expose
 the same tools; reconnect an existing client after updating the app.
 
 Control mode can type arbitrary DOS commands and run DOS programs. Mounted
@@ -83,9 +89,7 @@ accept DOS paths inside explicitly mapped drives, reject traversal/file links,
 and permit known curated game junctions. They do not mount arbitrary host paths.
 DOS commands themselves have the emulator's existing filesystem capabilities.
 
-The current DOSBox Pure core reports no libretro RAM buffer; memory reads return
-an explicit error. Screen reading still works through the installed Windows OCR
-engine, using an enlarged original framebuffer. OCR can misread pixel fonts;
+DOSBox Pure exposes RAM through its libretro memory-map callback. The host now uses this map for reads, scans, edits and locks; it does not require the legacy raw-RAM export. `dosbox_cheats` reports valid regions and the current map revision. Addresses are normalized core addresses, not physical DOS addresses: Game RAM normally starts at zero, with DOS/system and extended RAM in separate mapped regions. Screen reading uses local Windows OCR when physical VGA text RAM is unavailable. OCR can misread pixel fonts;
 use screenshots to check uncertain text. No cloud OCR service is contacted.
 Unsupported Lua, CPU registers, port I/O and video recording are not advertised.
 
@@ -152,8 +156,8 @@ fullscreen; the windowed toolbar remains available.
 {
   "environment_id":"my-games",
   "discover_new":true,
-  "updates":{"C:\\GAMES\\GAME\\CONAN.COM":{"visible":true,"name":"Conan"}},
-  "order":["C:\\GAMES\\GAME\\CONAN.COM"]
+  "updates":{"C:\\DEMO\\PLAY.COM":{"visible":true,"name":"Conan"}},
+  "order":["C:\\DEMO\\PLAY.COM"]
 }
 ```
 
@@ -253,3 +257,49 @@ A pair requires a running environment and completed graphics output. Reset, stop
 Launch `DosboxEnhanced.exe <mapped-game-program> --background` for minimized, non-activating automation. In this mode validation focus, fullscreen and mouse capture are refused, startup does not focus the game surface, and error notices are logged without modal dialogs. Internal DOS MCP keyboard/mouse controls remain available; they do not operate Windows input. `dosbox_status.automation` reports the mode and window state. `dosbox_mouse` accepts optional `hold_ms` (20–5000, default80) for slow games that miss short clicks. Keep movement and click as separate requests when a game samples position on another frame.
 
 For graphical prompts, `dosbox_read_text` also accepts optional native-pixel `x`, `y`, `width`, `height` and `color_filter` (`none`, `yellow`, `white`). Filtered crops use up to8x nearest scaling before Windows OCR. Crops must fit the frame. These operations read emulator pixels only and do not capture or control the Windows desktop. OCR can still omit digits; validate against screenshots or exact fixture-specific glyphs.
+
+## Cheats
+
+`dosbox_cheats` returns mapped RAM regions, a page of last-scan results, and saved watches with live values. Scanning and writes require AI control; observation mode can read the results but cannot scan, edit, lock or unlock memory.
+
+```json
+{"name":"dosbox_cheat_scan","arguments":{"action":"new","type":"u16","filter":"exact","value":"100","region":0}}
+{"name":"dosbox_cheat_scan","arguments":{"action":"next","filter":"decreased"}}
+{"name":"dosbox_cheat_watch","arguments":{"action":"add","address":4660,"type":"u16","name":"Health"}}
+{"name":"dosbox_cheat_watch","arguments":{"action":"update","id":"<returned watch id>","value":"999","frozen":true}}
+{"name":"dosbox_cheat_watch","arguments":{"action":"unlock_all"}}
+```
+
+Types: `u8/i8/u16/i16/u32/i32/u64/i64/f32/f64`, little endian. Numeric values are strings to preserve 64-bit integer precision. Integer values accept decimal or `0x` hex. Scans support exact, unknown initial value, not-equal, greater/less, inclusive between, changed/unchanged, increased/decreased, and changed by a specified amount. Next scan compares against the previous scan and retains its type/region/alignment. Scan up to 64 MiB at once and page results with `dosbox_cheats`' `offset`/`count`.
+
+`dosbox_cheat_write` takes `address`, optional `type` (default `u16`) and `value`, and edits once. Watch `update` takes optional `name`, `value`, `frozen`, and `write` (write once, default false). A locked watch writes its target before/after emulated frames. Overlapping locks/edits are refused. Unlocking does not restore the old value.
+
+Watch lists are private under `data/cheats`, keyed by environment and startup program. Locks are never restored from disk. Program/map changes, reset and save-state restoration clear locks and value-search snapshots. Stop destroys the emulation session and its locks. Saved pointer candidates survive these changes for rescanning. Addresses and roots can become obsolete in another game version; verify them before enabling a saved watch. No external process editing or code injection is provided.
+
+## Pointer chains and disassembly
+
+```json
+{"name":"dosbox_pointer_scan","arguments":{"target":4660,"mode":"far16","depth":3,"max_offset":256,"region":0}}
+{"name":"dosbox_cheats","arguments":{"offset":0,"count":100}}
+{"name":"dosbox_pointer_scan","arguments":{"action":"rescan","target":5190}}
+{"name":"dosbox_cheat_watch","arguments":{"action":"add_pointer","candidate":0,"type":"u16","name":"Health pointer"}}
+{"name":"dosbox_disassemble","arguments":{"address":256,"bits":16,"ip":"0x100","count":64,"bytes":1024}}
+```
+
+`dosbox_cheats.pointer_scan` includes options, last target, count, `limited`/`limit_reason`, and paginated results with their absolute `index`, `path` and `target`. Watch entries include an optional `pointer` path and their current resolved address. Pass the candidate's current index to `add_pointer`; rescans can change indices. Clearing candidates does not remove existing watches.
+
+Pointer scan actions are `new` (default), `rescan`, and `clear`. New accepts `mode` (`physical32` default, `far16`, `near16`, `mapped32`), `depth` (1–6, default 3), `max_offset` (0–65536, default 256), `negative_offsets` (default false), `aligned` (default true), `region` (default 0) or `all_regions`, `segment` (0–65535, near16 only), `wrap20` (default false), and `max_results` (1–1000). Rescan uses the saved options and requires the newly located target. Bounds are 64 MiB, 1,000,000 indexed slots, 100,000 explored nodes and an approximately eight-second search budget. Capped results stay marked partial. Searches require control access even though they do not write RAM.
+
+Physical pointer formats use verified core-map translation. `far16` reads offset then segment words; `near16` uses the caller's segment. `physical32` requires flat identity-mapped guest addresses. `mapped32` is only for values stored in normalized core coordinates. Each dereference adds its offset in that coordinate space, then translates into mapped RAM. Paging, protected-mode selectors and CPU registers are unavailable. Dynamic locks resolve the chain each frame and disarm on invalid targets/overlap. See [Cheats](CHEATS.md) for interpretation and reset behavior.
+
+Disassembly is available in observation mode. `address` is required; `bits` is 16 (default) or 32; `ip` is a decimal/hex string (default `0`); `count` is 1–256 (default 64); `bytes` is 1–4096 (default 1024). Output contains mapped/physical addresses, logical IP, hex bytes, instruction text, flow type, validity and any direct branch target. Reads clamp at the RAM region's end. Mode and IP are supplied manually; this is not a CPU debugger and does not identify code versus data.
+
+## Right tools dock
+
+DLSS and Cheats share a resizable right panel. `dosbox_display.effects_panel` controls visibility of this whole dock, retaining its legacy name for compatibility. `tools_tab` selects `dlss` or `cheats`; `cheat_view` selects `search`, `watches`, `pointers` or `disassembly`. These selectors preserve current visibility; set `effects_panel: true` to reveal it. `tools_width` remembers a width of 360–900 pixels; the displayed width clamps to keep space for the game. Status and display responses report these choices. Width and the main tab persist across launches.
+
+```json
+{"name":"dosbox_display","arguments":{"effects_panel":true,"tools_tab":"cheats","cheat_view":"pointers","tools_width":540}}
+```
+
+Changing or hiding tabs preserves searches and watches. UI polling stops when Cheats is hidden; active locks continue in the emulator. MCP cheat tools remain available regardless of which tab is visible. In fullscreen, reveal the menu with the usual one-second top-edge dwell, then use either tool icon.

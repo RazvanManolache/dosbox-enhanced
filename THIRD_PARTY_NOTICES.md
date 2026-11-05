@@ -13,6 +13,7 @@ The Git submodules are separately maintained projects, pinned in
 | NVIDIA NVAPI headers | NVIDIA Corporation; Phoenix build input | Retained upstream header/SDK terms; `licenses/phoenix/NVIDIA-NVAPI-headers-MIT.txt` |
 | NVIDIA Streamline headers | NVIDIA Corporation | `external/streamline/license.txt` and `3rd-party-licenses.md` |
 | NVIDIA DLSS SDK | NVIDIA Corporation | `licenses/nvidia-sdk/LICENSE.txt`, `external/dlss`; headers/helper library are build inputs |
+| Iced x86 decoder | icedland and contributors; pinned NuGet 1.21.0 | MIT; `licenses/Iced-MIT.txt` |
 | SharpCompress | Adam Hathcock and contributors; pinned NuGet 0.50.7 | MIT; `licenses/SharpCompress-MIT.txt` |
 | NVIDIA Image Scaling | NVIDIA Corporation; embedded in Phoenix native pipeline | `licenses/NVIDIA-Image-Scaling-LICENSE.txt`, `licenses/NVIDIA-Image-Scaling-NOTICE.txt` |
 | .NET / WPF / ASP.NET Core | Microsoft and contributors | MIT and third-party notices from the self-contained runtime distribution; `licenses/dotnet/` |

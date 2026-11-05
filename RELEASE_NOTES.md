@@ -1,11 +1,8 @@
-# DOSBox Enhanced 1.0 Beta
+# DOSBox Enhanced 1.0
 
-- **Quiet update notice:** clickable menu text opens GitHub for newer published releases, including betas. Background automation skips discovery; offline checks never interrupt emulation.
-- Updated to the published Phoenix DLSS5 1.0 Beta source and rebuilt standalone native library.
-- Refreshed model-free native kernels carry the selected RTX tuning. Automatic/native remains the default strategy.
-- Retains the shared neural/spatial pipeline, appearance controls, paired screenshots and background automation/OCR.
-- DOSBox uses the standalone library; ReShade-only panels and instruction-style selectors are not DOSBox features.
+- Search DOS guest memory for typed or changing values, edit them, and lock them while the game runs.
+- Save pointer chains and rescan them after a target moves. Browse live 16-bit and 32-bit x86 disassembly.
+- Switch between DLSS and Cheats in a resizable dock. The same tools are available through MCP, with write actions subject to the existing control permission.
+- Includes the standalone Phoenix DLSS5 1.0 Beta 2 library and its model-free native kernels.
 
-This is a beta prerelease. Validation covers the host self-tests, rebuilt native bridge and the checks recorded in VALIDATION.json. It does not certify every DOS game or older physical RTX GPU, and earlier Phoenix benchmark figures are not new DOSBox FPS results.
-
-Download the Windows ZIP, extract it and keep your saved environments when updating. Models remain separately supplied. No NVIDIA model DLLs, weights, games, saves or personal configuration are included. Third-party components retain their licenses and notices.
+Extract the Windows x64 ZIP to a writable folder and keep your saved environments when updating. Games, models and personal settings are supplied separately. See VALIDATION.json for the checks run on this build.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0
+
+- Add the Cheats dock, guest RAM editing, pointer watches, disassembly and MCP controls.
+- Update the standalone Phoenix DLSS5 library and kernel bundle to 1.0 Beta 2.
+
 ## 1.0 Beta
 
 - Update the standalone Phoenix native library and model-free kernels to the published Phoenix 1.0 Beta source.

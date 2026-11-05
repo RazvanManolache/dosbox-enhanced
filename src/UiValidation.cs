@@ -34,7 +34,7 @@ public sealed partial class MainWindow
     public async Task RunUiValidation()
     {
         var checks = new List<string>(); var report = new Dictionary<string, object?>();
-        var original = selected; var savedEnvironmentVisible = preferences.EnvironmentVisible; var savedEffectsVisible = preferences.EffectsVisible;
+        var original = selected; var savedEnvironmentVisible = preferences.EnvironmentVisible; var savedEffectsVisible = preferences.EffectsVisible;var savedToolsTab=preferences.ToolsTab;
         EnvironmentProfile? profile = null; var addedProfiles = new List<EnvironmentProfile>();
         void Check(bool condition, string name) { if (!condition) throw new Exception(name); checks.Add(name); }
         void Click(Button button) => button.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Button.ClickEvent));
@@ -54,7 +54,7 @@ public sealed partial class MainWindow
             Check(menu.Children.OfType<Button>().All(b => b.Content is Viewbox && b.ToolTip != null), "every toolbar button uses a vector icon with a tooltip");
             Check(menu.Children[menu.Children.IndexOf(programPicker) + 1] is Button play && play.ToolTip?.ToString() == "Run selected program / launch environment", "Play immediately follows the program picker");
             Check(!menu.Children.OfType<Button>().Any(b => b.ToolTip?.ToString()?.Contains("Copy this") == true || b.ToolTip?.ToString()?.Contains("DOSBox configuration") == true), "copy and DOSBox configuration are absent from the toolbar");
-            SetAllPanels(true); UpdateLayout(); double width = stage.ActualWidth;
+            ShowToolTab(0);SetAllPanels(true); UpdateLayout(); double width = stage.ActualWidth;
             Check(Descendants<Button>(deck.Children[0]).Any(b => Equals(b.Content, "Copy environment")) && Descendants<Button>(deck.Children[0]).Any(b => Equals(b.Content, "DOSBox configuration…")), "copy and DOSBox configuration live in the environment tab");
             Click(environmentButton!); UpdateLayout(); Check(!environmentVisible && effectsVisible && stage.ActualWidth > width + 200, "environment icon hides only the environment and expands the game");
             width = stage.ActualWidth; Click(effectsButton!); UpdateLayout(); Check(!effectsVisible && stage.ActualWidth > width + 200, "beautify icon independently hides effects and expands the game");
@@ -191,7 +191,7 @@ public sealed partial class MainWindow
         {
             Stop(); programPicker.Close(); renameProgramWindow?.Close(); programManager?.Close(); configurationWindow?.Close(); if (fullscreen) ToggleFullscreen();
             foreach (var added in addedProfiles) library.Environments.Remove(added); library.Save(); environments.SelectedItem = original;
-            preferences.EnvironmentVisible = savedEnvironmentVisible; preferences.EffectsVisible = savedEffectsVisible; environmentVisible = savedEnvironmentVisible; effectsVisible = savedEffectsVisible; ApplyLayout(); preferences.Save();
+            preferences.EnvironmentVisible = savedEnvironmentVisible; preferences.EffectsVisible = savedEffectsVisible; environmentVisible = savedEnvironmentVisible; effectsVisible = savedEffectsVisible;toolsTabs.SelectedIndex=savedToolsTab=="cheats"?1:0;preferences.ToolsTab=savedToolsTab;ApplyLayout(); preferences.Save();
             report["checks"] = checks; Paths.AtomicWrite(Path.Combine(results, "ui-validation.json"), JsonSerializer.Serialize(report, Paths.Json)); Close();
         }
     }

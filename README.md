@@ -2,7 +2,7 @@
 
 DOSBox with saved environments, optional DLSS graphics, and built-in MCP.
 
-[Download Windows v1.0-beta](https://github.com/RazvanManolache/dosbox-enhanced/releases/download/v1.0-beta/DOSBox-Enhanced-1.0-beta-win-x64.zip) Â· [All release files](https://github.com/RazvanManolache/dosbox-enhanced/releases/tag/v1.0-beta)
+[Download Windows v1.0.0](https://github.com/RazvanManolache/dosbox-enhanced/releases/download/v1.0.0/DOSBox-Enhanced-1.0.0-win-x64.zip) Â· [All release files](https://github.com/RazvanManolache/dosbox-enhanced/releases/tag/v1.0.0)
 
 - Set up drives and settings once, then pick a game and press Play.
 - Keep multiple environments, each with its own DOSBox and graphics settings.
@@ -14,6 +14,18 @@ DOSBox with saved environments, optional DLSS graphics, and built-in MCP.
 - Four games, four saved environments; all captures use **one neural pass**.
 - Game showcase images are retained from v0.5; new setup/control screenshots are from v0.6.
 - [Selected settings, before/after images and all 40 trials](docs/GAME_GALLERY.md).
+
+## New in 1.0
+
+The [Cheats panel](docs/CHEATS.md) lets you inspect and edit the running DOS session:
+
+- Typed/unknown-value searches, narrowing, value edits and frame-by-frame locks.
+- Saved pointer-chain searches, relocation rescans and watches that follow moving targets.
+- Read-only 16/32-bit x86 disassembly, with instruction bytes and address columns.
+- A resizable right dock with separate DLSS / Cheats tabs, compact forms and per-game saved lists.
+- Matching MCP tools, including dock tabs and width.
+
+The portable package also includes the standalone Phoenix DLSS5 1.0 Beta 2 runtime.
 
 ## Features
 

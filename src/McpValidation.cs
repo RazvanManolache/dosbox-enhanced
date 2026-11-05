@@ -18,6 +18,7 @@ public sealed partial class MainWindow
     {
         var checks=new List<string>(); var report=new Dictionary<string,object?>();
         var original=preferences.Mcp; var audioBefore=preferences.Audio;var mouseBefore=preferences.Mouse;var selectedBefore=selected;var envPanelBefore=preferences.EnvironmentVisible;var effectsPanelBefore=preferences.EffectsVisible;
+        var toolsWidthBefore=preferences.ToolsWidth;var toolsTabBefore=preferences.ToolsTab;int cheatViewBefore=cheatTabs.SelectedIndex;
         var addedEnvironments=new List<string>();
         string deniedLink=Path.Combine(Paths.Root,"tests","fixtures","mcp","UNAPPROV");
         var prefPath=Path.Combine(Paths.Data,"preferences.json"); var originalPrefs=File.Exists(prefPath)?File.ReadAllBytes(prefPath):null;
@@ -56,8 +57,40 @@ public sealed partial class MainWindow
             Check(initialized.body?["result"]?["protocolVersion"]?.GetValue<string>()=="2025-11-25"&&session.Length>0,"MCP initialization and session header");
             Check((await Request("tools/list")).body?["error"]!=null,"initialization notification required");
             Check((await Request("notifications/initialized",notify:true)).status==202,"initialized notification accepted");
-            var listed=await Request("tools/list");Check(((JsonArray)listed.body!["result"]!["tools"]!).Count==23,"all twenty-three tools discovered");
+            var listed=await Request("tools/list");Check(((JsonArray)listed.body!["result"]!["tools"]!).Count==29,"all twenty-nine tools discovered");
             Check((await Tool("dosbox_status"))["structuredContent"]?["ready"]?.GetValue<bool>()==true,"live status available");
+            var ram=await Tool("dosbox_cheats");var ramRegions=ram["structuredContent"]!["regions"]!.AsArray();
+            Check(ramRegions.Count>=2,"MCP exposes the real DOS memory map");
+            int cheatAddress=checked((int)ramRegions.Last()!["Start"]!.GetValue<long>()+32);int cheatRegion=ramRegions.Last()!["Index"]!.GetValue<int>();
+            var originalCheatBytes=await core.ReadMemory(cheatAddress,2,CancellationToken.None);
+            Check(!(await Tool("dosbox_cheat_write",new{address=cheatAddress,type="u16",value="0xDEAD"}))["isError"]!.GetValue<bool>(),"MCP writes a typed guest value");
+            var cheatScan=await Tool("dosbox_cheat_scan",new{action="new",type="u16",filter="exact",value="0xDEAD",region=cheatRegion});
+            Check(!cheatScan["isError"]!.GetValue<bool>()&&cheatScan["structuredContent"]!["results"]!.AsArray().Any(r=>r!["Address"]!.GetValue<long>()==cheatAddress),"MCP scans discover the value in actual guest RAM");
+            var addedCheat=await Tool("dosbox_cheat_watch",new{action="add",address=cheatAddress,type="u16",name="MCP test value"});string cheatId=addedCheat["structuredContent"]!["id"]!.GetValue<string>();
+            Check(!(await Tool("dosbox_cheat_watch",new{action="update",id=cheatId,value="1234",frozen=true}))["isError"]!.GetValue<bool>()&&BitConverter.ToUInt16(await core.ReadMemory(cheatAddress,2,CancellationToken.None))==1234,"MCP locks the typed value");
+            Check((await Tool("dosbox_cheat_write",new{address=cheatAddress,type="u16",value="4"}))["isError"]!.GetValue<bool>(),"MCP refuses writes overlapping an active lock");
+            await Tool("dosbox_cheat_watch",new{action="unlock_all"});
+            Check((await Tool("dosbox_cheat_write",new{address=cheatAddress,type="u16",value="65536"}))["isError"]!.GetValue<bool>()&&BitConverter.ToUInt16(await core.ReadMemory(cheatAddress,2,CancellationToken.None))==1234,"invalid cheat values cannot partially modify guest memory");
+            await Tool("dosbox_cheat_write",new{address=cheatAddress,type="u16",value="1233"});
+            Check(!(await Tool("dosbox_cheat_scan",new{action="next",filter="changed"}))["isError"]!.GetValue<bool>(),"MCP narrows a scan against its prior snapshot");
+            var watches=await Tool("dosbox_cheats");Check(watches["structuredContent"]!["watches"]!.AsArray().Any(w=>w!["id"]!.GetValue<string>()==cheatId&&w["current"]!.GetValue<string>()=="1233"&&!w["frozen"]!.GetValue<bool>()),"MCP reports live watched values and unlocked state");
+            int pointerRoot=cheatAddress+16;var originalPointer=await core.ReadMemory(pointerRoot,4,CancellationToken.None);
+            uint physicalTarget=checked((uint)(ramRegions.Last()!["PhysicalStart"]!.GetValue<long>()+cheatAddress-ramRegions.Last()!["Start"]!.GetValue<long>()));
+            await Tool("dosbox_cheat_write",new{address=pointerRoot,type="u32",value=physicalTarget.ToString()});
+            var pointerScan=await Tool("dosbox_pointer_scan",new{target=cheatAddress,mode="physical32",depth=1,max_offset=0,region=cheatRegion});
+            Check(!pointerScan["isError"]!.GetValue<bool>(),"MCP finds pointer chains in guest RAM");
+            var pointerPage=(await Tool("dosbox_cheats"))["structuredContent"]!["pointer_scan"]!["results"]!.AsArray();
+            int pointerCandidate=pointerPage.Single(c=>c!["path"]!["BaseAddress"]!.GetValue<long>()==pointerRoot)!["index"]!.GetValue<int>();
+            var addedPointer=await Tool("dosbox_cheat_watch",new{action="add_pointer",candidate=pointerCandidate,name="MCP pointer",type="u16"});
+            string pointerId=addedPointer["structuredContent"]!["id"]!.GetValue<string>();
+            Check(!(await Tool("dosbox_cheat_watch",new{action="update",id=pointerId,value="4321",frozen=true}))["isError"]!.GetValue<bool>()&&BitConverter.ToUInt16(await core.ReadMemory(cheatAddress,2,CancellationToken.None))==4321,"MCP creates and locks a dynamic pointer watch");
+            Check(!(await Tool("dosbox_pointer_scan",new{action="rescan",target=cheatAddress}))["isError"]!.GetValue<bool>(),"MCP rescans saved pointer candidates");
+            await Tool("dosbox_cheat_watch",new{action="remove",id=pointerId});await Tool("dosbox_pointer_scan",new{action="clear"});
+            await Tool("dosbox_cheat_write",new{address=pointerRoot,type="u32",value=BitConverter.ToUInt32(originalPointer).ToString()});
+            var decodedMcp=await Tool("dosbox_disassemble",new{address=cheatAddress,bits=16,ip="0x100",count=8,bytes=32});
+            Check(!decodedMcp["isError"]!.GetValue<bool>()&&decodedMcp["structuredContent"]!["Instructions"]!.AsArray().Count>0,"MCP returns structured read-only x86 disassembly");
+            Check((await Tool("dosbox_disassemble",new{address=cheatAddress,bits=24}))["isError"]!.GetValue<bool>(),"MCP refuses unsupported x86 modes");
+            await Tool("dosbox_cheat_watch",new{action="remove",id=cheatId});await Tool("dosbox_cheat_write",new{address=cheatAddress,type="u16",value=BitConverter.ToUInt16(originalCheatBytes).ToString()});await Tool("dosbox_cheat_scan",new{action="reset"});
             Check((await Tool("dosbox_list_files",new{environment_id=profile.Id,drive="C"}))["isError"]?.GetValue<bool>()==false,"mapped folder browsing");
             Check((await Tool("dosbox_list_files",new{environment_id=profile.Id,drive="C",path="..\\.."}))["isError"]?.GetValue<bool>()==true,"path traversal rejected");
             Check((await Tool("dosbox_audio",new{volume=101}))["isError"]?.GetValue<bool>()==true,"numeric bounds rejected");
@@ -105,6 +138,12 @@ public sealed partial class MainWindow
             await Tool("dosbox_effects",new{phoenix=new{}});
             var independentPanels=await Tool("dosbox_display",new{environment_panel=false,effects_panel=true});Check(!independentPanels["isError"]!.GetValue<bool>()&&!environmentVisible&&effectsVisible,"display tool independently hides environment and shows effects");
             Check(!ApplicationPreferences.Load().EnvironmentVisible&&ApplicationPreferences.Load().EffectsVisible,"MCP panel visibility persists to app preferences");
+            var dock=await Tool("dosbox_display",new{tools_tab="cheats",cheat_view="pointers",tools_width=560});
+            Check(!dock["isError"]!.GetValue<bool>()&&toolsTabs.SelectedIndex==1&&cheatTabs.SelectedIndex==2&&preferences.ToolsWidth==560,"MCP selects dock tabs and resizes the right panel");
+            var dockStatus=(await Tool("dosbox_status"))["structuredContent"]!["display"]!;
+            Check(dockStatus["tools_tab"]!.GetValue<string>()=="cheats"&&dockStatus["cheat_view"]!.GetValue<string>()=="pointers"&&dockStatus["tools_width"]!.GetValue<double>()==560,"MCP status reports dock tab, workflow and remembered width");
+            Check((await Tool("dosbox_display",new{tools_tab="invalid",environment_panel=true}))["isError"]!.GetValue<bool>()&&!environmentVisible,"invalid dock options are rejected before changing panel visibility");
+            await Tool("dosbox_display",new{tools_tab="dlss",tools_width=480});
             if(interactive) { FocusForValidation();stage.Focus();await Task.Delay(100); }
             var mouseConfigured=await Tool("dosbox_mouse_capture",new{capture_on_click=true,hide_pointer=true,release_shortcut="Ctrl+Alt+M",sensitivity=1.25});Check(!mouseConfigured["isError"]!.GetValue<bool>()&&preferences.Mouse.ReleaseShortcut=="Ctrl+Alt+M"&&ApplicationPreferences.Load().Mouse.Sensitivity==1.25,"MCP configures and persists the real mouse shortcut, pointer options and sensitivity");
             var invalidShortcut=await Tool("dosbox_mouse_capture",new{release_shortcut="F11",hide_pointer=false});Check(invalidShortcut["isError"]!.GetValue<bool>()&&preferences.Mouse.HidePointer&&preferences.Mouse.ReleaseShortcut=="Ctrl+Alt+M","invalid mouse shortcut is rejected without partially saving other changes");
@@ -166,7 +205,11 @@ public sealed partial class MainWindow
             }
             settings=settings with {AllowRemote=false,AllowControl=false};await ConfigureMcp(settings);session="";await Request("initialize",new JsonObject{["protocolVersion"]="2025-11-25"});await Request("notifications/initialized",notify:true);
             if(localIp!=null){bool blockedAgain=false;try{await Request("ping",url:$"http://{localIp}:{port}/mcp");}catch(HttpRequestException){blockedAgain=true;}Check(blockedAgain,"unchecking remote closes LAN listener again");}
-            var observe=await Request("tools/list");Check(((JsonArray)observe.body!["result"]!["tools"]!).Count==8,"observation mode hides control tools");Check((await Tool("dosbox_press_keys",new{keys=new[]{"a"}}))["isError"]!.GetValue<bool>(),"observation mode rejects direct control calls");
+            var observe=await Request("tools/list");Check(((JsonArray)observe.body!["result"]!["tools"]!).Count==10,"observation mode hides control tools");Check((await Tool("dosbox_press_keys",new{keys=new[]{"a"}}))["isError"]!.GetValue<bool>(),"observation mode rejects direct control calls");
+            Check((await Tool("dosbox_cheat_write",new{address=0,type="u8",value="0"}))["isError"]!.GetValue<bool>(),"observation mode rejects guest memory writes");
+            Check((await Tool("dosbox_cheat_watch",new{action="unlock_all"}))["isError"]!.GetValue<bool>(),"observation mode rejects cheat controls");
+            Check((await Tool("dosbox_pointer_scan",new{target=0}))["isError"]!.GetValue<bool>(),"observation mode rejects pointer search controls");
+            Check(!(await Tool("dosbox_disassemble",new{address=0,bits=16,count=4}))["isError"]!.GetValue<bool>(),"observation mode allows read-only disassembly");
             Check(((JsonArray)observe.body!["result"]!["tools"]!).Any(t => t?["name"]?.GetValue<string>() == "dosbox_screenshot" && t?["inputSchema"]?["properties"]?["pair"]?["type"]?.GetValue<string>() == "boolean"),"paired screenshots remain available in observation mode");
             foreach(var control in new[]{("dosbox_mouse_capture",new JsonObject{["captured"]=true}),("dosbox_manage_programs",new JsonObject{["environment_id"]=profile.Id,["scan"]=true}),("dosbox_environment",new JsonObject{["action"]="copy",["environment_id"]=profile.Id}),("dosbox_drive",new JsonObject{["environment_id"]=profile.Id,["action"]="remove",["drive"]="D"}),("dosbox_quick_run",new JsonObject{["environment_id"]=profile.Id,["drive"]="C",["path"]="VERIFY.COM"})})Check((await Tool(control.Item1,control.Item2))["isError"]!.GetValue<bool>(),"observation mode rejects "+control.Item1);
             Check(!(await Tool("dosbox_list_programs",new{environment_id=profile.Id}))["isError"]!.GetValue<bool>(),"observation mode reads the managed program menu");
@@ -174,7 +217,7 @@ public sealed partial class MainWindow
             using(var bridge=Process.Start(new ProcessStartInfo(Path.Combine(AppContext.BaseDirectory,"DosboxEnhanced.exe"),"--mcp-stdio"){UseShellExecute=false,RedirectStandardInput=true,RedirectStandardOutput=true,RedirectStandardError=true,CreateNoWindow=true})!)
             {
                 await bridge.StandardInput.WriteLineAsync("{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2025-11-25\"}}");await bridge.StandardInput.FlushAsync();var reply=await bridge.StandardOutput.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(10));Check(JsonNode.Parse(reply!)?["result"]?["serverInfo"]?["name"]?.GetValue<string>()=="dosbox-enhanced","published executable stdio initialization");
-                await bridge.StandardInput.WriteLineAsync("{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}");await bridge.StandardInput.WriteLineAsync("{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\"}");await bridge.StandardInput.FlushAsync();var tools=await bridge.StandardOutput.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(10));Check(JsonNode.Parse(tools!)?["result"]?["tools"] is JsonArray array&&array.Count==8,"stdio tool discovery without extra runtime");bridge.StandardInput.Close();await bridge.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(10));Check(bridge.ExitCode==0,"stdio EOF shuts down cleanly");
+                await bridge.StandardInput.WriteLineAsync("{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}");await bridge.StandardInput.WriteLineAsync("{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\"}");await bridge.StandardInput.FlushAsync();var tools=await bridge.StandardOutput.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(10));Check(JsonNode.Parse(tools!)?["result"]?["tools"] is JsonArray array&&array.Count==10,"stdio tool discovery without extra runtime");bridge.StandardInput.Close();await bridge.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(10));Check(bridge.ExitCode==0,"stdio EOF shuts down cleanly");
             }
             ShowMcpPanel();await Task.Delay(150);CaptureMcpPanel(Path.Combine(Paths.Root,"tests","results","mcp-panel.png"));mcpPanel?.Close();
             settings=settings with {Enabled=false};await ConfigureMcp(settings);bool closed=false;try{await Request("ping");}catch(HttpRequestException){closed=true;}Check(closed,"disable stops listening");
@@ -184,7 +227,7 @@ public sealed partial class MainWindow
         finally
         {
             report["checks"]=checks;report["count"]=checks.Count;
-            ReleaseMouseCapture();if(fullscreen)ToggleFullscreen();mcpPanel?.Close();await ConfigureMcp(original,false);preferences.Mcp=original;preferences.Audio=audioBefore;preferences.Mouse=mouseBefore;releaseShortcut=MouseShortcut.Parse(mouseBefore.ReleaseShortcut);UpdateMouseUi();preferences.EnvironmentVisible=envPanelBefore;preferences.EffectsVisible=effectsPanelBefore;environmentVisible=envPanelBefore;effectsVisible=effectsPanelBefore;ApplyLayout();
+            ReleaseMouseCapture();if(fullscreen)ToggleFullscreen();mcpPanel?.Close();await ConfigureMcp(original,false);preferences.Mcp=original;preferences.Audio=audioBefore;preferences.Mouse=mouseBefore;releaseShortcut=MouseShortcut.Parse(mouseBefore.ReleaseShortcut);UpdateMouseUi();preferences.EnvironmentVisible=envPanelBefore;preferences.EffectsVisible=effectsPanelBefore;environmentVisible=envPanelBefore;effectsVisible=effectsPanelBefore;preferences.ToolsWidth=toolsWidthBefore;toolsTabs.SelectedIndex=toolsTabBefore=="cheats"?1:0;preferences.ToolsTab=toolsTabBefore;cheatTabs.SelectedIndex=cheatViewBefore;ApplyLayout();
             if(originalPrefs!=null)File.WriteAllBytes(prefPath,originalPrefs);else if(File.Exists(prefPath))File.Delete(prefPath);
             foreach(string added in addedEnvironments){var temporary=library.Environments.FirstOrDefault(p=>p.Id==added);if(temporary!=null)library.Environments.Remove(temporary);}library.Environments.Remove(profile);library.Save();Stop();environments.SelectedItem=selectedBefore;
             var folder=Path.Combine(profile.Drives[0].Folder,"MCPTEST");var temporaryProgram=Path.Combine(folder,"TOOLS.BAT");if(File.Exists(temporaryProgram))File.Delete(temporaryProgram);if(Directory.Exists(folder)&&!Directory.EnumerateFileSystemEntries(folder).Any())Directory.Delete(folder);

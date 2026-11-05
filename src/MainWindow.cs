@@ -26,7 +26,7 @@ public sealed partial class MainWindow : Window
     readonly Image image = new() { Stretch = Stretch.Fill, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
     readonly NativeView nativeView = new() { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Visibility = Visibility.Hidden };
     readonly Popup fullscreenMenu = new() { AllowsTransparency = false, StaysOpen = true, Placement = PlacementMode.Absolute };
-    readonly TextBlock welcome = new() { Text = "Your DOS workspace\n\nOpen a DOS program for a quick run,\nor create an environment with your own drives.", FontSize = 22, Foreground = new SolidColorBrush(Color.FromRgb(110, 133, 159)), TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+    readonly TextBlock welcome = new() { Text = "Your DOS workspace\n\nOpen a DOS program for a quick run,\nor create an environment with your own drives.", FontSize = 22, Foreground = new SolidColorBrush(Color.FromRgb(110, 133, 159)), TextAlignment = TextAlignment.Center, TextWrapping=TextWrapping.Wrap, Margin=new Thickness(16), VerticalAlignment = VerticalAlignment.Center };
     readonly TextBlock status = new() { Margin = new Thickness(12, 6, 12, 6), Foreground = Brushes.LightSteelBlue, TextWrapping = TextWrapping.Wrap };
     readonly ListBox environments = new(), drives = new(), files = new();
     readonly TextBox name = new(), startup = new(), cycles = new() { Text = "auto" };
@@ -72,7 +72,7 @@ public sealed partial class MainWindow : Window
     {
         BackgroundAutomation = backgroundAutomation;
         if (BackgroundAutomation) { ShowActivated = false; ShowInTaskbar = false; WindowState = WindowState.Minimized; }
-        Title = "DOSBox Enhanced · 1.0 Beta"; Width = 1440; Height = 920; MinWidth = 1050; MinHeight = 640;
+        Title = "DOSBox Enhanced · 1.0"; Width = 1440; Height = 920; MinWidth = 1050; MinHeight = 640;
         Background = Brush(15, 20, 29); Foreground = Brush(221, 231, 241); FontFamily = new FontFamily("Segoe UI"); FontSize = 13;
         environmentVisible = preferences.EnvironmentVisible; effectsVisible = preferences.EffectsVisible;
         root.Background = Background; ConfigureTheme(); BuildUi(); InitializePrograms(); InitializeMouseCapture(); ApplyLayout();
@@ -120,7 +120,7 @@ public sealed partial class MainWindow : Window
         DragOver += (_, e) => { e.Effects = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None; e.Handled = true; };
         Drop += (_, e) => { if (e.Data.GetData(DataFormats.FileDrop) is string[] paths && paths.Length > 0) Try(() => QuickRun(paths[0])); };
         Closing += (_, _) => DisposeApp();
-        SizeChanged += (_, _) => { ReleaseMouseCapture(); FitImage(); };
+        SizeChanged += (_, _) => { ReleaseMouseCapture(); ApplyToolsWidth(); FitImage(); };
         stage.SizeChanged += (_, _) => FitImage();
         if (executable != null) Loaded += (_, _) => Try(() => QuickRun(executable));
     }
@@ -231,7 +231,8 @@ public sealed partial class MainWindow : Window
         right.Children.Add(Label("Input", 18)); right.Children.Add(mouseHelp); right.Children.Add(Button("Mouse capture settings…", ShowMouseSettings));
         right.Children.Add(Label("Native rendering uses estimated motion from DOS images and a flat 2D plane. Super Resolution enlarges the image; Frame Generation adds frames. Generated-frame counts come from NVIDIA's presenter."));
         BuildPhoenixPanel(right);
-        var rightScroll = new ScrollViewer { Content = right, VerticalScrollBarVisibility = ScrollBarVisibility.Auto }; Grid.SetColumn(rightScroll, 2); deck.Children.Add(rightScroll);
+        var rightScroll = new ScrollViewer { Content = right, VerticalScrollBarVisibility = ScrollBarVisibility.Auto, HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled };
+        BuildToolsDock(rightScroll);
         Grid.SetRow(status, 2); root.Children.Add(status); Content = root;
         enabled.Checked += (_, _) => UpdateEffects(); enabled.Unchecked += (_, _) => UpdateEffects();
         compare.Checked += (_, _) => UpdateEffects(); compare.Unchecked += (_, _) => UpdateEffects();
@@ -440,6 +441,7 @@ public sealed partial class MainWindow : Window
         if (disposed) return;
         CacheCoreCatalog();
         TickMouseCapture();
+        if(cheatSession!=null) { cheatSession.Sync();int locks=core?.ActiveCheatLocks??0;if(cheatButton!=null)cheatButton.ToolTip=locks>0?$"Cheats · {locks} value(s) locked":"Cheats · search, edit and lock DOS values"; }
         var source = core?.Latest;
         if (inputResize.IsChecked == true) UpdateInputPreview();
         var wasPaused = phoenix.Paused; var wasMenu = phoenix.MenuOpen; var wasBackground = phoenix.Background;
@@ -512,8 +514,9 @@ public sealed partial class MainWindow : Window
     void ApplyLayout()
     {
         panels = environmentVisible || effectsVisible;
-        deck.ColumnDefinitions[0].Width = new GridLength(environmentVisible ? 285 : 0); deck.ColumnDefinitions[2].Width = new GridLength(effectsVisible ? 270 : 0);
+        deck.ColumnDefinitions[0].Width = new GridLength(environmentVisible ? 285 : 0); ApplyToolsWidth();
         deck.Children[0].Visibility = environmentVisible ? Visibility.Visible : Visibility.Collapsed; deck.Children[2].Visibility = effectsVisible ? Visibility.Visible : Visibility.Collapsed;
+        UpdateToolsDock();
         status.Visibility = fullscreen ? Visibility.Collapsed : Visibility.Visible;
         Grid.SetRow(deck, fullscreen && !panels ? 0 : 1); Grid.SetRowSpan(deck, fullscreen && !panels ? 3 : 1);
         deck.Margin = fullscreen && panels ? new Thickness(0, menu.ActualHeight, 0, 0) : new Thickness(0);
@@ -672,7 +675,7 @@ public sealed partial class MainWindow : Window
     }
     [StructLayout(LayoutKind.Sequential)] struct CursorPoint { public int X, Y; }
     [DllImport("user32.dll")] static extern bool GetCursorPos(out CursorPoint point);
-    void DisposeApp() { if (disposed) return; disposed = true; StopUpdateNotice(); programPicker.Close(); renameProgramWindow?.Close(); DisposeMouseCapture(); programTimer.Stop(); scanCancellation?.Cancel(); mcp?.Dispose(); mcpPanel?.Close(); timer.Stop(); fullscreenMenu.IsOpen = false; preferencesTimer.Stop(); preferences.Save(); core?.Dispose(); phoenix.Dispose(); }
+    void DisposeApp() { if (disposed) return; disposed = true; cheatTimer?.Stop(); cheatCancellation?.Cancel(); StopUpdateNotice(); programPicker.Close(); renameProgramWindow?.Close(); DisposeMouseCapture(); programTimer.Stop(); scanCancellation?.Cancel(); mcp?.Dispose(); mcpPanel?.Close(); timer.Stop(); fullscreenMenu.IsOpen = false; preferencesTimer.Stop(); preferences.Save(); core?.Dispose(); phoenix.Dispose(); }
 }
 
 

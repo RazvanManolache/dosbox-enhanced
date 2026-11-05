@@ -26,12 +26,29 @@ public sealed partial class MainWindow
         mcp = new(this); changingMcp = true; mcpEnabled.IsChecked = preferences.Mcp.Enabled; changingMcp = false;
         mcpEnabled.Checked += async (_, _) => { if (!changingMcp) await ConfigureMcp(preferences.Mcp with { Enabled = true }); };
         mcpEnabled.Unchecked += async (_, _) => { if (!changingMcp) await ConfigureMcp(preferences.Mcp with { Enabled = false }); };
-        Loaded += async (_, _) => { if (mcpStartupHandled) return; mcpStartupHandled = true; if (preferences.Mcp.Enabled) await ConfigureMcp(preferences.Mcp, false); };
+        Loaded += async (_, _) =>
+        {
+            if (mcpStartupHandled) return;
+            mcpStartupHandled = true;
+            TraceMcpStartup("window-loaded");
+            if (preferences.Mcp.Enabled) await ConfigureMcp(preferences.Mcp, false);
+        };
+    }
+    // Private regression diagnostics are opt-in and omit connection keys and
+    // environment/game data. They distinguish startup failure from an idle core.
+    void TraceMcpStartup(string phase, string? error = null)
+    {
+        if (Environment.GetEnvironmentVariable("DOSBOX_ENHANCED_MCP_DIAGNOSTICS") != "1") return;
+        Paths.AtomicWrite(Path.Combine(Paths.Data, "mcp-startup.json"), System.Text.Json.JsonSerializer.Serialize(new
+        {
+            phase, enabled = preferences.Mcp.Enabled, port = preferences.Mcp.Port,
+            status = mcp?.Status, error
+        }));
     }
     async Task ConfigureMcp(McpSettings settings, bool save = true)
     {
-        try { await mcp!.Configure(settings); preferences.Mcp = settings; if (save) preferences.Save(); }
-        catch (Exception e) { preferences.Mcp = preferences.Mcp with { Enabled = false }; if (save) preferences.Save(); status.Text = "MCP: " + e.Message; }
+        try { TraceMcpStartup("configuring"); await mcp!.Configure(settings); preferences.Mcp = settings; if (save) preferences.Save(); TraceMcpStartup("configured"); }
+        catch (Exception e) { preferences.Mcp = preferences.Mcp with { Enabled = false }; if (save) preferences.Save(); status.Text = "MCP: " + e.Message; TraceMcpStartup("failed", e.GetType().Name + ": " + e.Message); }
         finally { changingMcp = true; mcpEnabled.IsChecked = preferences.Mcp.Enabled; if (panelEnabled != null) panelEnabled.IsChecked = preferences.Mcp.Enabled; changingMcp = false; UpdateMcpUi(); }
     }
     void UpdateMcpUi()
@@ -103,7 +120,7 @@ public sealed partial class MainWindow
         automation=new { background=BackgroundAutomation, windowState=WindowState.ToString() },
         cpu=new { requested=core?.RequestedCpuCycles, liveControl=core?.LiveCpuCycles??false, acknowledgedUpdates=core?.CpuCycleUpdates??0 },
         selectedEnvironmentId=selected?.Id,frame=core?.Latest?.Sequence, width=core?.Latest?.Width,height=core?.Latest?.Height, memoryBytes=core?.MemoryBytes??0, audio=preferences.Audio, mouse=MouseInfo(),
-        graphics=JsonNode.Parse(phoenix.RuntimeStatus), graphicsStatus=phoenix.Status, frameGeneration=phoenix.FrameGenerationStatus,display=new{fullscreen,panels,environment_panel=environmentVisible,effects_panel=effectsVisible,menu_visible=menu.Visibility==Visibility.Visible,aspect=aspectMode.SelectedIndex,sampling=scaler.SelectedIndex},
+        graphics=JsonNode.Parse(phoenix.RuntimeStatus), graphicsStatus=phoenix.Status, frameGeneration=phoenix.FrameGenerationStatus,display=new{fullscreen,panels,environment_panel=environmentVisible,effects_panel=effectsVisible,tools_tab=toolsTabs.SelectedIndex==1?"cheats":"dlss",tools_width=preferences.ToolsWidth,cheat_view=new[]{"search","watches","pointers","disassembly"}[Math.Max(0,cheatTabs.SelectedIndex)],menu_visible=menu.Visibility==Visibility.Visible,aspect=aspectMode.SelectedIndex,sampling=scaler.SelectedIndex},
         mcp=new { enabled=preferences.Mcp.Enabled,allowRemote=preferences.Mcp.AllowRemote,allowControl=preferences.Mcp.AllowControl,status=mcp!.Status }, error=core?.Error };
     internal object McpConfiguration(string id) { var p=McpProfile(id); return new { environment=ProfileInfo(p),ini=Configuration.Generate(p),settingsIni=DosboxIni.Format(DosboxIni.Effective(p)),settingsCatalog=ConfigurationCatalog.Settings,coreOptionsCatalog=CoreCatalog().ToArray(), applies="Common CPU cycles apply live when available; other settings take effect at next launch/reload; [libretro] accepts dosbox_pure_ frontend options from the catalog. Export/import settingsIni; ini also includes managed drive/startup commands and cannot be imported as settings. Null removes overrides; replace or settings INI imports are supported." }; }
     static (Drive drive, string root, string host, string relative) Mapped(EnvironmentProfile p,string letter,string relative)
@@ -180,12 +197,15 @@ public sealed partial class MainWindow
     {
         int Index(string key,string[] values) { var value=args[key]!.GetValue<string>();int index=Array.IndexOf(values,value);return index>=0?index:throw new ArgumentException("Invalid "+key+"; use "+string.Join(", ",values)); }
         int? aspect=args["aspect"]==null?null:Index("aspect",["dos","pixels","stretch"]),sampling=args["sampling"]==null?null:Index("sampling",["smooth","sharp","integer"]);
+        int? toolTab=args["tools_tab"]==null?null:Index("tools_tab",["dlss","cheats"]),cheatView=args["cheat_view"]==null?null:Index("cheat_view",["search","watches","pointers","disassembly"]);
         bool targetFullscreen=args["fullscreen"]?.GetValue<bool>()??fullscreen;
         if(!targetFullscreen&&args["menu_visible"]?.GetValue<bool>()==false)throw new ArgumentException("The windowed toolbar stays visible; menu_visible hides only the fullscreen menu.");
         if(args["fullscreen"]!=null && fullscreen!=args["fullscreen"]!.GetValue<bool>())ToggleFullscreen();if(args["panels"]!=null){SetAllPanels(args["panels"]!.GetValue<bool>());if(fullscreen)ShowMenu(panels);}
         if(args["environment_panel"]!=null || args["effects_panel"]!=null) {ReleaseMouseCapture();environmentVisible=args["environment_panel"]?.GetValue<bool>()??environmentVisible;effectsVisible=args["effects_panel"]?.GetValue<bool>()??effectsVisible;SavePanePreferences();ApplyLayout();if(fullscreen&&panels)ShowMenu(true);}
+        if(toolTab!=null)toolsTabs.SelectedIndex=toolTab.Value;if(cheatView!=null)cheatTabs.SelectedIndex=cheatView.Value;
+        if(args["tools_width"]!=null)SetToolsWidth(args["tools_width"]!.GetValue<int>());
         if(args["menu_visible"] is JsonNode visible)ShowMenu(visible.GetValue<bool>());
-        if(aspect!=null)aspectMode.SelectedIndex=aspect.Value;if(sampling!=null)scaler.SelectedIndex=sampling.Value;preferences.Save();return new{fullscreen,panels,environment_panel=environmentVisible,effects_panel=effectsVisible,menu_visible=menu.Visibility==Visibility.Visible,aspect=aspectMode.SelectedIndex,sampling=scaler.SelectedIndex};
+        if(aspect!=null)aspectMode.SelectedIndex=aspect.Value;if(sampling!=null)scaler.SelectedIndex=sampling.Value;preferences.Save();return new{fullscreen,panels,environment_panel=environmentVisible,effects_panel=effectsVisible,tools_tab=toolsTabs.SelectedIndex==1?"cheats":"dlss",tools_width=preferences.ToolsWidth,cheat_view=new[]{"search","watches","pointers","disassembly"}[Math.Max(0,cheatTabs.SelectedIndex)],menu_visible=menu.Visibility==Visibility.Visible,aspect=aspectMode.SelectedIndex,sampling=scaler.SelectedIndex};
     }
     internal object McpEffects(JsonObject args)
     {

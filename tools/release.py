@@ -3,7 +3,7 @@ from pathlib import Path
 import argparse,hashlib,json,os,re,subprocess,urllib.request,urllib.parse,zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
-VERSION='1.0-beta'
+VERSION='1.0.0'
 REPO='RazvanManolache/dosbox-enhanced'
 OUT=ROOT/'release'/('v'+VERSION)/'prepared'
 
@@ -96,11 +96,11 @@ def publish():
     assert any(r['conclusion']=='success' and r['event']=='push' for r in status()),'Wait for CI success.'
     audit=json.loads((OUT/'RELEASE_AUDIT.json').read_text());assert audit['passed'] and audit['commit']==git('rev-parse','HEAD')
     prefix=f'/repos/{REPO}'
-    release=api('POST',prefix+'/releases',dict(tag_name='v'+VERSION,target_commitish=audit['commit'],name='DOSBox Enhanced 1.0 Beta',body=(ROOT/'RELEASE_NOTES.md').read_text(encoding='utf-8-sig'),draft=True,prerelease=True),auth=True)
+    release=api('POST',prefix+'/releases',dict(tag_name='v'+VERSION,target_commitish=audit['commit'],name='DOSBox Enhanced 1.0',body=(ROOT/'RELEASE_NOTES.md').read_text(encoding='utf-8-sig'),draft=True,prerelease=False),auth=True)
     for name in [a['name'] for a in audit['archives']]+['VALIDATION.json','SHA256SUMS.txt']:
         data=(OUT/name).read_bytes();asset=api('POST',release['upload_url'].split('{')[0]+'?name='+urllib.parse.quote(name),raw=data,auth=True)
         assert asset['size']==len(data) and asset['digest']=='sha256:'+sha(data);print('Uploaded and hash-verified:',name,flush=True)
-    release=api('PATCH',prefix+'/releases/'+str(release['id']),dict(draft=False,make_latest='false'),auth=True)
+    release=api('PATCH',prefix+'/releases/'+str(release['id']),dict(draft=False,make_latest='true'),auth=True)
     assert not release['draft'];print('Published:',release['html_url'])
     (OUT/'PUBLICATION.json').write_text(json.dumps(dict(url=release['html_url'],commit=audit['commit'],release_id=release['id']),indent=2)+'\n')
 

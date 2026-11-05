@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace DosboxEnhanced;
 
-public sealed class DosCore : IDisposable
+public sealed partial class DosCore : IDisposable
 {
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate byte Env(uint command, IntPtr data);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void Video(IntPtr data, uint width, uint height, nuint pitch);
@@ -138,6 +138,7 @@ public sealed class DosCore : IDisposable
                     var info = Marshal.PtrToStructure<AvInfo>(data); ApplyAv(info); return 1;
                 case 37:
                     var geo = Marshal.PtrToStructure<Geometry>(data); if (geo.aspect > 0) aspect = geo.aspect; return 1;
+                case 65572: ReceiveMemoryMap(data); return 1;
                 case 39: return 0; // optional hardware renderer is deliberately unsupported
                 case 52: Marshal.WriteInt32(data, 0); return 1; // request stable legacy options
                 case 59: Marshal.WriteInt32(data, 0); return 1; // English
@@ -197,7 +198,8 @@ public sealed class DosCore : IDisposable
             var game = new GameInfo { path = Text(config) };
             if (Export<Load>("retro_load_game")(ref game) == 0) throw new InvalidOperationException("DOSBox could not load the environment.");
             loaded = true;
-            if (NativeLibrary.TryGetExport(module, "retro_get_memory_size", out var memorySize)) MemoryBytes = checked((long)Marshal.GetDelegateForFunctionPointer<MemorySize>(memorySize)(2));
+            if (NativeLibrary.TryGetExport(module, "retro_get_memory_size", out var memorySize)) rawMemoryBytes = checked((long)Marshal.GetDelegateForFunctionPointer<MemorySize>(memorySize)(2));
+            UpdateMemorySize();
             Export<GetAv>("retro_get_system_av_info")(out var info); ApplyAv(info);
             if (sound) { audio = new WaveAudio((int)info.timing.sampleRate, Volatile.Read(ref audioSettings)); audio.Settings = Volatile.Read(ref audioSettings); }
             ready = true; Status = "DOS running";
@@ -206,7 +208,7 @@ public sealed class DosCore : IDisposable
             {
                 while (commands.TryDequeue(out var action)) { try { action(); } catch (Exception e) { OnMessage?.Invoke(e.Message); } }
                 if (paused) { Thread.Sleep(10); next = clock.Elapsed.TotalSeconds; continue; }
-                run(); next += 1 / fps;
+                ApplyFrozenValues(); run(); ApplyFrozenValues(); next += 1 / fps;
                 var wait = next - clock.Elapsed.TotalSeconds;
                 if (wait > .002) Thread.Sleep((int)(wait * 1000));
                 if (wait < -.1) next = clock.Elapsed.TotalSeconds;
@@ -216,6 +218,7 @@ public sealed class DosCore : IDisposable
         finally
         {
             ready = false;
+            ClearCheatMemory();
             if (loaded) unload?.Invoke();
             deinit?.Invoke(); audio?.Dispose();
             if (module != IntPtr.Zero) NativeLibrary.Free(module);
@@ -233,7 +236,7 @@ public sealed class DosCore : IDisposable
     public void MouseWheel(int direction) => Interlocked.Exchange(ref wheel, direction);
     public void Pause(bool value) { ReleaseKeys(); paused = value; audio?.Clear(); }
     public void SetAudio(AudioSettings settings) { Volatile.Write(ref audioSettings, settings); if (audio != null) Volatile.Write(ref audio.Settings, settings); }
-    public void Reset() => commands.Enqueue(() => Export<VoidCall>("retro_reset")());
+    public void Reset() => commands.Enqueue(() => { InvalidateCheatMemory(); Export<VoidCall>("retro_reset")(); });
     void SetCycleOptions(string value)
     {
         options["dosbox_pure_cycles"] = value; options["dosbox_pure_cycles_scale"] = "1.0"; options["dosbox_pure_cycles_max"] = "none";
@@ -260,7 +263,7 @@ public sealed class DosCore : IDisposable
     public Task LoadState(string path) => Execute(() =>
     {
         var bytes = File.ReadAllBytes(path); var p = Marshal.AllocHGlobal(bytes.Length);
-        try { Marshal.Copy(bytes, 0, p, bytes.Length); if (Export<Serialize>("retro_unserialize")(p, (nuint)bytes.Length) == 0) throw new InvalidOperationException("State does not match this environment/core configuration."); audio?.Clear(); }
+        try { Marshal.Copy(bytes, 0, p, bytes.Length); if (Export<Serialize>("retro_unserialize")(p, (nuint)bytes.Length) == 0) throw new InvalidOperationException("State does not match this environment/core configuration."); InvalidateCheatMemory(); audio?.Clear(); }
         finally { Marshal.FreeHGlobal(p); }
     });
     Task Execute(Action action)
@@ -272,14 +275,12 @@ public sealed class DosCore : IDisposable
     }
     public async Task<byte[]> ReadMemory(int offset, int count, CancellationToken cancellation)
     {
-        if (offset < 0 || count < 1 || count > 4096 || (long)offset + count > MemoryBytes) throw new ArgumentException("Choose an available RAM range of 1–4096 bytes.");
-        byte[] bytes = new byte[count];
-        await Execute(() => { var memory = Export<MemoryData>("retro_get_memory_data")(2); if (memory == IntPtr.Zero) throw new InvalidOperationException("This core does not expose RAM."); Marshal.Copy(memory + offset, bytes, 0, count); }).WaitAsync(TimeSpan.FromSeconds(10), cancellation);
-        return bytes;
+        if (count is < 1 or > 4096) throw new ArgumentException("Read 1–4096 bytes of mapped DOS RAM.");
+        return await MemoryCommand(() => ReadRam(offset,count), cancellation);
     }
     public async Task<object> ReadText(CancellationToken cancellation)
     {
-        if (MemoryBytes < 0xc0000) throw new InvalidOperationException("This core does not expose text memory. Use dosbox_screenshot.");
+        if (!CanReadTextMemory) throw new InvalidOperationException("This core does not expose physical text memory. Use dosbox_screenshot.");
         var bios = await ReadMemory(0x400, 256, cancellation); int mode = bios[0x49];
         if (mode is not (2 or 3 or 7)) return new { textMode = false, videoMode = mode, message = "Graphics mode: use dosbox_screenshot to read the screen." };
         int columns = Math.Clamp((int)BitConverter.ToUInt16(bios, 0x4a), 1, 160), rows = Math.Clamp(bios[0x84] + 1, 1, 100);

@@ -74,6 +74,8 @@ public class ApplicationPreferences
     public McpSettings Mcp { get; set; } = new();
     public bool EnvironmentVisible { get; set; } = true;
     public bool EffectsVisible { get; set; } = true;
+    public double ToolsWidth { get; set; } = 480;
+    public string ToolsTab { get; set; } = "dlss";
     public static ApplicationPreferences Load()
     {
         var file = Path.Combine(Paths.Data, "preferences.json");
