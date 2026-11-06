@@ -9,58 +9,70 @@ jobs:
   host:
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-dotnet@v6.1.0
-        with:
-          dotnet-version: '9.0.x'
-      - name: Build portable host and check regressions
-        shell: pwsh
-        run: ./build.ps1
-      - name: Stage portable host package
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force out/ci-host/app, out/ci-host/runtime, out/ci-host/docs | Out-Null
-          Copy-Item -LiteralPath app/DosboxEnhanced.exe -Destination out/ci-host/app
-          Copy-Item -LiteralPath runtime/dosbox_pure_libretro.dll -Destination out/ci-host/runtime
-          Copy-Item -LiteralPath 'DOSBox Enhanced.cmd', LICENSE, THIRD_PARTY_NOTICES.md, runtime.lock.json -Destination out/ci-host
-          Copy-Item -LiteralPath licenses -Destination out/ci-host -Recurse
-          Copy-Item -LiteralPath docs/DOSBOX_LICENSE -Destination out/ci-host/docs
-          @'
-          DOSBox Enhanced - GitHub build (Windows x64)
+    - uses: actions/checkout@v7.0.1
+    - uses: actions/setup-dotnet@v6.1.0
+      with:
+        dotnet-version: '9.0.x'
+    - name: Build portable host and check regressions
+      shell: pwsh
+      run: ./build.ps1
+    - name: Stage portable host package
+      shell: pwsh
+      run: |
+        New-Item -ItemType Directory -Force out/ci-host/app, out/ci-host/runtime, out/ci-host/docs | Out-Null
+        Copy-Item -LiteralPath app/DosboxEnhanced.exe -Destination out/ci-host/app
+        Copy-Item -LiteralPath runtime/dosbox_pure_libretro.dll -Destination out/ci-host/runtime
+        Copy-Item -LiteralPath 'DOSBox Enhanced.cmd', LICENSE, THIRD_PARTY_NOTICES.md, runtime.lock.json -Destination out/ci-host
+        Copy-Item -LiteralPath licenses -Destination out/ci-host -Recurse
+        Copy-Item -LiteralPath docs/DOSBOX_LICENSE -Destination out/ci-host/docs
+        @'
+        DOSBox Enhanced - GitHub build (Windows x64)
 
-          Extract the whole archive, then run DOSBox Enhanced.cmd.
-          The portable host and pinned DOSBox Pure core are included.
-          Games, saved settings, Phoenix graphics, kernels and models are not included.
-          Optional neural graphics require the separately prepared graphics package.
-          This is a development build, not a tagged release.
-          '@ | Set-Content -LiteralPath out/ci-host/README.txt
-          git rev-parse HEAD | Set-Content -LiteralPath out/ci-host/SOURCE_COMMIT.txt
-          if ($LASTEXITCODE) { throw 'Cannot record the source commit.' }
-      - name: Upload portable host
-        uses: actions/upload-artifact@v7.0.2
-        with:
-          name: DOSBox-Enhanced-windows-x64-host
-          path: out/ci-host/
-          if-no-files-found: error
-          retention-days: 14
-      - name: Upload self-test report
-        if: always()
-        uses: actions/upload-artifact@v7.0.2
-        with:
-          name: dosbox-host-self-tests
-          path: tests/results/self-test.json
-          if-no-files-found: warn
+        Extract the whole archive, then run DOSBox Enhanced.cmd.
+        The portable host and pinned DOSBox Pure core are included.
+        Games, saved settings, Phoenix graphics, kernels and models are not included.
+        Optional neural graphics require the separately prepared graphics package.
+        This is a development build, not a tagged release.
+        '@ | Set-Content -LiteralPath out/ci-host/README.txt
+        git rev-parse HEAD | Set-Content -LiteralPath out/ci-host/SOURCE_COMMIT.txt
+        if ($LASTEXITCODE) { throw 'Cannot record the source commit.' }
+    - name: Upload portable host
+      uses: actions/github-script@v9
+      with:
+        script: |
+          const publish = require('./.github/scripts/publish-build.cjs');
+          await publish({github, context, core, glob, exec});
+      env:
+        BUILD_NAME: DOSBox-Enhanced-windows-x64-host
+        BUILD_PATHS: out/ci-host/
+        BUILD_HIDDEN: 'false'
+        BUILD_MISSING: error
+      if: (success()) && success() && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && github.event_name != 'pull_request'
+    - name: Upload self-test report
+      if: (always()) && success() && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && github.event_name != 'pull_request'
+      uses: actions/github-script@v9
+      with:
+        script: |
+          const publish = require('./.github/scripts/publish-build.cjs');
+          await publish({github, context, core, glob, exec});
+      env:
+        BUILD_NAME: dosbox-host-self-tests
+        BUILD_PATHS: tests/results/self-test.json
+        BUILD_HIDDEN: 'false'
+        BUILD_MISSING: warn
+    permissions:
+      contents: write
   graphics-compile:
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-dotnet@v6.1.0
-        with:
-          dotnet-version: '9.0.x'
-      - uses: actions/setup-python@v7.1.0
-        with:
-          python-version: '3.12'
-      - name: Compile pinned Phoenix source and the native bridge
-        shell: pwsh
-        run: ./build.ps1 -Graphics -BuildPhoenix
+    - uses: actions/checkout@v7.0.1
+    - uses: actions/setup-dotnet@v6.1.0
+      with:
+        dotnet-version: '9.0.x'
+    - uses: actions/setup-python@v7.1.0
+      with:
+        python-version: '3.12'
+    - name: Compile pinned Phoenix source and the native bridge
+      shell: pwsh
+      run: ./build.ps1 -Graphics -BuildPhoenix
       # This checks compilation; interactive DOS input and GPU inference run locally.
