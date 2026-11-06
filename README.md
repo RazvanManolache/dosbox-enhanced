@@ -151,3 +151,11 @@ git submodule update --init --recursive
 ## Update notice
 
 A newer published version adds a small **Update available** link to the menu. Click it to open GitHub releases. Checks include betas, run in the background at startup and once a day, and stay quiet offline. Background automation skips the check. This only reads public release metadata; it does not install updates.
+
+## Build on GitHub
+
+Open [Actions](https://github.com/RazvanManolache/dosbox-enhanced/actions), select **Windows build**, then choose **Run workflow** and a branch. When the run succeeds, download its files from **Artifacts** at the bottom of the run page (GitHub sign-in required).
+
+DOSBox-Enhanced-windows-x64-host contains the portable app, launcher and pinned DOSBox Pure core. It runs without a .NET installation. Games and optional Phoenix graphics/runtime kernels are not bundled; the separate graphics job checks compilation only.
+
+Build downloads are retained for 14 days. They are development snapshots, separate from tagged releases; running this workflow does not publish a release.
